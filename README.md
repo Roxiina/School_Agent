@@ -47,7 +47,7 @@ La **Phase 2** intégrera un **LLM (Local ou API)** comme Ollama ou Llama pour p
 ---
 
 ## 🧱 Architecture du projet (MVC manuel)
-
+ Exemple :
 ```bash
 PlateformeIA/
 ├── app/
@@ -86,6 +86,7 @@ PlateformeIA/
 
 ## 🧮 Base de données (Merise)
 
+Exemple :
 ## MCD (Modèle Conceptuel de Données)
 Entités principales :
 - **User** (`id`, `nom`, `email`, `passwordHash`, `consentementRGPD`)
