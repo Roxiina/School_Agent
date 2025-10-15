@@ -133,20 +133,20 @@ CREATE TABLE agents (
 );
 ```
 ## 💻 Technologies utilisées
-Catégorie	Outils / Langages
-Back-End	PHP 8 (POO, PDO)
-Front-End	HTML5, TailwindCSS, JavaScript
-Base de données	MySQL
-Modélisation	Merise (Draw.io)
-Versionnement	Git / GitHub
-Outils RGPD	Registre de traitement (Word/PDF)
+- Catégorie	Outils / Langages
+- Back-End	PHP 8 (POO, PDO)
+- Front-End	HTML5, TailwindCSS, JavaScript
+- Base de données	MySQL
+- Modélisation	Merise (Draw.io)
+- Versionnement	Git / GitHub
+- Outils RGPD	Registre de traitement (Word/PDF)
 
 ## ⚙️ Installation (en local)
-Cloner le dépôt GitHub
+Cloner le dépôt GitHub :
 
 ```bash
 Copier le code
-git clone https://github.com/<votre_repo>/plateforme-ia-educative.git
+git clone https://github.com/Roxiina/School_Agent.git
 cd plateforme-ia-educative
 Créer la base de données
 ```
