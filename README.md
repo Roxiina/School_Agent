@@ -173,47 +173,48 @@ Accéder à la plateforme
 ```
 
 ## 🧾 Registre RGPD
-Le registre (rgpd/registre_rgpd.pdf) décrit :
+- Le registre (rgpd/registre_rgpd.pdf) décrit :
 
-les types de données traitées,
+- les types de données traitées,
 
-la finalité de leur usage (authentification, personnalisation),
+- la finalité de leur usage (authentification, personnalisation),
 
-les durées de conservation,
+- les durées de conservation,
 
-les procédures de suppression.
+- les procédures de suppression.
 
 ## 🧑‍💻 Équipe projet
-Product Owner : Roxina Fmnd
-Formateur référent : David Michel
-Développeurs : [à compléter avec les membres de ton groupe]
-Méthodologie : Agile / Kanban (GitHub Projects ou Trello)
+- Product Owner : Roxina Fmnd
+- Formateur référent : David Michel
+- Chef de projet : Nicolas
+- Développeurs : Olivier
+- Méthodologie : Agile / Kanban (GitHub Projects ou Trello)
 
 ## ✅ Livrables attendus
-Diagramme MCD / MLD / MPD (Draw.io export PNG/PDF)
+- Diagramme MCD / MLD / MPD (Draw.io export PNG/PDF)
 
-Script SQL d’installation
+- Script SQL d’installation
 
-Code PHP MVC (CRUD complet)
+- Code PHP MVC (CRUD complet)
 
-Interfaces HTML/Tailwind
+- Interfaces HTML/Tailwind
 
-Registre RGPD (PDF)
+- Registre RGPD (PDF)
 
-README.md (ce document)
+- README.md (ce document)
 
-Démo live (≤ 15 min)
+- Démo live (≤ 15 min)
 
 ## 🚀 Phase 2 (Prévision)
-Passage à Laravel (Back-End API) et Vue.js (Front).
+- Passage à Laravel (Back-End API) et Vue.js (Front).
 
-Intégration d’un LLM local (Ollama / Llama).
+- Intégration d’un LLM local (Ollama / Llama).
 
-Connexion via API pour générer des réponses IA.
+- Connexion via API pour générer des réponses IA.
 
-Déploiement sur serveur local ou distant.
+- Déploiement sur serveur local ou distant.
 
 ## 📄 Licence
-Projet pédagogique – Tous droits réservés © 2025
-Formation : Développeur·se en Intelligence Artificielle
-Encadrant : David Michel
+- Projet pédagogique – Tous droits réservés © 2025
+- Formation : Développeur·se en Intelligence Artificielle
+- Encadrant : David Michel
