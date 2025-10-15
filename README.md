@@ -86,7 +86,7 @@ PlateformeIA/
 
 ## 🧮 Base de données (Merise)
 
-### MCD (Modèle Conceptuel de Données)
+## MCD (Modèle Conceptuel de Données)
 Entités principales :
 - **User** (`id`, `nom`, `email`, `passwordHash`, `consentementRGPD`)
 - **Agent** (`id`, `user_id`, `promptPerso`, `historique`)
@@ -95,7 +95,7 @@ Relations :
 - Un **User** peut avoir **0,n Agents**  
 - Un **Agent** appartient à **1 User**
 
-### MLD (Modèle Logique de Données)
+## MLD (Modèle Logique de Données)
 ```bash
 USER(id_user, nom, email, password_hash, consentement_rgpd)
 AGENT(id_agent, user_id, prompt_perso, historique)
