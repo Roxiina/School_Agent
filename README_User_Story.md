@@ -147,7 +147,7 @@ Tâches techniques :
 - Rédiger le registre_rgpd.pdf.
 - Vérifier le code PHP pour conformité.
 
-🌐 US10 — Interface responsive
+## 🌐 US10 — Interface responsive
 
 **En tant qu’**utilisateur mobile,
 je veux naviguer sur la plateforme depuis mon téléphone,
