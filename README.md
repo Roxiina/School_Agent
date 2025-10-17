@@ -1,7 +1,17 @@
 # 🎓 Plateforme IA Éducative avec Agent (Phase 1)
 
-## Lien Trello :
-https://trello.com/invite/b/68ef748e0e82c5cecfcfe7db/ATTI2536ef6f89f22ec7129aa49833f94f442AF2FB7B/mon-tableau-trello
+## 🧭 Méthodologie Agile
+
+Le projet est organisé en 3 sprints sur Trello :
+- **Sprint 1** : Backend et base de données
+- **Sprint 2** : Interface utilisateur et IA
+- **Sprint 3** : Sécurité et RGPD
+
+Chaque fonctionnalité est définie sous forme de **User Story** :
+> En tant que [rôle], je veux [objectif] afin de [bénéfice].
+
+Les tâches sont suivies dans Trello :  
+👉 [https://trello.com/invite/b/68ef748e0e82c5cecfcfe7db/ATTI2536ef6f89f22ec7129aa49833f94f442AF2FB7B/mon-tableau-trello]()s
 
 ## 📘 Description du projet
 Ce projet a pour objectif de concevoir et implémenter une **plateforme éducative** permettant à des utilisateurs de créer et gérer des **agents IA personnalisés**.  
@@ -149,11 +159,10 @@ Cloner le dépôt GitHub :
 Copier le code
 git clone https://github.com/Roxiina/School_Agent.git
 cd plateforme-ia-educative
-Créer la base de données
 ```
-Importer le script sql/script.sql dans phpMyAdmin ou MySQL Workbench.
-
-Configurer la connexion
+Créer la base de données :
+- Importer le script sql/script.sql dans phpMyAdmin ou MySQL Workbench.
+- Configurer la connexion
 
 Modifier config/database.php :
 
@@ -184,7 +193,7 @@ Accéder à la plateforme
 - les procédures de suppression.
 
 ## 🧑‍💻 Équipe projet
-- Product Owner : Roxina Fmnd
+- Product Owner : Flavie
 - Formateur référent : David Michel
 - Chef de projet : Nicolas
 - Développeurs : Olivier
