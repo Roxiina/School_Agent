@@ -1,0 +1,72 @@
+CREATE TABLE niveauScolaire(
+   id_niveauScolaire ,
+   niveau ,
+   PRIMARY KEY(id_niveauScolaire)
+);
+
+CREATE TABLE agent(
+   id_agent ,
+   nom ,
+   avatar ,
+   description ,
+   temperature ,
+   systemPrompt ,
+   PRIMARY KEY(id_agent)
+);
+
+CREATE TABLE matiere(
+   id_matiere ,
+   nom ,
+   id_agent  NOT NULL,
+   PRIMARY KEY(id_matiere),
+   FOREIGN KEY(id_agent) REFERENCES agent(id_agent)
+);
+
+CREATE TABLE utilisateur(
+   id_user ,
+   nom ,
+   prenom ,
+   email ,
+   motDePasse ,
+   role ,
+   id_niveauScolaire  NOT NULL,
+   PRIMARY KEY(id_user),
+   FOREIGN KEY(id_niveauScolaire) REFERENCES niveauScolaire(id_niveauScolaire)
+);
+
+CREATE TABLE userlog(
+   id_userlog ,
+   dernierConnection ,
+   id_user  NOT NULL,
+   PRIMARY KEY(id_userlog),
+   UNIQUE(id_user),
+   FOREIGN KEY(id_user) REFERENCES utilisateur(id_user)
+);
+
+CREATE TABLE conversation(
+   id_conversation ,
+   titre ,
+   creerLe ,
+   id_agent  NOT NULL,
+   id_user  NOT NULL,
+   PRIMARY KEY(id_conversation),
+   FOREIGN KEY(id_agent) REFERENCES agent(id_agent),
+   FOREIGN KEY(id_user) REFERENCES utilisateur(id_user)
+);
+
+CREATE TABLE message(
+   id_message ,
+   question ,
+   reponse ,
+   id_conversation  NOT NULL,
+   PRIMARY KEY(id_message),
+   FOREIGN KEY(id_conversation) REFERENCES conversation(id_conversation)
+);
+
+CREATE TABLE utiliser(
+   id_user ,
+   id_agent ,
+   PRIMARY KEY(id_user, id_agent),
+   FOREIGN KEY(id_user) REFERENCES utilisateur(id_user),
+   FOREIGN KEY(id_agent) REFERENCES agent(id_agent)
+);

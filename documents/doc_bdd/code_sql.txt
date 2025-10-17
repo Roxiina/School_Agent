@@ -1,0 +1,125 @@
+-- ===========================================================
+-- Base de données : SCHOOLIA
+-- ===========================================================
+CREATE DATABASE IF NOT EXISTS schoolia
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE schoolia;
+
+-- ===========================================================
+-- Table : niveau_scolaire
+-- ===========================================================
+CREATE TABLE niveau_scolaire (
+    id_niveau_scolaire INT AUTO_INCREMENT,
+    niveau VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id_niveau_scolaire)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Table : agent
+-- ===========================================================
+CREATE TABLE agent (
+    id_agent INT AUTO_INCREMENT,
+    nom VARCHAR(100) NOT NULL,
+    avatar VARCHAR(255),
+    description TEXT,
+    temperature FLOAT,
+    system_prompt TEXT,
+    PRIMARY KEY (id_agent)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Table : matiere
+-- ===========================================================
+CREATE TABLE matiere (
+    id_matiere INT AUTO_INCREMENT,
+    nom VARCHAR(100) NOT NULL,
+    id_agent INT NOT NULL,
+    PRIMARY KEY (id_matiere),
+    FOREIGN KEY (id_agent) REFERENCES agent(id_agent)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Table : utilisateur
+-- ===========================================================
+CREATE TABLE utilisateur (
+    id_user INT AUTO_INCREMENT,
+    nom VARCHAR(50) NOT NULL,
+    prenom VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    mot_de_passe VARCHAR(255) NOT NULL,
+    role ENUM('etudiant', 'professeur', 'admin') DEFAULT 'etudiant',
+    id_niveau_scolaire INT NOT NULL,
+    PRIMARY KEY (id_user),
+    FOREIGN KEY (id_niveau_scolaire) REFERENCES niveau_scolaire(id_niveau_scolaire)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Table : user_log
+-- ===========================================================
+CREATE TABLE user_log (
+    id_userlog INT AUTO_INCREMENT,
+    derniere_connection DATETIME,
+    id_user INT NOT NULL,
+    PRIMARY KEY (id_userlog),
+    UNIQUE (id_user),
+    FOREIGN KEY (id_user) REFERENCES utilisateur(id_user)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Table : conversation
+-- ===========================================================
+CREATE TABLE conversation (
+    id_conversation INT AUTO_INCREMENT,
+    titre VARCHAR(150),
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id_agent INT NOT NULL,
+    id_user INT NOT NULL,
+    PRIMARY KEY (id_conversation),
+    FOREIGN KEY (id_agent) REFERENCES agent(id_agent)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (id_user) REFERENCES utilisateur(id_user)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Table : message
+-- ===========================================================
+CREATE TABLE message (
+    id_message INT AUTO_INCREMENT,
+    question TEXT,
+    reponse TEXT,
+    id_conversation INT NOT NULL,
+    PRIMARY KEY (id_message),
+    FOREIGN KEY (id_conversation) REFERENCES conversation(id_conversation)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Table : utiliser
+-- ===========================================================
+CREATE TABLE utiliser (
+    id_user INT NOT NULL,
+    id_agent INT NOT NULL,
+    PRIMARY KEY (id_user, id_agent),
+    FOREIGN KEY (id_user) REFERENCES utilisateur(id_user)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (id_agent) REFERENCES agent(id_agent)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===========================================================
+-- Fin du script
+-- ===========================================================
