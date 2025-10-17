@@ -1,159 +1,255 @@
-## 🧩 Structure d’une User Story
+# 🎓 Plateforme IA Éducative – SCHOOLIA (Phase 1)
 
-👉 Chaque user story suit la structure :
+## 📘 Contexte du projet
 
-- En tant que [type d’utilisateur],
-- je veux [objectif / action],
-- afin de [bénéfice / raison].
+Le projet **SCHOOLIA** vise à créer une plateforme éducative intelligente où des **étudiants**, **professeurs** et **administrateurs** peuvent interagir avec des **agents IA pédagogiques**.  
+Cette première phase se concentre sur :
+- la **base de données relationnelle MySQL** (modélisation MERISE),
+- le **développement POO/MVC en PHP**,
+- la **gestion RGPD** (consentement, suppression des données),
+- et l’interface HTML/Tailwind/JS pour le CRUD et la navigation.
 
-Et chaque story doit avoir :
-- ✅ des critères d’acceptation (comment on sait que c’est fini),
-- 🧠 éventuellement des tâches techniques associées (à donner aux dévs).
-- 🎯 Liste des principales User Stories (Phase 1)
-- 🧍‍♂️ US01 — Inscription utilisateur
+---
 
-En tant que nouvel utilisateur,
-je veux m’inscrire sur la plateforme avec mon nom, e-mail, mot de passe et consentement RGPD,
-afin de pouvoir accéder à mon espace personnel.
+## 🧠 Objectif de la Phase 1
 
-Critères d’acceptation :
-- Un formulaire affiche les champs : nom, email, mot de passe, case consentement RGPD.
-- Le mot de passe est haché avant insertion en base.
-- Si le consentement n’est pas coché, l’inscription est refusée.
-- Message de confirmation affiché si l’inscription réussit.
+- Concevoir et implémenter la base de données SCHOOLIA (MySQL).
+- Créer les classes PHP (User, Agent, Conversation, Message...).
+- Implémenter le modèle MVC manuel.
+- Mettre en place un CRUD complet.
+- Respecter les règles de sécurité et de RGPD.
 
-Tâches techniques :
-- Créer le modèle User (POO).
-- Ajouter méthode register() avec PDO sécurisé.
-- Créer la vue register.php.
+---
 
-## 🔐 US02 — Connexion utilisateur
+## 👥 Rôles utilisateurs
 
-**En tant qu’**utilisateur existant,
-je veux me connecter avec mon e-mail et mon mot de passe,
-afin de accéder à mon espace personnel et gérer mes agents.
+- 👨‍🎓 **Étudiant** : Apprend avec des agents IA.
+- 👩‍🏫 **Professeur** : Crée et gère des agents IA.
+- 👨‍💼 **Administrateur** : Supervise le système et la base de données.
 
-Critères d’acceptation :
-- Vérification du mot de passe avec password_verify().
-- Redirection vers le profil si connexion réussie.
-- Mesage d’erreur si e-mail/mot de passe invalide.
+---
 
-Tâches techniques :
-- Créer la méthode login() dans UserController.
-- Gérer la session PHP.
+## 📋 User Stories (Phase 1)
 
-## 👤 US03 — Gestion du profil
+---
 
-**En tant qu’**utilisateur connecté,
-je veux voir et modifier mes informations (nom, e-mail, mot de passe),
-afin de maintenir mes données à jour.
+### US01 – Inscription utilisateur
+**En tant qu’étudiant**, je veux créer un compte sur la plateforme.
 
-Critères d’acceptation :
-- Le profil affiche les infos actuelles de l’utilisateur.
-- La modification est enregistrée dans la base.
-- Un message confirme la mise à jour.
+**Tâches :**
+- Créer le formulaire d’inscription (HTML/PHP)
+- Valider les champs côté client et serveur
+- Hacher le mot de passe
+- Enregistrer dans la table `utilisateur`
 
-Tâches techniques :
-- Méthodes getUserById() et update() dans User.php.
-Vue profile.php.
+**Critères d’acceptation :**
+- Tous les champs sont remplis et validés
+- Email unique
+- Confirmation après inscription réussie
 
-## 🗑️ US04 — Suppression du compte (RGPD)
+---
 
-**En tant qu’**utilisateur,
-je veux pouvoir supprimer mon compte,
-afin de exercer mon droit à l’effacement des données personnelles.
+### US02 – Connexion utilisateur
+**En tant qu’utilisateur**, je veux me connecter pour accéder à mon tableau de bord.
 
-Critères d’acceptation :
-- Bouton “Supprimer mon compte” accessible depuis le profil.
-- Les agents liés sont supprimés automatiquement (ON DELETE CASCADE).
-- Message confirmant la suppression.
+**Tâches :**
+- Créer le formulaire de connexion
+- Vérifier email et mot de passe
+- Mettre à jour `user_log`
+- Rediriger vers le tableau de bord
 
-Tâches techniques :
-- Méthode delete() dans User.php.
-- Vérifier le fonctionnement de la clé étrangère MySQL.
+**Critères d’acceptation :**
+- Connexion uniquement avec identifiants valides
+- Message d’erreur clair en cas d’échec
+- Journal de connexion mis à jour
 
-## 🤖 US05 — Création d’un agent IA
+---
 
-**En tant qu’**utilisateur connecté,
-je veux créer un nouvel agent IA avec un prompt personnalisé,
-afin de configurer mon assistant pédagogique.
+### US03 – Liste et interaction avec les agents
+**En tant qu’étudiant**, je veux voir les agents disponibles et discuter avec eux.
 
-Critères d’acceptation :
-- Formulaire : nom agent, promptPerso.
-- L’agent est lié à l’utilisateur (user_id).
-- Confirmation affichée après enregistrement.
+**Tâches :**
+- Créer page listant les agents avec nom, avatar, description
+- Créer une conversation dans `conversation` lors du premier message
+- Lier conversation à `id_user` et `id_agent`
 
-Tâches techniques :
-- Modèle Agent.php, méthode create().
-Vue agents/create.php.
+**Critères d’acceptation :**
+- Liste d’agents affichée correctement
+- Conversation créée automatiquement
+- Affichage du titre dans l'historique et de la date
 
-## 📜 US06 — Liste de mes agents
+---
 
-**En tant qu’**utilisateur connecté,
-je veux voir la liste de mes agents existants,
-afin de les gérer facilement.
+### US04 – Gestion du profil utilisateur
+**En tant qu’étudiant**, une fois connecté je veux voir mon profil et modifier les données.
 
-Critères d’acceptation :
-- Affichage des agents liés à mon user_id.
-- Lien pour modifier ou supprimer chaque agent.
+**Tâches :**
+- Créer page listant les données de profil
+- Validation ou annulation en cas de modification
+- Possibilité de modifier chaque champs, même l'avatar (nécéssite une gestion d'image pas trop lourde)
 
-Tâches techniques :
-Méthode getAgentsByUser() dans Agent.php.
-Vue agents/index.php.
+**Critères d’acceptation :**
+- Données de profil affichées correctement
+- Bouton de validation fonctionnel (données mises à jour à l'affichage)
+- Message clair de modification réussie et affichage des données mises à jour
 
-## ✏️ US07 — Modification d’un agent
+---
+### US05 – Liste et interaction avec les agents
+**En tant qu’étudiant**, je veux voir les agents disponibles et discuter avec eux.
 
-**En tant qu’**utilisateur,
-je veux modifier le prompt ou le nom d’un agent,
-afin de adapter son comportement.
+**Tâches :**
+- Créer page listant agents (nom, avatar, description) correspondant au **niveau scolaire** et à la **matière** de l’étudiant  
+- Créer une conversation dans `conversation` lors du premier message
+- Lier conversation à `id_user` et `id_agent`
 
-Critères d’acceptation :
-- Formulaire prérempli avec données actuelles.
-- Validation et mise à jour dans la base.
+**Critères d’acceptation :**
+- Liste des agents filtrée selon le niveau scolaire et la matière
+- Conversation créée automatiquement
+- Affichage du titre et de la date
 
-Tâches techniques :
-Méthode update() dans Agent.php.
+---
 
-## 🗑️ US08 — Suppression d’un agent
+### US06 – Échanger des messages
+**En tant qu’étudiant**, je veux poser des questions à un agent et voir ses réponses.
 
-**En tant qu’**utilisateur,
-je veux supprimer un agent que je n’utilise plus,
-afin de garder mon espace organisé.
+**Tâches :**
+- Créer la table `message`
+- Envoyer et afficher les messages
+- Charger l’historique d’une conversation
 
-Critères d’acceptation :
+**Critères d’acceptation :**
+- Messages enregistrés dans `message`
+- Affichage instantané question/réponse
+- Historique consultable
 
-Bouton “Supprimer” par agent.
+---
 
-Confirmation avant suppression.
+### US07 – Suppression des conversations (RGPD)
+**En tant qu’étudiant**, je veux supprimer mes conversations.
 
-L’agent disparaît de la liste.
+**Tâches :**
+- Ajouter bouton "Supprimer conversation"
+- Suppression en cascade (`conversation` + `message`)
+- Confirmation avant suppression
 
-Tâches techniques :
+**Critères d’acceptation :**
+- Suppression complète dans la base
+- Message de confirmation affiché
+- Aucun accès aux conversations supprimées
 
-Méthode delete() dans Agent.php.
+---
 
-## ⚙️ US09 — Sécurité et RGPD
-En tant que responsable RGPD,
-je veux que les données personnelles soient protégées,
-afin de respecter la réglementation.
+### US08 – Gestion des niveaux scolaires
+**En tant qu’administrateur**, je veux gérer les niveaux scolaires.
 
-Critères d’acceptation :
-- Hash des mots de passe (password_hash()).
-- Aucune donnée en clair sensible.
-- Registre RGPD tenu à jour (PDF).
-- Suppression complète des données supprimées.
+**Tâches :**
+- Créer interface CRUD pour les niveaux
+- Lier `utilisateur.id_niveau_scolaire` à `niveau_scolaire.id_niveau_scolaire`
+- Empêcher suppression si utilisé par un utilisateur
 
-Tâches techniques :
-- Rédiger le registre_rgpd.pdf.
-- Vérifier le code PHP pour conformité.
+**Critères d’acceptation :**
+- Niveaux ajoutés, modifiés ou supprimés correctement
+- Aucun conflit avec utilisateurs existants
 
-## 🌐 US10 — Interface responsive
+---
 
-**En tant qu’**utilisateur mobile,
-je veux naviguer sur la plateforme depuis mon téléphone,
-afin de créer et gérer mes agents facilement.
+### US09 – Gestion des utilisateurs
+**En tant qu’administrateur**, je veux gérer les utilisateurs.
 
-Critères d’acceptation :
-- Interface responsive (Tailwind).
-- Navigation claire et accessible (WCAG).
-- Menus fonctionnels sur mobile.
+**Tâches :**
+- Créer page CRUD pour utilisateurs
+- Modifier informations utilisateur (profil)
+- Supprimer un utilisateur et ses conversations
+
+**Critères d’acceptation :**
+- CRUD complet fonctionnel
+- Suppression en cascade des données associées
+- Validation avant suppression
+
+---
+
+### US010 – Gestion des matières et agents
+**En tant qu’administrateur**, je veux lier chaque agent à une matière.
+
+**Tâches :**
+- Créer table `matiere`
+- Lier `id_agent` à `id_matiere` et à `id_niveau_scolaire`
+- Interface d’ajout et gestion des matières
+
+**Critères d’acceptation :**
+- Agents correctement associés à un niveau et une matière
+- Suppression impossible si matière utilisée
+- Affichage clair sur la page étudiant
+
+---
+
+### US011 – Gestion des matières et agents
+**En tant qu’administrateur**, je veux lier chaque agent à une matière.
+
+**Tâches :**
+- Créer table `matiere`
+- Lier `id_agent` à `id_matiere`
+- Interface d’ajout et de gestion des matières
+
+**Critères d’acceptation :**
+- Agents correctement associés à une matière
+- Suppression impossible si matière utilisée
+- Affichage clair sur la page étudiant
+
+---
+
+### US012 – Tableau de bord étudiant
+**En tant qu’étudiant**, je veux voir mes agents utilisés et mes dernières conversations.
+
+**Tâches :**
+- Créer page tableau de bord
+- Charger agents et conversations depuis la BDD
+- Lien pour reprendre une conversation existante
+
+**Critères d’acceptation :**
+- Tableau de bord clair et dynamique
+- Accès rapide aux conversations récentes
+
+---
+
+### US013 – Journal de connexion
+**En tant qu’administrateur**, je veux consulter les journaux de connexion.
+
+**Tâches :**
+- Créer table `user_log` si non existante
+- Page affichant date de dernière connexion par utilisateur
+- Mise à jour automatique à chaque connexion
+
+**Critères d’acceptation :**
+- Affichage correct des logs
+- Suppression de l’utilisateur supprime aussi son log
+
+---
+
+## 🗂️ Backlog & Organisation (Trello)
+
+### 🔹 Backlog Produit
+Toutes les User Stories ci-dessus.
+
+### 🔹 Sprint 1 – Base de Données & Authentification
+- US01 à US04
+- US09, US13
+
+### 🔹 Sprint 2 – Agents & Conversations
+- US05 à US08
+
+### 🔹 Sprint 3 – RGPD & Sécurité
+- US10 à US12
+
+---
+
+## ✅ Critères de réussite
+- Base de données fonctionnelle sans erreur.
+- Classes POO propres avec PDO sécurisé.
+- CRUD complet pour `Utilisateur` et `Agent`.
+- Consentement RGPD respecté.
+- Interface claire et responsive.
+- Historique Git propre (commits clairs + README).
+
+---
+
