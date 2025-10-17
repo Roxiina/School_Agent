@@ -159,11 +159,10 @@ Cloner le dépôt GitHub :
 Copier le code
 git clone https://github.com/Roxiina/School_Agent.git
 cd plateforme-ia-educative
-Créer la base de données
 ```
-Importer le script sql/script.sql dans phpMyAdmin ou MySQL Workbench.
-
-Configurer la connexion
+Créer la base de données :
+- Importer le script sql/script.sql dans phpMyAdmin ou MySQL Workbench.
+- Configurer la connexion
 
 Modifier config/database.php :
 
@@ -194,7 +193,7 @@ Accéder à la plateforme
 - les procédures de suppression.
 
 ## 🧑‍💻 Équipe projet
-- Product Owner : Roxina Fmnd
+- Product Owner : Flavie
 - Formateur référent : David Michel
 - Chef de projet : Nicolas
 - Développeurs : Olivier
