@@ -1,0 +1,15 @@
+{
+    "name": "school_agent/mysite",
+    "autoload": {
+        "psr-4": {
+            "SchoolAgent\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "nicolas tchenio",
+            "email": "nicolas.tchenio@gmail.com"
+        }
+    ],
+    "require": {}
+}
