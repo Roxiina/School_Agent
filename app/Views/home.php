@@ -5,6 +5,9 @@
     <title>Accueil - School Agent</title>
 </head>
 <body>
-    <h1><?= htmlspecialchars($message) ?></h1>
+    <h1>Bienvenue sur School Agent !</h1>
+    <p><a href="/users">Voir la liste des utilisateurs</a></p>
+    <p>hello le world</p>
 </body>
 </html>
+
