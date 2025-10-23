@@ -6,8 +6,7 @@ use SchoolAgent\Controllers\HomeController;
 use SchoolAgent\Controllers\UserController;
 
 // -------------------------------------------------------------
-// Étape 1 : Récupération propre de la route dans l’URL ()=> car le serveur integre de php "php -S" ne prend pas en charge .htaccess)
-// Le fichier .htaccess ne fonctionne que sous Apache => executer son site via apache avec wamp
+// Récupération propre de la route dans l’URL
 // -------------------------------------------------------------
 $uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
@@ -19,16 +18,15 @@ if ($basePath && strpos($uri, ltrim($basePath, '/')) === 0) {
     $uri = substr($uri, strlen(ltrim($basePath, '/')));
 }
 
-// 🔹 Si un paramètre GET "page" est présent, il a la priorité
+// 🔹 Priorité au paramètre GET "page"
 if (isset($_GET['page']) && $_GET['page'] !== '') {
     $page = $_GET['page'];
 } else {
-    // Sinon on utilise l’URI (ou "home" par défaut)
     $page = $uri !== '' ? $uri : 'home';
 }
 
 // -------------------------------------------------------------
-// 🔹 Étape 2 : Routing via switch-case (lisible et extensible)
+// Routing via switch-case
 // -------------------------------------------------------------
 switch ($page) {
     case 'home':
@@ -36,13 +34,38 @@ switch ($page) {
         $controller->index();
         break;
 
-    // http://localhost:8000/?page=users
-    // via le .htaccess => http://localhost:8000/users
+    // Liste des utilisateurs
     case 'users':
         $controller = new UserController();
         $controller->index();
         break;
 
+    // Formulaire création utilisateur
+    case 'users/create':
+        $controller = new UserController();
+        $controller->create();
+        break;
+
+    
+    // Formulaire édition utilisateur
+    // http://localhost:8000/users/edit/?id=4
+    case 'users/edit':
+        if (isset($_GET['id'])) {
+            $controller = new UserController();
+            $controller->edit($_GET['id']);
+        }
+        break;
+
+    // Suppression utilisateur
+    // http://localhost:8000/users/delete/?id=4
+    case 'users/delete':
+        if (isset($_GET['id'])) {
+            $controller = new UserController();
+            $controller->delete($_GET['id']);
+        }
+        break;
+
+    // Page non trouvée
     default:
         http_response_code(404);
         echo "<h1>404 - Page non trouvée</h1>";
