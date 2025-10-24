@@ -11,32 +11,13 @@ $flash = Authenticator::getFlash();
 </head>
 <body>
 
-<?php if ($flash): ?>
-    <div style="
-        padding:10px;
-        margin-bottom:10px;
-        border-radius:5px;
-        background-color:<?= $flash['type'] === 'success' ? '#d4edda' : '#cce5ff' ?>;
-        color:<?= $flash['type'] === 'success' ? '#155724' : '#004085' ?>;
-    ">
-        <?= htmlspecialchars($flash['message']) ?>
-    </div>
-<?php endif; ?>
-
-
 <?php
-// Démarre la session si elle ne l'est pas déjà
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Dump de debug
 echo "<pre style='background:#222;color:#0f0;padding:10px;border-radius:5px;'>";
 echo "=== DEBUG SESSION ===\n";
 var_dump($_SESSION);
 echo "</pre>";
 ?>
-
 
 
 <h1>Bienvenue sur School Agent !</h1>
