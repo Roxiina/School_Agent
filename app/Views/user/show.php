@@ -1,5 +1,20 @@
 <h1>Profil de <?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?></h1>
 
+
+<?php
+// Démarre la session si elle ne l'est pas déjà
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Dump de debug
+echo "<pre style='background:#222;color:#0f0;padding:10px;border-radius:5px;'>";
+echo "=== DEBUG SESSION ===\n";
+var_dump($_SESSION);
+echo "</pre>";
+?>
+
+
 <ul>
     <li><strong>ID :</strong> <?= $user['id_user'] ?></li>
     <li><strong>Nom :</strong> <?= htmlspecialchars($user['nom']) ?></li>

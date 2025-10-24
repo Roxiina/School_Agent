@@ -1,3 +1,8 @@
+<?php
+use SchoolAgent\Config\Authenticator;
+
+$flash = Authenticator::getFlash();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,9 +10,41 @@
     <title>Accueil - School Agent</title>
 </head>
 <body>
-    <h1>Bienvenue sur School Agent !</h1>
-    <p><a href="/user">Voir la liste des utilisateurs</a></p>
-    <p>hello le world</p>
+
+<?php if ($flash): ?>
+    <div style="
+        padding:10px;
+        margin-bottom:10px;
+        border-radius:5px;
+        background-color:<?= $flash['type'] === 'success' ? '#d4edda' : '#cce5ff' ?>;
+        color:<?= $flash['type'] === 'success' ? '#155724' : '#004085' ?>;
+    ">
+        <?= htmlspecialchars($flash['message']) ?>
+    </div>
+<?php endif; ?>
+
+
+<?php
+// Démarre la session si elle ne l'est pas déjà
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Dump de debug
+echo "<pre style='background:#222;color:#0f0;padding:10px;border-radius:5px;'>";
+echo "=== DEBUG SESSION ===\n";
+var_dump($_SESSION);
+echo "</pre>";
+?>
+
+
+
+<h1>Bienvenue sur School Agent !</h1>
+
+<p><a href="/users">Voir la liste des utilisateurs</a></p>
+<p><a href="/login">Se connecter</a> | <a href="/logout">Se déconnecter</a></p>
+
+<p>Hello le world 👋</p>
+
 </body>
 </html>
-

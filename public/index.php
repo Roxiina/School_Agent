@@ -2,8 +2,13 @@
 // Autoload Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use SchoolAgent\Controllers\HomeController;
-use SchoolAgent\Controllers\UserController;
+// use SchoolAgent\Controllers\HomeController;
+// use SchoolAgent\Controllers\UserController;
+use SchoolAgent\Controllers\{
+    HomeController,
+    UserController,
+    AuthController
+};
 
 // -------------------------------------------------------------
 // Récupération propre de la route dans l’URL
@@ -18,7 +23,7 @@ if ($basePath && strpos($uri, ltrim($basePath, '/')) === 0) {
     $uri = substr($uri, strlen(ltrim($basePath, '/')));
 }
 
-// 🔹 Priorité au paramètre GET "page"
+// Priorité au paramètre GET "page"
 if (isset($_GET['page']) && $_GET['page'] !== '') {
     $page = $_GET['page'];
 } else {
@@ -34,7 +39,16 @@ switch ($page) {
         $controller->index();
         break;
 
-    // Liste des utilisateurs
+    case 'login':
+        (new AuthController())->login();
+        break;
+
+    case 'logout':
+        (new AuthController())->logout();
+        break;
+    
+    
+        // Liste des utilisateurs
     case 'user':
         $controller = new UserController();
         $controller->index();
