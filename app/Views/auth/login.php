@@ -1,27 +1,4 @@
-<?php
-use SchoolAgent\Config\Authenticator;
-
-$flash = Authenticator::getFlash(); // 🔹 Récupère le message flash s'il existe
-?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Connexion - School Agent</title>
-</head>
-<body>
-
-<?php if ($flash): ?>
-    <div style="
-        padding:10px;
-        margin-bottom:10px;
-        border-radius:5px;
-        background-color:<?= $flash['type'] === 'success' ? '#d4edda' : '#cce5ff' ?>;
-        color:<?= $flash['type'] === 'success' ? '#155724' : '#004085' ?>;
-    ">
-        <?= htmlspecialchars($flash['message']) ?>
-    </div>
-<?php endif; ?>
+<?php require_once __DIR__ . '/../templates/header.php'; ?>
 
 <h1>Connexion</h1>
 
@@ -36,8 +13,7 @@ $flash = Authenticator::getFlash(); // 🔹 Récupère le message flash s'il exi
 </form>
 
 <?php if (!empty($error)): ?>
-    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+    <div class="flash-message flash-error"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
-</body>
-</html>
+<?php require_once __DIR__ . '/../templates/footer.php'; ?>
