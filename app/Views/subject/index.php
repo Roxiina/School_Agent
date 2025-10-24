@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../templates/header.php'; ?>
+
 <h1>Liste des matières</h1>
 
 <a href="/subject/create">➕ Ajouter une matière</a>
@@ -20,3 +22,4 @@
 </table>
 <a href="/home" class="btn btn-outline-secondary">← Retour à l’accueil</a>
 
+<?php require_once __DIR__ . '/../templates/footer.php'; ?>

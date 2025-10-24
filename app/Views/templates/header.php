@@ -43,6 +43,10 @@ $flash = Authenticator::getFlash();
     <div>
         <a href="/home">Accueil</a>
         <a href="/user">Utilisateurs</a>
+        <a href="/level">Niveaux</a>
+        <a href="/subject">Matieres</a>
+        <a href="/message">Messages</a>
+        <a href="/conversation">Conversation</a>
     </div>
     <div>
     <?php if (Authenticator::isLogged()): ?>

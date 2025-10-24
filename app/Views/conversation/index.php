@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../templates/header.php'; ?>
+
 <h1>Liste des conversations</h1>
 
 <a href="/conversation/create">➕ Ajouter une conversation</a>
@@ -19,3 +21,5 @@
     <?php endforeach; ?>
 </table>
 <a href="/home" class="btn btn-outline-secondary">← Retour à l’accueil</a>
+
+<?php require_once __DIR__ . '/../templates/footer.php'; ?>

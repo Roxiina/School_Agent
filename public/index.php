@@ -7,7 +7,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use SchoolAgent\Controllers\{
     HomeController,
     UserController,
-    AuthController
+    AuthController,
+    LevelController,
+    SubjectController,
+    ConversationController,
+    MessageController
 };
 
 // -------------------------------------------------------------

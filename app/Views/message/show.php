@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../templates/header.php'; ?>
+
 <h1>Message <?= htmlspecialchars($message['question']) ?></h1>
 
 <ul>
@@ -12,3 +14,5 @@
     <a href="/message/edit?id=<?= $message['id_message'] ?>">✏ Modifier</a> |
     <a href="/message/delete?id=<?= $message['id_message'] ?>" onclick="return confirm('Supprimer ce message ?')">🗑 Supprimer</a>
 </p>
+
+<?php require_once __DIR__ . '/../templates/footer.php'; ?>
