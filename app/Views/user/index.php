@@ -1,6 +1,6 @@
 <h1>Liste des utilisateurs</h1>
 
-<a href="/users/create">➕ Ajouter un utilisateur</a>
+<a href="/user/create">➕ Ajouter un utilisateur</a>
 
 <table border="1" cellpadding="8">
     <tr>
@@ -14,8 +14,9 @@
         <td><?= htmlspecialchars($user['email']) ?></td>
         <td><?= htmlspecialchars($user['role']) ?></td>
         <td>
-            <a href="/users/edit?id=<?= $user['id_user'] ?>">✏️</a>
-            <a href="/users/delete?id=<?= $user['id_user'] ?>" onclick="return confirm('Supprimer cet utilisateur ?')">🗑</a>
+            <a href="/user/show?id=<?= $user['id_user'] ?>">👁️</a>    
+            <a href="/user/edit?id=<?= $user['id_user'] ?>">✏️</a>
+            <a href="/user/delete?id=<?= $user['id_user'] ?>" onclick="return confirm('Supprimer cet utilisateur ?')">🗑</a>
         </td>
     </tr>
     <?php endforeach; ?>

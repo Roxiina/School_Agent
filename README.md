@@ -227,3 +227,18 @@ Accéder à la plateforme
 - Projet pédagogique – Tous droits réservés © 2025
 - Formation : Développeur·se en Intelligence Artificielle
 - Encadrant : David Michel
+
+# informations #
+Apres avoir recuperer le projet sur gitHub, executer wampserver.
+- Dans php myadmin (http://localhost/phpmyadmin/index.php) :
+  - creer la base de donnee => recuperer le script sql dans documents > doc_bdd > code_sql.txt
+  - integrer un jeu de donnée => documents > doc_bdd > jeu_donne.txt
+
+Le projet utiliser une bibliotheque autoload issu de composer. il faut donc :
+- telecharger composer sur son ordinateur si on ne la pas : https://getcomposer.org/download/ => cliquer sur Composer-Setup.exe  
+Verifier que composer se trouve bien dans les variables d'environnnement
+- aller dans le dossier du projet et excuter la commande ```composer install```
+cela devrait creer le dossier "vendor" ou il, y a la bibiliotheque autoload qui sera intégré. Le fichier composer.json gere notamment la configuration du l'autoload qui est deja fait.
+
+Pour afficher le site sur don navigateur si le projet n'est pas dans wampserver il faut execiter la commande suivante dans un terminal :  
+```php -S localhost:8000 -t public```

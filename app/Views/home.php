@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Bienvenue sur School Agent !</h1>
-    <p><a href="/users">Voir la liste des utilisateurs</a></p>
+    <p><a href="/user">Voir la liste des utilisateurs</a></p>
     <p>hello le world</p>
 </body>
 </html>

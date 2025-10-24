@@ -1,6 +1,6 @@
 <h1>Modifier l'utilisateur</h1>
 
-<form action="/users/edit/?id=<?= $user['id_user'] ?>" method="POST">
+<form action="/user/edit/?id=<?= $user['id_user'] ?>" method="POST">
     <input type="text" name="nom" value="<?= htmlspecialchars($user['nom']) ?>" required><br>
     <input type="text" name="prenom" value="<?= htmlspecialchars($user['prenom']) ?>" required><br>
     <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required><br>

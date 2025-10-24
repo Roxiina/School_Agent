@@ -1,6 +1,6 @@
 <h1>Ajouter un utilisateur</h1>
 
-<form action="/users/create" method="POST">
+<form action="/user/create" method="POST">
     <input type="text" name="nom" placeholder="Nom" required><br>
     <input type="text" name="prenom" placeholder="Prénom" required><br>
     <input type="email" name="email" placeholder="Email" required><br>

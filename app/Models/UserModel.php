@@ -13,6 +13,26 @@ class UserModel
         $this->db = Database::getConnection();
     }
 
+    // READ (tous les utilisateurs)
+    public function getUsers()
+    {
+        $sql = "SELECT u.id_user, u.nom, u.prenom, u.email, u.role, n.niveau 
+                FROM utilisateur u
+                JOIN niveau_scolaire n ON u.id_niveau_scolaire = n.id_niveau_scolaire
+                ORDER BY u.id_user ASC";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // READ (un utilisateur)
+    public function getUser($id)
+    {
+        $sql = "SELECT * FROM utilisateur WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // CREATE
     public function createUser($data)
     {
@@ -27,26 +47,6 @@ class UserModel
             ':role' => $data['role'],
             ':id_niveau_scolaire' => $data['id_niveau_scolaire']
         ]);
-    }
-
-    // READ (un utilisateur)
-    public function getUser($id)
-    {
-        $sql = "SELECT * FROM utilisateur WHERE id_user = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // READ (tous les utilisateurs)
-    public function getUsers()
-    {
-        $sql = "SELECT u.id_user, u.nom, u.prenom, u.email, u.role, n.niveau 
-                FROM utilisateur u
-                JOIN niveau_scolaire n ON u.id_niveau_scolaire = n.id_niveau_scolaire
-                ORDER BY u.id_user ASC";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // UPDATE

@@ -35,21 +35,31 @@ switch ($page) {
         break;
 
     // Liste des utilisateurs
-    case 'users':
+    case 'user':
         $controller = new UserController();
         $controller->index();
         break;
 
+    // Afficher le profil utilisateur
+    // Exemple : http://localhost:8000/user/show?id=4
+    case 'user/show':
+    if (isset($_GET['id'])) {
+        $controller = new UserController();
+        $controller->show($_GET['id']);
+    } else {
+        echo "<h1>Erreur : ID manquant</h1>";
+    }
+    break;
+
     // Formulaire création utilisateur
-    case 'users/create':
+    case 'user/create':
         $controller = new UserController();
         $controller->create();
         break;
-
     
     // Formulaire édition utilisateur
-    // http://localhost:8000/users/edit/?id=4
-    case 'users/edit':
+    // http://localhost:8000/user/edit/?id=4
+    case 'user/edit':
         if (isset($_GET['id'])) {
             $controller = new UserController();
             $controller->edit($_GET['id']);
@@ -57,8 +67,8 @@ switch ($page) {
         break;
 
     // Suppression utilisateur
-    // http://localhost:8000/users/delete/?id=4
-    case 'users/delete':
+    // http://localhost:8000/user/delete/?id=4
+    case 'user/delete':
         if (isset($_GET['id'])) {
             $controller = new UserController();
             $controller->delete($_GET['id']);
