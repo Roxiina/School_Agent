@@ -4,16 +4,19 @@
 
 <table border="1" cellpadding="8">
     <tr>
-        <th>ID</th><th>Nom</th><th>Actions</th>
+        <th>ID</th><th>Matière</th><th>Actions</th>
     </tr>
     <?php foreach ($subjects as $subject): ?>
     <tr>
         <td><?= $subject['id_matiere'] ?></td>
         <td><?= htmlspecialchars($subject['nom']) ?></td>
         <td>
+            <a href="/subject/show?id=<?= $subject['id_matiere'] ?>">👁️</a> 
             <a href="/subject/edit?id=<?= $subject['id_matiere'] ?>">✏️</a>
             <a href="/subject/delete?id=<?= $subject['id_matiere'] ?>" onclick="return confirm('Supprimer cette matière ?')">🗑</a>
         </td>
     </tr>
     <?php endforeach; ?>
 </table>
+<a href="/home" class="btn btn-outline-secondary">← Retour à l’accueil</a>
+

@@ -19,6 +19,21 @@ class SubjectController
         require __DIR__ . '/../Views/subject/index.php';
     }
 
+    // Afficher la matière
+    public function show($id)
+    {
+        $subject = $this->model->getSubject($id);
+
+        if (!$subject) {
+            http_response_code(404);
+            echo "<h1>Matière introuvable</h1>";
+            exit;
+        }
+
+        require __DIR__ . '/../Views/subject/show.php';
+    }
+
+
     // Formulaire création matière + traitement POST
     public function create()
     {

@@ -21,3 +21,4 @@
     </tr>
     <?php endforeach; ?>
 </table>
+<a href="/home" class="btn btn-outline-secondary">← Retour à l’accueil</a>

@@ -39,7 +39,7 @@ class SubjectModel
     {
         $sql = "SELECT * 
                 FROM matiere
-                ORDER BY umatiere.id_matiere ASC";
+                ORDER BY id_matiere ASC";
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

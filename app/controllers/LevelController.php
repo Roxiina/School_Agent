@@ -19,6 +19,21 @@ class LevelController
         require __DIR__ . '/../Views/level/index.php';
     }
 
+    // Afficher le niveau
+    public function show($id)
+    {
+        $level = $this->model->getLevel($id);
+
+        if (!$level) {
+            http_response_code(404);
+            echo "<h1>Niveau introuvable</h1>";
+            exit;
+        }
+
+        require __DIR__ . '/../Views/level/show.php';
+    }
+
+
     // Formulaire création niveau + traitement POST
     public function create()
     {
