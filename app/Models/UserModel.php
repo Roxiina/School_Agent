@@ -73,4 +73,13 @@ class UserModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
     }
+
+    // Pour l'authentification
+    public function getUserByEmail($email)
+    {
+        $sql = "SELECT * FROM utilisateur WHERE email = :email LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

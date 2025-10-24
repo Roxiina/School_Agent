@@ -234,6 +234,13 @@ Apres avoir recuperer le projet sur gitHub, executer wampserver.
   - creer la base de donnee => recuperer le script sql dans documents > doc_bdd > code_sql.txt
   - integrer un jeu de donnée => documents > doc_bdd > jeu_donne.txt
 
+Pour mettre a jour le jeu de donner avec le hachage mis en place et le fait que la base de donnee et encoder en MD5 un script a ete creer => scripts > update_passwords.php  
+pour l executer dans le terminal en etant dans notre projet executer la commande  
+```
+php scripts/update_passwords.php
+```
+
+
 Le projet utiliser une bibliotheque autoload issu de composer. il faut donc :
 - telecharger composer sur son ordinateur si on ne la pas : https://getcomposer.org/download/ => cliquer sur Composer-Setup.exe  
 Verifier que composer se trouve bien dans les variables d'environnnement
@@ -242,3 +249,4 @@ cela devrait creer le dossier "vendor" ou il, y a la bibiliotheque autoload qui 
 
 Pour afficher le site sur don navigateur si le projet n'est pas dans wampserver il faut execiter la commande suivante dans un terminal :  
 ```php -S localhost:8000 -t public```
+
