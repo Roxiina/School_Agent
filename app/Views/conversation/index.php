@@ -7,6 +7,59 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header('Location: ?page=login');
     exit;
 }
+
+// Fonction pour déterminer l'icône d'un agent
+    function getAgentIconPHP($agentName) {
+        $name = strtolower($agentName);
+        
+        if (strpos($name, 'math') !== false || strpos($name, 'calcul') !== false) {
+            return 'fas fa-calculator';
+        } elseif (strpos($name, 'science') !== false || strpos($name, 'physique') !== false || strpos($name, 'chimie') !== false || strpos($name, 'biologie') !== false) {
+            return 'fas fa-flask';
+        } elseif (strpos($name, 'histoire') !== false || strpos($name, 'géographie') !== false || strpos($name, 'geo') !== false) {
+            return 'fas fa-globe';
+        } elseif (strpos($name, 'littérature') !== false || strpos($name, 'français') !== false || strpos($name, 'lecture') !== false) {
+            return 'fas fa-book';
+        } elseif (strpos($name, 'anglais') !== false || strpos($name, 'langue') !== false) {
+            return 'fas fa-language';
+        } elseif (strpos($name, 'art') !== false || strpos($name, 'dessin') !== false || strpos($name, 'peinture') !== false) {
+            return 'fas fa-palette';
+        } elseif (strpos($name, 'musique') !== false) {
+            return 'fas fa-music';
+        } elseif (strpos($name, 'sport') !== false || strpos($name, 'eps') !== false) {
+            return 'fas fa-dumbbell';
+        } elseif (strpos($name, 'informatique') !== false || strpos($name, 'code') !== false || strpos($name, 'programmation') !== false) {
+            return 'fas fa-laptop-code';
+        } else {
+            return 'fas fa-graduation-cap';
+        }
+    }
+
+    function getAgentColorPHP($agentName) {
+        $name = strtolower($agentName);
+        
+        if (strpos($name, 'math') !== false || strpos($name, 'calcul') !== false) {
+            return 'from-blue-600 to-indigo-700'; // Bleu pour mathématiques
+        } elseif (strpos($name, 'science') !== false || strpos($name, 'physique') !== false || strpos($name, 'chimie') !== false || strpos($name, 'biologie') !== false) {
+            return 'from-green-600 to-emerald-700'; // Vert pour sciences
+        } elseif (strpos($name, 'histoire') !== false || strpos($name, 'géographie') !== false || strpos($name, 'geo') !== false) {
+            return 'from-amber-600 to-orange-700'; // Orange pour histoire/géo
+        } elseif (strpos($name, 'littérature') !== false || strpos($name, 'français') !== false || strpos($name, 'lecture') !== false) {
+            return 'from-purple-600 to-violet-700'; // Violet pour littérature
+        } elseif (strpos($name, 'anglais') !== false || strpos($name, 'langue') !== false) {
+            return 'from-red-600 to-rose-700'; // Rouge pour langues
+        } elseif (strpos($name, 'art') !== false || strpos($name, 'dessin') !== false || strpos($name, 'peinture') !== false) {
+            return 'from-pink-600 to-fuchsia-700'; // Rose pour art
+        } elseif (strpos($name, 'musique') !== false) {
+            return 'from-teal-600 to-cyan-700'; // Bleu-vert pour musique
+        } elseif (strpos($name, 'sport') !== false || strpos($name, 'eps') !== false) {
+            return 'from-emerald-600 to-green-700'; // Vert émeraude pour sport
+        } elseif (strpos($name, 'informatique') !== false || strpos($name, 'code') !== false || strpos($name, 'programmation') !== false) {
+            return 'from-slate-600 to-gray-700'; // Gris pour informatique
+        } else {
+            return 'from-indigo-600 to-purple-600'; // Violet par défaut
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -258,6 +311,44 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             
             // Agent par défaut
             return 'fas fa-robot';
+        }
+
+        // ===== FONCTION POUR DÉTERMINER LA COULEUR D'UN AGENT =====
+        function getAgentColor(agentName) {
+            const name = agentName.toLowerCase();
+            
+            if (name.includes('math') || name.includes('calcul')) {
+                return 'from-blue-600 to-indigo-700'; // Bleu pour mathématiques
+            } else if (name.includes('science') || name.includes('physique') || name.includes('chimie') || name.includes('biologie')) {
+                return 'from-green-600 to-emerald-700'; // Vert pour sciences
+            } else if (name.includes('histoire') || name.includes('géographie') || name.includes('geo')) {
+                return 'from-amber-600 to-orange-700'; // Orange pour histoire/géo
+            } else if (name.includes('littérature') || name.includes('français') || name.includes('lecture')) {
+                return 'from-purple-600 to-violet-700'; // Violet pour littérature
+            } else if (name.includes('anglais') || name.includes('langue')) {
+                return 'from-red-600 to-rose-700'; // Rouge pour langues
+            } else if (name.includes('art') || name.includes('dessin') || name.includes('peinture')) {
+                return 'from-pink-600 to-fuchsia-700'; // Rose pour art
+            } else if (name.includes('musique')) {
+                return 'from-teal-600 to-cyan-700'; // Bleu-vert pour musique
+            } else if (name.includes('sport') || name.includes('eps')) {
+                return 'from-emerald-600 to-green-700'; // Vert émeraude pour sport
+            } else if (name.includes('informatique') || name.includes('code') || name.includes('programmation')) {
+                return 'from-slate-600 to-gray-700'; // Gris pour informatique
+            } else {
+                return 'from-indigo-600 to-purple-600'; // Violet par défaut
+            }
+        }
+
+        // ===== FONCTION POUR METTRE À JOUR LES COULEURS DE L'INTERFACE =====
+        function updateInterfaceColors(agentName) {
+            const agentColor = getAgentColor(agentName);
+            
+            // Mettre à jour le bouton d'envoi
+            const sendButton = document.getElementById('sendButton');
+            if (sendButton) {
+                sendButton.className = sendButton.className.replace(/from-\w+-\d+ to-\w+-\d+/, agentColor);
+            }
         }
 
         // ===== FONCTIONS DE NOTIFICATION =====
@@ -529,13 +620,14 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                 const currentConv = conversationsData.find(c => c.id == window.currentConvId);
                 const agentName = currentConv ? currentConv.name : 'Agent IA';
                 const agentIcon = getAgentIcon(agentName);
+                const agentColor = getAgentColor(agentName);
                 
                 div.style.display = 'flex';
                 div.style.width = '100%';
                 div.style.justifyContent = 'flex-start';
                 div.innerHTML = `
                     <div style="max-width: 70%; display: flex; gap: 12px; align-items: flex-start;" class="group">
-                        <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <div class="w-8 h-8 bg-gradient-to-br ${agentColor} rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
                             <i class="${agentIcon} text-white text-xs"></i>
                         </div>
                         <div style="flex: 1; position: relative;">
@@ -848,6 +940,12 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             // Mettre à jour la conversation actuelle
             window.currentConvId = convId;
 
+            // Récupérer l'agent de cette conversation et mettre à jour les couleurs
+            const conv = conversationsData.find(c => c.id == convId);
+            if (conv && conv.agent_nom) {
+                updateInterfaceColors(conv.agent_nom);
+            }
+
             // Afficher la conversation
             displayConversation(convId);
         }
@@ -875,6 +973,10 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             // Initialiser avec la première conversation si elle existe
             if (conversationsData.length > 0) {
                 selectConversation(conversationsData[0].id);
+                // Mettre à jour les couleurs dès le chargement
+                if (conversationsData[0].agent_nom) {
+                    updateInterfaceColors(conversationsData[0].agent_nom);
+                }
             }
         });
     </script>
@@ -904,11 +1006,13 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                         $isActive = $index === 0 ? 'active' : '';
                         $lastMessage = end($conv['messages']);
                         $preview = $lastMessage ? substr($lastMessage['reponse'] ?? $lastMessage['question'], 0, 50) . '...' : 'Pas de message';
+                        $agentIcon = getAgentIconPHP($conv['agent_nom']);
+                        $agentColor = getAgentColorPHP($conv['agent_nom']);
                 ?>
                     <div class="conversation-item <?php echo $isActive; ?>" data-id="<?php echo $conv['id']; ?>">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-robot text-white text-xs"></i>
+                            <div class="w-8 h-8 bg-gradient-to-br <?php echo $agentColor; ?> rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="<?php echo $agentIcon; ?> text-white text-xs"></i>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-semibold text-gray-900 truncate"><?php echo htmlspecialchars($conv['titre']); ?></p>
@@ -987,6 +1091,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                         </div>
                     </div>
                     <button 
+                        id="sendButton"
                         onclick="sendMessage()" 
                         class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-3 rounded-full hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center min-w-[3rem]"
                         title="Envoyer le message"

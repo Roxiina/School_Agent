@@ -1,6 +1,85 @@
 <?php
 use SchoolAgent\Config\Authenticator;
 Authenticator::startSession();
+
+// Fonctions pour les icônes et couleurs des agents
+function getAgentIconPHP($agentName) {
+    $name = strtolower($agentName);
+    
+    if (strpos($name, 'math') !== false || strpos($name, 'calcul') !== false) {
+        return 'fas fa-calculator';
+    } elseif (strpos($name, 'science') !== false || strpos($name, 'physique') !== false || strpos($name, 'chimie') !== false || strpos($name, 'biologie') !== false) {
+        return 'fas fa-flask';
+    } elseif (strpos($name, 'histoire') !== false || strpos($name, 'géographie') !== false || strpos($name, 'geo') !== false) {
+        return 'fas fa-globe';
+    } elseif (strpos($name, 'littérature') !== false || strpos($name, 'français') !== false || strpos($name, 'lecture') !== false) {
+        return 'fas fa-book';
+    } elseif (strpos($name, 'anglais') !== false || strpos($name, 'langue') !== false) {
+        return 'fas fa-language';
+    } elseif (strpos($name, 'art') !== false || strpos($name, 'dessin') !== false || strpos($name, 'peinture') !== false) {
+        return 'fas fa-palette';
+    } elseif (strpos($name, 'musique') !== false) {
+        return 'fas fa-music';
+    } elseif (strpos($name, 'sport') !== false || strpos($name, 'eps') !== false) {
+        return 'fas fa-dumbbell';
+    } elseif (strpos($name, 'informatique') !== false || strpos($name, 'code') !== false || strpos($name, 'programmation') !== false) {
+        return 'fas fa-laptop-code';
+    } else {
+        return 'fas fa-graduation-cap';
+    }
+}
+
+function getAgentColorPHP($agentName) {
+    $name = strtolower($agentName);
+    
+    if (strpos($name, 'math') !== false || strpos($name, 'calcul') !== false) {
+        return 'border-blue-600 from-blue-50';
+    } elseif (strpos($name, 'science') !== false || strpos($name, 'physique') !== false || strpos($name, 'chimie') !== false || strpos($name, 'biologie') !== false) {
+        return 'border-green-600 from-green-50';
+    } elseif (strpos($name, 'histoire') !== false || strpos($name, 'géographie') !== false || strpos($name, 'geo') !== false) {
+        return 'border-amber-600 from-amber-50';
+    } elseif (strpos($name, 'littérature') !== false || strpos($name, 'français') !== false || strpos($name, 'lecture') !== false) {
+        return 'border-purple-600 from-purple-50';
+    } elseif (strpos($name, 'anglais') !== false || strpos($name, 'langue') !== false) {
+        return 'border-red-600 from-red-50';
+    } elseif (strpos($name, 'art') !== false || strpos($name, 'dessin') !== false || strpos($name, 'peinture') !== false) {
+        return 'border-pink-600 from-pink-50';
+    } elseif (strpos($name, 'musique') !== false) {
+        return 'border-teal-600 from-teal-50';
+    } elseif (strpos($name, 'sport') !== false || strpos($name, 'eps') !== false) {
+        return 'border-emerald-600 from-emerald-50';
+    } elseif (strpos($name, 'informatique') !== false || strpos($name, 'code') !== false || strpos($name, 'programmation') !== false) {
+        return 'border-slate-600 from-slate-50';
+    } else {
+        return 'border-indigo-600 from-indigo-50';
+    }
+}
+
+function getAgentIconColorPHP($agentName) {
+    $name = strtolower($agentName);
+    
+    if (strpos($name, 'math') !== false || strpos($name, 'calcul') !== false) {
+        return 'from-blue-600 to-indigo-700';
+    } elseif (strpos($name, 'science') !== false || strpos($name, 'physique') !== false || strpos($name, 'chimie') !== false || strpos($name, 'biologie') !== false) {
+        return 'from-green-600 to-emerald-700';
+    } elseif (strpos($name, 'histoire') !== false || strpos($name, 'géographie') !== false || strpos($name, 'geo') !== false) {
+        return 'from-amber-600 to-orange-700';
+    } elseif (strpos($name, 'littérature') !== false || strpos($name, 'français') !== false || strpos($name, 'lecture') !== false) {
+        return 'from-purple-600 to-violet-700';
+    } elseif (strpos($name, 'anglais') !== false || strpos($name, 'langue') !== false) {
+        return 'from-red-600 to-rose-700';
+    } elseif (strpos($name, 'art') !== false || strpos($name, 'dessin') !== false || strpos($name, 'peinture') !== false) {
+        return 'from-pink-600 to-fuchsia-700';
+    } elseif (strpos($name, 'musique') !== false) {
+        return 'from-teal-600 to-cyan-700';
+    } elseif (strpos($name, 'sport') !== false || strpos($name, 'eps') !== false) {
+        return 'from-emerald-600 to-green-700';
+    } elseif (strpos($name, 'informatique') !== false || strpos($name, 'code') !== false || strpos($name, 'programmation') !== false) {
+        return 'from-slate-600 to-gray-700';
+    } else {
+        return 'from-indigo-600 to-purple-600';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -371,38 +450,40 @@ Authenticator::startSession();
                             </h2>
 
                             <div class="space-y-4">
-                                <!-- Conversation 1 -->
-                                <div class="border-l-4 border-indigo-600 bg-gradient-to-r from-indigo-50 to-transparent p-5 rounded-lg hover:shadow-md transition cursor-pointer">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-bold text-gray-900">💬 Ouvrir le chat</h3>
-                                            <p class="text-gray-600 text-xs mt-1">Agent : <strong>Agent Scolaire</strong></p>
-                                        </div>
-                                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded">03/11 10:42</span>
+                                <?php if (!empty($recentConversations)): ?>
+                                    <?php foreach ($recentConversations as $conv): 
+                                        $agentIcon = getAgentIconPHP($conv['agent_nom']);
+                                        $agentColor = getAgentColorPHP($conv['agent_nom']);
+                                        $agentIconColor = getAgentIconColorPHP($conv['agent_nom']);
+                                        $formattedDate = date('d/m H:i', strtotime($conv['date_creation']));
+                                    ?>
+                                        <a href="?page=conversation&action=show&id=<?php echo $conv['id_conversation']; ?>" class="block">
+                                            <div class="border-l-4 <?php echo $agentColor; ?> bg-gradient-to-r to-transparent p-5 rounded-lg hover:shadow-md transition cursor-pointer">
+                                                <div class="flex justify-between items-start">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="w-8 h-8 bg-gradient-to-br <?php echo $agentIconColor; ?> rounded-full flex items-center justify-center flex-shrink-0">
+                                                            <i class="<?php echo $agentIcon; ?> text-white text-xs"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h3 class="font-bold text-gray-900"><?php echo htmlspecialchars($conv['titre']); ?></h3>
+                                                            <p class="text-gray-600 text-xs mt-1">Agent : <strong><?php echo htmlspecialchars($conv['agent_nom']); ?></strong></p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded"><?php echo $formattedDate; ?></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="text-center py-8 text-gray-500">
+                                        <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+                                        <p class="text-lg mb-2">Aucune conversation</p>
+                                        <p class="text-sm">Créez votre première conversation avec un agent IA !</p>
+                                        <a href="?page=conversation&action=create" class="inline-block mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                                            <i class="fas fa-plus mr-2"></i>Nouvelle conversation
+                                        </a>
                                     </div>
-                                </div>
-
-                                <!-- Conversation 2 -->
-                                <div class="border-l-4 border-purple-600 bg-gradient-to-r from-purple-50 to-transparent p-5 rounded-lg hover:shadow-md transition cursor-pointer">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-bold text-gray-900">Révision des équations</h3>
-                                            <p class="text-gray-600 text-xs mt-1">Agent : <strong>Agent Mathéo</strong></p>
-                                        </div>
-                                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded">03/11 10:21</span>
-                                    </div>
-                                </div>
-
-                                <!-- Conversation 3 -->
-                                <div class="border-l-4 border-pink-600 bg-gradient-to-r from-pink-50 to-transparent p-5 rounded-lg hover:shadow-md transition cursor-pointer">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h3 class="font-bold text-gray-900">⚔️ Guerre mondiale</h3>
-                                            <p class="text-gray-600 text-xs mt-1">Agent : <strong>Agent Histoire</strong></p>
-                                        </div>
-                                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded">03/11 09:59</span>
-                                    </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
 
                             <div class="mt-6 pt-4 border-t border-gray-200">

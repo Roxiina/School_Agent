@@ -34,6 +34,22 @@ class ConversationModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // READ (les dernières conversations d'un utilisateur - pour la page d'accueil)
+    public function getRecentByUserId($userId, $limit = 3)
+    {
+        $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, a.nom as agent_nom, a.avatar
+                FROM conversation c
+                JOIN agent a ON c.id_agent = a.id_agent
+                WHERE c.id_user = :user_id
+                ORDER BY c.date_creation DESC
+                LIMIT :limit";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // READ (une conversation)
     public function getConversation($id)
     {
