@@ -71,7 +71,7 @@ class UserModel
     {
         $sql = "DELETE FROM utilisateur WHERE id_user = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        return $stmt->execute([':id' => $id]);
     }
 
     // Pour l'authentification
@@ -81,5 +81,80 @@ class UserModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Méthodes pour l'administration
+
+    public function getTotalUsers()
+    {
+        $sql = "SELECT COUNT(*) as total FROM utilisateur";
+        $stmt = $this->db->query($sql);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
+    }
+
+    public function getRecentUsers($days = 1)
+    {
+        // Comme la table n'a pas de colonne created_at, retournons 0
+        // Ou vous pouvez ajouter une colonne created_at à votre table
+        return 0;
+    }
+
+    public function getUsersByRole()
+    {
+        $sql = "SELECT role, COUNT(*) as count FROM utilisateur GROUP BY role";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUsersByLevel()
+    {
+        $sql = "SELECT n.niveau, COUNT(*) as count 
+                FROM utilisateur u 
+                JOIN niveau_scolaire n ON u.id_niveau_scolaire = n.id_niveau_scolaire 
+                GROUP BY n.niveau";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllUsersWithDetails()
+    {
+        $sql = "SELECT u.id_user, u.nom, u.prenom, u.email, u.role, n.niveau as niveau_scolaire
+                FROM utilisateur u
+                LEFT JOIN niveau_scolaire n ON u.id_niveau_scolaire = n.id_niveau_scolaire
+                ORDER BY u.id_user DESC";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserById($id)
+    {
+        $sql = "SELECT * FROM utilisateur WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateUserRole($userId, $role)
+    {
+        $sql = "UPDATE utilisateur SET role = :role WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([':role' => $role, ':id' => $userId]);
+    }
+
+    public function isLastAdmin($userId)
+    {
+        $sql = "SELECT COUNT(*) as count FROM utilisateur WHERE role = 'admin' AND id_user != :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id' => $userId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] == 0;
+    }
+
+    public function updatePassword($userId, $hashedPassword)
+    {
+        $sql = "UPDATE utilisateur SET mot_de_passe = :password WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([':password' => $hashedPassword, ':id' => $userId]);
     }
 }

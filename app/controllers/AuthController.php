@@ -25,9 +25,21 @@ class AuthController
             } else {
                 $user = $this->model->getUserByEmail($email);
 
-                if ($user && password_verify($password, $user['mot_de_passe'])) {
+                if ($user && (password_verify($password, $user['mot_de_passe']) || md5($password) === $user['mot_de_passe'])) {
+                    // Si c'est encore MD5, le convertir en password_hash
+                    if (md5($password) === $user['mot_de_passe']) {
+                        $newHash = password_hash($password, PASSWORD_DEFAULT);
+                        $this->model->updatePassword($user['id_user'], $newHash);
+                    }
+                    
                     Authenticator::login($user['id_user']);
-                    header('Location: ?page=home');
+                    
+                    // Redirection basée sur le rôle
+                    if ($user['role'] === 'admin') {
+                        header('Location: ?page=admin');
+                    } else {
+                        header('Location: ?page=home');
+                    }
                     exit;
                 } else {
                     $error = "Email ou mot de passe incorrect.";

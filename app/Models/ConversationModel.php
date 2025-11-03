@@ -114,4 +114,46 @@ class ConversationModel
         $stmt->execute([':id' => $id]);
         return $stmt->rowCount(); // Retourner le nombre de lignes supprimées
     }
+
+    // Méthodes pour l'administration
+
+    public function getTotalConversations()
+    {
+        $sql = "SELECT COUNT(*) as total FROM conversation";
+        $stmt = $this->db->query($sql);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
+    }
+
+    public function getRecentConversations($limit = 10)
+    {
+        $sql = "SELECT c.id_conversation, c.titre, c.date_creation, 
+                       u.nom as user_nom, u.prenom as user_prenom, 
+                       a.nom as agent_nom
+                FROM conversation c
+                JOIN utilisateur u ON c.id_user = u.id_user
+                JOIN agent a ON c.id_agent = a.id_agent
+                ORDER BY c.date_creation DESC
+                LIMIT :limit";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllConversationsWithDetails()
+    {
+        $sql = "SELECT c.id_conversation, c.titre, c.date_creation,
+                       u.nom as user_nom, u.prenom as user_prenom, u.email as user_email,
+                       a.nom as agent_nom, a.avatar as agent_avatar,
+                       COUNT(m.id_message) as message_count
+                FROM conversation c
+                JOIN utilisateur u ON c.id_user = u.id_user
+                JOIN agent a ON c.id_agent = a.id_agent
+                LEFT JOIN message m ON c.id_conversation = m.id_conversation
+                GROUP BY c.id_conversation, c.titre, c.date_creation, u.nom, u.prenom, u.email, a.nom, a.avatar
+                ORDER BY c.date_creation DESC";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

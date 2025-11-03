@@ -20,12 +20,13 @@ class Authenticator
         // Récupérer les infos utilisateur depuis la BD
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("SELECT id_user, nom, email FROM utilisateur WHERE id_user = ?");
+            $stmt = $db->prepare("SELECT id_user, nom, email, role FROM utilisateur WHERE id_user = ?");
             $stmt->execute([$userId]);
             
             if ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $_SESSION['user_name'] = $row['nom'];
                 $_SESSION['user_email'] = $row['email'];
+                $_SESSION['user_role'] = $row['role'];
             }
         } catch (\Exception $e) {
             // En cas d'erreur, on continue quand même la connexion
@@ -65,6 +66,26 @@ class Authenticator
     {
         self::startSession();
         return $_SESSION['user_id'] ?? null;
+    }
+
+    public static function getUserRole()
+    {
+        self::startSession();
+        return $_SESSION['user_role'] ?? null;
+    }
+
+    public static function isAdmin(): bool
+    {
+        return self::getUserRole() === 'admin';
+    }
+
+    public static function requireAdmin()
+    {
+        self::startSession();
+        if (!self::isLogged() || !self::isAdmin()) {
+            header('Location: ?page=home');
+            exit;
+        }
     }
 
     // 🔹 Gestion des messages flash

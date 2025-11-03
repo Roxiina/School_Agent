@@ -13,6 +13,7 @@ use SchoolAgent\Controllers\{
     ConversationController,
     MessageController
 };
+use SchoolAgent\Controllers\AdminController as MainAdminController;
 use SchoolAgent\Controllers\Admin\{
     AdminController,
     AdminUserController,
@@ -173,9 +174,52 @@ switch ($page) {
 // ADMINISTRATION DU SITE
 // ---------------------------------------------------------------------------
 
-    // http://localhost:8000/admin
+    // Dashboard admin principal
     case 'admin':
-        (new AdminController())->dashboard();
+        $controller = new MainAdminController();
+        $section = $_GET['section'] ?? 'dashboard';
+        
+        switch ($section) {
+            case 'dashboard':
+                $controller->dashboard();
+                break;
+            case 'users':
+                $controller->users();
+                break;
+            case 'conversations':
+                $controller->conversations();
+                break;
+            case 'agents':
+                $controller->agents();
+                break;
+            case 'subjects':
+                $controller->subjects();
+                break;
+            case 'levels':
+                $controller->levels();
+                break;
+            default:
+                $controller->dashboard();
+        }
+        break;
+
+    // Actions admin
+    case 'admin/delete-user':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            (new MainAdminController())->deleteUser();
+        }
+        break;
+        
+    case 'admin/toggle-user-role':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            (new MainAdminController())->toggleUserRole();
+        }
+        break;
+        
+    case 'admin/delete-conversation':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            (new MainAdminController())->deleteConversation();
+        }
         break;
     
     // -------------------- user admin ---------------------
