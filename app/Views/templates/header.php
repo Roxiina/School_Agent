@@ -1,53 +1,214 @@
 <?php
 use SchoolAgent\Config\Authenticator;
 
-// On démarre la session sur toutes les pages
 Authenticator::startSession();
-
-$flash = Authenticator::getFlash();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>School Agent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) : 'School Agent'; ?></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; margin: 20px; background-color: #f9f9f9; }
-        .container { max-width: 1200px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .flash-message {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            border: 1px solid;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .flash-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
-        .flash-info { background-color: #cce5ff; color: #004085; border-color: #b8daff; }
-        .flash-error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
-        nav { background-color: #333; color: white; padding: 10px 20px; margin-bottom: 20px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-        nav a { color: white; text-decoration: none; margin-right: 15px; }
-        nav a:hover { text-decoration: underline; }
-        footer { text-align: center; margin-top: 30px; color: #777; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        form { margin-top: 20px; }
-        form input, form button { padding: 10px; margin-bottom: 10px; width: calc(100% - 22px); }
-        form button { width: 100%; cursor: pointer; background-color: #333; color: white; border: none; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #667eea;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #666;
+        }
+
+        .logout-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background: #764ba2;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container">
+    <header>
+        <div class="header-content">
+            <a href="?page=home" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                School Agent
+            </a>
+            
+            <nav class="nav">
+                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                    <a href="?page=conversation"><i class="fas fa-comments"></i> Conversations</a>
+                    <a href="?page=level"><i class="fas fa-book"></i> Niveaux</a>
+                    <a href="?page=subject"><i class="fas fa-bookmark"></i> Matières</a>
+                    <a href="?page=user"><i class="fas fa-user"></i> Profil</a>
+                    <div class="user-info">
+                        <span><i class="fas fa-user-circle"></i> <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Utilisateur'); ?></span>
+                        <a href="?page=logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                    </div>
+                <?php else: ?>
+                    <a href="?page=login" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                <?php endif; ?>
+            </nav>
+        </div>
+    </header>
 
-<nav>
-    <div>
-        <a href="/home">Accueil</a>
-        <a href="/user">Utilisateurs</a>
-        <a href="/level">Niveaux</a>
-        <a href="/subject">Matieres</a>
-        <a href="/message">Messages</a>
-        <a href="/conversation">Conversation</a>
-    </div>
+    <main>
+        <div class="container">
+        <?php
+        if (isset($_SESSION['success'])) {
+            echo '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ' . htmlspecialchars($_SESSION['success']) . '</div>';
+            unset($_SESSION['success']);
+        }
+        if (isset($_SESSION['error'])) {
+            echo '<div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ' . htmlspecialchars($_SESSION['error']) . '</div>';
+            unset($_SESSION['error']);
+        }
+        ?>
     <div>
     <?php if (Authenticator::isLogged()): ?>
         <a href="/logout">Se déconnecter</a>
@@ -58,8 +219,12 @@ $flash = Authenticator::getFlash();
 </nav>
 
 <main>
-    <?php if ($flash): ?>
+    <?php 
+    $flash = $_SESSION['flash'] ?? null;
+    if ($flash): 
+    ?>
         <div class="flash-message flash-<?= htmlspecialchars($flash['type']) ?>">
             <?= htmlspecialchars($flash['message']) ?>
         </div>
+        <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
