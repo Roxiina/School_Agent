@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Boutons Conversation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-start mb-6">
+            <div class="flex-1">
+                <h1 class="text-3xl font-bold text-indigo-600 mb-2">Test Conversation</h1>
+                <p class="text-gray-600">Description de test</p>
+            </div>
+            
+            <!-- Boutons d'action en haut à droite -->
+            <div class="flex gap-2 ml-6">
+                <button 
+                    onclick="showConversationInfo()" 
+                    class="p-2 hover:bg-gray-100 rounded-lg transition text-gray-600 flex items-center gap-2"
+                    title="Informations sur la conversation"
+                >
+                    <i class="fas fa-info-circle text-lg"></i>
+                    <span class="hidden sm:inline text-sm font-medium">Infos</span>
+                </button>
+                
+                <button 
+                    onclick="confirmDeleteConversation()" 
+                    class="p-2 hover:bg-red-50 rounded-lg transition text-red-600 flex items-center gap-2"
+                    title="Supprimer la conversation"
+                >
+                    <i class="fas fa-trash text-lg"></i>
+                    <span class="hidden sm:inline text-sm font-medium">Supprimer</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="border-t pt-6">
+            <p class="text-gray-600">Cliquez sur les boutons en haut à droite pour tester les fonctionnalités.</p>
+        </div>
+    </div>
+
+    <!-- Modal d'informations -->
+    <div id="infoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    Informations sur la conversation
+                </h3>
+                <button onclick="closeInfoModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Titre :</span>
+                    <span class="font-medium">Test Conversation</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Agent :</span>
+                    <span class="font-medium flex items-center gap-2">
+                        <i class="fas fa-robot text-indigo-500"></i>
+                        Agent IA Test
+                    </span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Messages :</span>
+                    <span class="font-medium">5 message(s)</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Créée le :</span>
+                    <span class="font-medium">03/11/2025 à 14:30</span>
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-6">
+                <button 
+                    onclick="closeInfoModal()" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full shadow-xl">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                <h3 class="text-lg font-bold text-gray-900">Supprimer la conversation</h3>
+            </div>
+            
+            <p class="text-gray-600 mb-6">
+                Êtes-vous sûr de vouloir supprimer la conversation 
+                <strong>"Test Conversation"</strong> ?
+                <br><br>
+                <span class="text-red-600 text-sm">
+                    ⚠️ Cette action est irréversible et supprimera tous les messages associés.
+                </span>
+            </p>
+            
+            <div class="flex justify-end gap-3">
+                <button 
+                    onclick="closeDeleteModal()" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    Annuler
+                </button>
+                <button 
+                    onclick="deleteConversation()" 
+                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    <i class="fas fa-trash mr-2"></i>
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fonctions pour les boutons d'action
+        function showConversationInfo() {
+            const modal = document.getElementById('infoModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                console.log('Modal info ouvert');
+            } else {
+                console.error('Modal infoModal non trouvé');
+            }
+        }
+
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                console.log('Modal info fermé');
+            }
+        }
+
+        function confirmDeleteConversation() {
+            const modal = document.getElementById('deleteModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                console.log('Modal suppression ouvert');
+            } else {
+                console.error('Modal deleteModal non trouvé');
+            }
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                console.log('Modal suppression fermé');
+            }
+        }
+
+        function deleteConversation() {
+            alert('Fonction de suppression appelée ! (Dans l\'app réelle, cela redirigerait vers la suppression)');
+            closeDeleteModal();
+        }
+        
+        // Fermer les modals en cliquant à l'extérieur
+        document.addEventListener('click', function(e) {
+            const infoModal = document.getElementById('infoModal');
+            const deleteModal = document.getElementById('deleteModal');
+            
+            if (e.target === infoModal) {
+                closeInfoModal();
+            }
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+        
+        // Fermer les modals avec la touche Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeInfoModal();
+                closeDeleteModal();
+            }
+        });
+
+        console.log('Script chargé - Boutons prêts à être testés');
+    </script>
+</body>
+</html>

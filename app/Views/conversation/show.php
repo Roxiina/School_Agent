@@ -216,14 +216,7 @@
             </form>
         </div>
 
-        <div class="flex gap-2 mt-6">
-            <a href="?page=conversation&action=edit&id=<?php echo $conversation['id_conversation']; ?>" class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600 transition">
-                <i class="fas fa-edit"></i> Éditer
-            </a>
-            <a href="?page=conversation&action=delete&id=<?php echo $conversation['id_conversation']; ?>" onclick="return confirm('Êtes-vous sûr ?')" class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition">
-                <i class="fas fa-trash"></i> Supprimer
-            </a>
-        </div>
+        <!-- Les boutons d'action en bas ont été retirés car ils sont désormais disponibles en haut à droite -->
     </div>
 </div>
 
@@ -322,6 +315,68 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Fonctions pour les boutons d'action - Définies globalement
+    window.showConversationInfo = function() {
+        const modal = document.getElementById('infoModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        } else {
+            console.error('Modal infoModal non trouvé');
+        }
+    };
+
+    window.closeInfoModal = function() {
+        const modal = document.getElementById('infoModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    };
+
+    window.confirmDeleteConversation = function() {
+        const modal = document.getElementById('deleteModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        } else {
+            console.error('Modal deleteModal non trouvé');
+        }
+    };
+
+    window.closeDeleteModal = function() {
+        const modal = document.getElementById('deleteModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    };
+
+    window.deleteConversation = function() {
+        window.location.href = '?page=conversation&action=delete&id=<?php echo $conversation['id_conversation']; ?>';
+    };
+    
+    // Fermer les modals en cliquant à l'extérieur
+    document.addEventListener('click', function(e) {
+        const infoModal = document.getElementById('infoModal');
+        const deleteModal = document.getElementById('deleteModal');
+        
+        if (e.target === infoModal) {
+            closeInfoModal();
+        }
+        if (e.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
+    
+    // Fermer les modals avec la touche Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeInfoModal();
+            closeDeleteModal();
+        }
+    });
+    
     // Animation d'apparition des messages existants
     const messages = document.querySelectorAll('.chat-message');
     messages.forEach((message, index) => {
@@ -334,31 +389,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, index * 100);
     });
 });
-
-// Fonctions pour les boutons d'action
-function showConversationInfo() {
-    document.getElementById('infoModal').classList.remove('hidden');
-    document.getElementById('infoModal').classList.add('flex');
-}
-
-function closeInfoModal() {
-    document.getElementById('infoModal').classList.add('hidden');
-    document.getElementById('infoModal').classList.remove('flex');
-}
-
-function confirmDeleteConversation() {
-    document.getElementById('deleteModal').classList.remove('hidden');
-    document.getElementById('deleteModal').classList.add('flex');
-}
-
-function closeDeleteModal() {
-    document.getElementById('deleteModal').classList.add('hidden');
-    document.getElementById('deleteModal').classList.remove('flex');
-}
-
-function deleteConversation() {
-    window.location.href = '?page=conversation&action=delete&id=<?php echo $conversation['id_conversation']; ?>';
-}
 </script>
 
 <!-- Modal d'informations -->

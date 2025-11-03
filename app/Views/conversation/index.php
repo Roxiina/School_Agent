@@ -212,25 +212,149 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             }
         }
 
-        // Wrappers pour les boutons header
-        function openStatusMenu() {
-            showStatusModal();
-        }
-
-        function openInfoMenu() {
+        // ===== FONCTIONS POUR LES NOUVEAUX BOUTONS =====
+        window.showConversationInfo = function() {
             if (!window.currentConvId) {
                 alert('Veuillez sélectionner une conversation');
                 return;
             }
-            showInfoModal();
+            const modal = document.getElementById('infoModal');
+            if (modal) {
+                // Mettre à jour les informations dans le modal
+                const currentConv = conversationsData.find(c => c.id == window.currentConvId);
+                if (currentConv) {
+                    document.getElementById('modalConvTitle').textContent = currentConv.titre || 'Sans titre';
+                    document.getElementById('modalAgentName').textContent = currentConv.name || 'Agent inconnu';
+                    document.getElementById('modalMessageCount').textContent = (currentConv.messages?.length || 0) + ' message(s)';
+                }
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                console.log('Modal info ouvert');
+            } else {
+                console.error('Modal infoModal non trouvé');
+            }
         }
 
-        function openActionMenu() {
+        window.closeInfoModal = function() {
+            const modal = document.getElementById('infoModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                console.log('Modal info fermé');
+            }
+        }
+
+        window.confirmDeleteConversation = function() {
             if (!window.currentConvId) {
                 alert('Veuillez sélectionner une conversation');
                 return;
             }
-            showActionModal(window.currentConvId);
+            const modal = document.getElementById('deleteModal');
+            if (modal) {
+                // Mettre à jour le titre dans le modal de suppression
+                const currentConv = conversationsData.find(c => c.id == window.currentConvId);
+                if (currentConv) {
+                    document.getElementById('deleteConvTitle').textContent = currentConv.titre || 'Sans titre';
+                }
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                console.log('Modal suppression ouvert');
+            } else {
+                console.error('Modal deleteModal non trouvé');
+            }
+        }
+
+        window.closeDeleteModal = function() {
+            const modal = document.getElementById('deleteModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                console.log('Modal suppression fermé');
+            }
+        }
+
+        window.deleteConversation = function() {
+            if (!window.currentConvId) {
+                alert('Aucune conversation sélectionnée');
+                return;
+            }
+            
+            console.log('Suppression de la conversation ID:', window.currentConvId);
+            
+            // Désactiver le bouton pour éviter les doubles clics
+            const deleteBtn = document.querySelector('#deleteModal button[onclick="deleteConversation()"]');
+            if (deleteBtn) {
+                deleteBtn.disabled = true;
+                deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Suppression...';
+            }
+            
+            // Faire l'appel AJAX pour supprimer la conversation
+            fetch(`?page=conversation&action=delete&id=${window.currentConvId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Fermer le modal
+                    closeDeleteModal();
+                    
+                    // Supprimer la conversation de la liste
+                    const convElement = document.querySelector(`.conversation-item[data-id="${window.currentConvId}"]`);
+                    if (convElement) {
+                        convElement.remove();
+                    }
+                    
+                    // Supprimer des données locales
+                    conversationsData = conversationsData.filter(c => c.id != window.currentConvId);
+                    
+                    // Réinitialiser la sélection
+                    window.currentConvId = null;
+                    
+                    // Vider la zone de chat
+                    const chatDiv = document.getElementById('chatMessages');
+                    if (chatDiv) {
+                        chatDiv.innerHTML = '<div class="text-center text-gray-500 p-8">Sélectionnez une conversation pour commencer</div>';
+                    }
+                    
+                    // Mettre à jour le header
+                    document.getElementById('agentName').textContent = 'Agent Scolaire';
+                    
+                    // Afficher un message de succès
+                    alert('Conversation supprimée avec succès !');
+                    
+                    // Si plus aucune conversation, afficher le message approprié
+                    if (conversationsData.length === 0) {
+                        const sidebar = document.querySelector('.sidebar .space-y-2');
+                        if (sidebar) {
+                            sidebar.innerHTML = '<div class="p-4 text-center text-gray-500"><p>Aucune conversation</p></div>';
+                        }
+                    } else {
+                        // Sélectionner automatiquement la première conversation restante
+                        const firstConv = conversationsData[0];
+                        if (firstConv) {
+                            selectConversation(firstConv.id);
+                        }
+                    }
+                } else {
+                    alert('Erreur lors de la suppression de la conversation');
+                    console.error('Erreur suppression:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la suppression:', error);
+                alert('Erreur de connexion lors de la suppression');
+            })
+            .finally(() => {
+                // Réactiver le bouton
+                if (deleteBtn) {
+                    deleteBtn.disabled = false;
+                    deleteBtn.innerHTML = '<i class="fas fa-trash mr-2"></i>Supprimer';
+                }
+            });
         }
 
         // ===== GESTION DE L'AFFICHAGE DES CONVERSATIONS =====
@@ -663,15 +787,23 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <button onclick="openStatusMenu()" class="p-2 hover:bg-gray-100 rounded-lg transition text-gray-600" title="Statut">
-                        <i id="statusIcon" class="fas fa-circle text-lg text-yellow-500"></i>
-                    </button>
-                    <button onclick="openInfoMenu()" class="p-2 hover:bg-gray-100 rounded-lg transition text-gray-600" title="Informations">
+                <div class="flex gap-2">
+                    <button 
+                        onclick="showConversationInfo()" 
+                        class="p-2 hover:bg-gray-100 rounded-lg transition text-gray-600 flex items-center gap-2"
+                        title="Informations sur la conversation"
+                    >
                         <i class="fas fa-info-circle text-lg"></i>
+                        <span class="hidden sm:inline text-sm font-medium">Infos</span>
                     </button>
-                    <button onclick="openActionMenu()" class="p-2 hover:bg-gray-100 rounded-lg transition text-gray-600" title="Actions">
-                        <i class="fas fa-ellipsis-v text-lg"></i>
+                    
+                    <button 
+                        onclick="confirmDeleteConversation()" 
+                        class="p-2 hover:bg-red-50 rounded-lg transition text-red-600 flex items-center gap-2"
+                        title="Supprimer la conversation"
+                    >
+                        <i class="fas fa-trash text-lg"></i>
+                        <span class="hidden sm:inline text-sm font-medium">Supprimer</span>
                     </button>
                 </div>
             </div>
@@ -710,5 +842,113 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             </div>
         </div>
     </div>
+
+    <!-- Modal d'informations -->
+    <div id="infoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    Informations sur la conversation
+                </h3>
+                <button onclick="closeInfoModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Titre :</span>
+                    <span id="modalConvTitle" class="font-medium">--</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Agent :</span>
+                    <span id="modalAgentName" class="font-medium flex items-center gap-2">
+                        <i class="fas fa-robot text-indigo-500"></i>
+                        --
+                    </span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Messages :</span>
+                    <span id="modalMessageCount" class="font-medium">-- message(s)</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600">Créée le :</span>
+                    <span class="font-medium">03/11/2025 à 14:30</span>
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-6">
+                <button 
+                    onclick="closeInfoModal()" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full shadow-xl">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                <h3 class="text-lg font-bold text-gray-900">Supprimer la conversation</h3>
+            </div>
+            
+            <p class="text-gray-600 mb-6">
+                Êtes-vous sûr de vouloir supprimer la conversation 
+                <strong id="deleteConvTitle">"--"</strong> ?
+                <br><br>
+                <span class="text-red-600 text-sm">
+                    ⚠️ Cette action est irréversible et supprimera tous les messages associés.
+                </span>
+            </p>
+            
+            <div class="flex justify-end gap-3">
+                <button 
+                    onclick="closeDeleteModal()" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    Annuler
+                </button>
+                <button 
+                    onclick="deleteConversation()" 
+                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    <i class="fas fa-trash mr-2"></i>
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fermer les modals en cliquant à l'extérieur
+        document.addEventListener('click', function(e) {
+            const infoModal = document.getElementById('infoModal');
+            const deleteModal = document.getElementById('deleteModal');
+            
+            if (e.target === infoModal) {
+                closeInfoModal();
+            }
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+        
+        // Fermer les modals avec la touche Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeInfoModal();
+                closeDeleteModal();
+            }
+        });
+    </script>
+
 </body>
 </html>
