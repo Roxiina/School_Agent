@@ -1,10 +1,9 @@
 <?php
 // scripts/update_passwords.php
-require_once __DIR__ . '/../vendor/autoload.php'; // adapte le chemin si besoin
+require_once __DIR__ . '/../vendor/autoload.php'; // charge les dépendances
 
 use SchoolAgent\Config\Database;
 
-// MAP email => plain password (remplace par les mots de passe souhaités)
 $map = [
     'alice.dupont@example.com' => 'password1',
     'jean.martin@example.com'  => 'password2',
