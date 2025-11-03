@@ -146,6 +146,29 @@ switch ($page) {
         (new MessageController())->delete();
         break;
 
+    // ---------------------------------------------------------------------------
+    // PAGES SUBJECT ET LEVEL
+    // ---------------------------------------------------------------------------
+    case 'subject':
+        (new SubjectController())->index();
+        break;
+        
+    case 'subject/show':
+        if (isset($_GET['id'])) {
+            (new SubjectController())->show($_GET['id']);
+        }
+        break;
+        
+    case 'level':
+        (new LevelController())->index();
+        break;
+        
+    case 'level/show':
+        if (isset($_GET['id'])) {
+            (new LevelController())->show($_GET['id']);
+        }
+        break;
+
 // ---------------------------------------------------------------------------
 // ADMINISTRATION DU SITE
 // ---------------------------------------------------------------------------
