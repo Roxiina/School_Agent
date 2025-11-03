@@ -52,6 +52,15 @@ class Authenticator
         return isset($_SESSION['is_logged']) && $_SESSION['is_logged'] === true;
     }
 
+    public static function requireLogin()
+    {
+        self::startSession();
+        if (!self::isLogged()) {
+            header('Location: ?page=login');
+            exit;
+        }
+    }
+
     public static function getUserId()
     {
         self::startSession();

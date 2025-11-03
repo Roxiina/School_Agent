@@ -58,6 +58,18 @@ switch ($page) {
         (new AuthController())->logout();
         break;
 
+    case 'user':
+        (new UserController())->profile();
+        break;
+
+    case 'user/edit':
+        (new UserController())->edit();
+        break;
+
+    case 'conversation':
+        (new ConversationController())->index();
+        break;
+
 // ---------------------------------------------------------------------------
 // ADMINISTRATION DU SITE
 // ---------------------------------------------------------------------------

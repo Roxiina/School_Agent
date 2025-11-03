@@ -275,58 +275,202 @@ Authenticator::startSession();
 
     <?php else: ?>
         <!-- Dashboard for logged-in users -->
-        <section class="py-24 px-4">
+        <section class="py-12 px-4">
             <div class="max-w-7xl mx-auto">
-                <!-- Welcome Message -->
-                <div class="mb-16">
+                <!-- Welcome & Header -->
+                <div class="mb-12">
                     <h1 class="text-5xl md:text-6xl font-bold mb-4 text-gray-900">
                         Bienvenue, <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span> 👋
                     </h1>
-                    <p class="text-xl text-gray-600">Prêt à poursuivre votre apprentissage ?</p>
+                    <p class="text-xl text-gray-600">Continuez votre apprentissage avec nos agents spécialisés</p>
                 </div>
 
-                <!-- Dashboard Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Conversations Card -->
-                    <div class="card-hover bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 p-10 rounded-2xl">
-                        <div class="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl flex items-center justify-center mb-6 feature-icon">
-                            <i class="fas fa-comments text-white text-2xl"></i>
-                        </div>
-                        <h2 class="text-3xl font-bold mb-3 text-gray-900">Conversations</h2>
-                        <p class="text-gray-700 mb-8 leading-relaxed">
-                            Accédez à vos conversations avec les agents IA et continuez vos échanges.
-                        </p>
-                        <a href="?page=conversation" class="inline-block bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-3 rounded-lg font-bold hover:shadow-lg transition btn-glow">
-                            <i class="fas fa-arrow-right mr-2"></i> Voir mes conversations
+                <!-- Quick Actions (En haut pour meilleure visibilité) -->
+                <div class="card-hover bg-white rounded-2xl shadow-lg p-8 border border-indigo-100 mb-12">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
+                        <i class="fas fa-lightning-bolt text-yellow-500"></i> Accès Rapide
+                    </h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <a href="?page=conversation" class="card-hover bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 p-6 rounded-xl text-center hover:shadow-lg hover:border-blue-600 transition group">
+                            <div class="bg-blue-600 text-white w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+                                <i class="fas fa-comments text-lg"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 mb-1">Conversations</h4>
+                            <p class="text-xs text-gray-600">Mes discussions</p>
+                        </a>
+
+                        <a href="?page=subject" class="card-hover bg-gradient-to-br from-pink-50 to-pink-100 border-2 border-pink-200 p-6 rounded-xl text-center hover:shadow-lg hover:border-pink-600 transition group">
+                            <div class="bg-pink-600 text-white w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+                                <i class="fas fa-bookmark text-lg"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 mb-1">Matières</h4>
+                            <p class="text-xs text-gray-600">Explorez les matières</p>
+                        </a>
+
+                        <a href="?page=level" class="card-hover bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 p-6 rounded-xl text-center hover:shadow-lg hover:border-purple-600 transition group">
+                            <div class="bg-purple-600 text-white w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+                                <i class="fas fa-book text-lg"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 mb-1">Niveaux</h4>
+                            <p class="text-xs text-gray-600">Voir les niveaux</p>
                         </a>
                     </div>
+                </div>
 
-                    <!-- Levels Card -->
-                    <div class="card-hover bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 p-10 rounded-2xl">
-                        <div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-purple-400 rounded-xl flex items-center justify-center mb-6 feature-icon">
-                            <i class="fas fa-book text-white text-2xl"></i>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Profile Card (Sidebar) -->
+                    <div class="card-hover bg-white rounded-2xl shadow-lg p-8 border border-indigo-100 h-fit">
+                        <h2 class="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
+                            <i class="fas fa-user text-indigo-600"></i> Mon Profil
+                        </h2>
+
+                        <div class="space-y-6">
+                            <!-- Prénom -->
+                            <div>
+                                <label class="text-xs font-bold text-gray-600 uppercase tracking-wide">Prénom</label>
+                                <p class="text-lg font-bold text-gray-900 mt-1"><?php echo htmlspecialchars($_SESSION['user_name'] ?? ''); ?></p>
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="text-xs font-bold text-gray-600 uppercase tracking-wide">Email</label>
+                                <p class="text-sm text-indigo-600 font-semibold mt-1 break-all"><?php echo htmlspecialchars($_SESSION['user_email'] ?? ''); ?></p>
+                            </div>
+
+                            <!-- Niveau Scolaire -->
+                            <div>
+                                <label class="text-xs font-bold text-gray-600 uppercase tracking-wide">Niveau</label>
+                                <div class="mt-2">
+                                    <span class="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full font-bold text-sm">
+                                        <i class="fas fa-book mr-2"></i>Collège
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="flex gap-3 text-sm text-gray-600 pt-2">
+                                <span class="flex items-center gap-1"><i class="fas fa-check-circle text-green-600"></i> Actif</span>
+                                <span class="flex items-center gap-1"><i class="fas fa-calendar text-gray-500"></i> Aujourd'hui</span>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <a href="?page=user" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-3 rounded-xl hover:shadow-lg transition font-bold text-center text-sm block">
+                                    <i class="fas fa-user-circle mr-2"></i> Voir mon profil complet
+                                </a>
+                            </div>
                         </div>
-                        <h2 class="text-3xl font-bold mb-3 text-gray-900">Niveaux Scolaires</h2>
-                        <p class="text-gray-700 mb-8 leading-relaxed">
-                            Explorez les différents niveaux d'éducation et les ressources adaptées.
-                        </p>
-                        <a href="?page=level" class="inline-block bg-gradient-to-r from-purple-600 to-purple-500 text-white px-8 py-3 rounded-lg font-bold hover:shadow-lg transition btn-glow">
-                            <i class="fas fa-arrow-right mr-2"></i> Explorer les niveaux
-                        </a>
                     </div>
 
-                    <!-- Subjects Card -->
-                    <div class="card-hover bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 p-10 rounded-2xl">
-                        <div class="w-14 h-14 bg-gradient-to-br from-pink-600 to-pink-400 rounded-xl flex items-center justify-center mb-6 feature-icon">
-                            <i class="fas fa-bookmark text-white text-2xl"></i>
+                    <!-- Main Content Area -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Mes Conversations -->
+                        <div class="card-hover bg-white rounded-2xl shadow-lg p-8 border border-indigo-100">
+                            <h2 class="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
+                                <i class="fas fa-comments text-purple-600"></i> Mes Dernières Conversations
+                            </h2>
+
+                            <div class="space-y-4">
+                                <!-- Conversation 1 -->
+                                <div class="border-l-4 border-indigo-600 bg-gradient-to-r from-indigo-50 to-transparent p-5 rounded-lg hover:shadow-md transition cursor-pointer">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-gray-900">💬 Ouvrir le chat</h3>
+                                            <p class="text-gray-600 text-xs mt-1">Agent : <strong>Agent Scolaire</strong></p>
+                                        </div>
+                                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded">03/11 10:42</span>
+                                    </div>
+                                </div>
+
+                                <!-- Conversation 2 -->
+                                <div class="border-l-4 border-purple-600 bg-gradient-to-r from-purple-50 to-transparent p-5 rounded-lg hover:shadow-md transition cursor-pointer">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-gray-900">Révision des équations</h3>
+                                            <p class="text-gray-600 text-xs mt-1">Agent : <strong>Agent Mathéo</strong></p>
+                                        </div>
+                                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded">03/11 10:21</span>
+                                    </div>
+                                </div>
+
+                                <!-- Conversation 3 -->
+                                <div class="border-l-4 border-pink-600 bg-gradient-to-r from-pink-50 to-transparent p-5 rounded-lg hover:shadow-md transition cursor-pointer">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="font-bold text-gray-900">⚔️ Guerre mondiale</h3>
+                                            <p class="text-gray-600 text-xs mt-1">Agent : <strong>Agent Histoire</strong></p>
+                                        </div>
+                                        <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded">03/11 09:59</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <a href="?page=conversation" class="text-indigo-600 hover:text-indigo-700 font-bold transition text-sm">
+                                    <i class="fas fa-arrow-right mr-2"></i>Voir toutes les conversations →
+                                </a>
+                            </div>
                         </div>
-                        <h2 class="text-3xl font-bold mb-3 text-gray-900">Matières</h2>
-                        <p class="text-gray-700 mb-8 leading-relaxed">
-                            Découvrez toutes les matières disponibles avec nos agents spécialisés.
-                        </p>
-                        <a href="?page=subject" class="inline-block bg-gradient-to-r from-pink-600 to-pink-500 text-white px-8 py-3 rounded-lg font-bold hover:shadow-lg transition btn-glow">
-                            <i class="fas fa-arrow-right mr-2"></i> Voir les matières
-                        </a>
+                    </div>
+                </div>
+
+                <!-- Agents par Matière Section -->
+                <div class="card-hover bg-white rounded-2xl shadow-lg p-8 border border-indigo-100">
+                    <h2 class="text-3xl font-bold mb-8 text-gray-900 flex items-center gap-2">
+                        <i class="fas fa-robot text-pink-600"></i> Agents par Matière
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Agent Histoire -->
+                        <div class="border border-pink-200 p-6 rounded-xl hover:border-pink-600 hover:shadow-lg transition">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-pink-600 to-pink-400 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-scroll text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Histoire</h3>
+                                    <p class="text-xs text-gray-600">Agent Histoire</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">Agent passionné d'histoire et de culture générale...</p>
+                            <button class="w-full bg-gradient-to-r from-pink-600 to-pink-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition font-bold text-sm">
+                                <i class="fas fa-comments mr-2"></i> Discuter
+                            </button>
+                        </div>
+
+                        <!-- Agent Mathématiques -->
+                        <div class="border border-purple-200 p-6 rounded-xl hover:border-purple-600 hover:shadow-lg transition">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-400 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-calculator text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Mathématiques</h3>
+                                    <p class="text-xs text-gray-600">Agent Mathéo</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">Agent spécialisé en mathématiques et résolution de problèmes...</p>
+                            <button class="w-full bg-gradient-to-r from-purple-600 to-purple-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition font-bold text-sm">
+                                <i class="fas fa-comments mr-2"></i> Discuter
+                            </button>
+                        </div>
+
+                        <!-- Agent Méthodologie -->
+                        <div class="border border-indigo-200 p-6 rounded-xl hover:border-indigo-600 hover:shadow-lg transition">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-400 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-brain text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Méthodologie</h3>
+                                    <p class="text-xs text-gray-600">Agent Scolaire</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">Agent généraliste pour le suivi scolaire...</p>
+                            <button class="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition font-bold text-sm">
+                                <i class="fas fa-comments mr-2"></i> Discuter
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

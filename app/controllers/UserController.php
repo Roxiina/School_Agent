@@ -13,4 +13,9 @@ class UserController {
         Authenticator::requireLogin();
         require __DIR__ . '/../Views/user/show.php';
     }
+
+    public function edit() {
+        Authenticator::requireLogin();
+        require __DIR__ . '/../Views/user/edit.php';
+    }
 }
