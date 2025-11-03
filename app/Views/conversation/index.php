@@ -212,10 +212,78 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             }
         }
 
+        // ===== FONCTIONS DE NOTIFICATION =====
+        function showSuccessMessage(message) {
+            showNotification(message, 'success');
+        }
+        
+        function showErrorMessage(message) {
+            showNotification(message, 'error');
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Supprimer toute notification existante
+            const existingNotification = document.getElementById('notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Créer la notification
+            const notification = document.createElement('div');
+            notification.id = 'notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                padding: 16px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                max-width: 400px;
+            `;
+            
+            // Couleurs selon le type
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                notification.innerHTML = '<i class="fas fa-check-circle"></i>' + message;
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                notification.innerHTML = '<i class="fas fa-exclamation-circle"></i>' + message;
+            } else {
+                notification.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+                notification.innerHTML = '<i class="fas fa-info-circle"></i>' + message;
+            }
+            
+            // Ajouter au body
+            document.body.appendChild(notification);
+            
+            // Animation d'entrée
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Auto-suppression après 4 secondes
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
         // ===== FONCTIONS POUR LES NOUVEAUX BOUTONS =====
         window.showConversationInfo = function() {
             if (!window.currentConvId) {
-                alert('Veuillez sélectionner une conversation');
+                showErrorMessage('Veuillez sélectionner une conversation');
                 return;
             }
             const modal = document.getElementById('infoModal');
@@ -246,7 +314,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 
         window.confirmDeleteConversation = function() {
             if (!window.currentConvId) {
-                alert('Veuillez sélectionner une conversation');
+                showErrorMessage('Veuillez sélectionner une conversation');
                 return;
             }
             const modal = document.getElementById('deleteModal');
@@ -275,7 +343,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 
         window.deleteConversation = function() {
             if (!window.currentConvId) {
-                alert('Aucune conversation sélectionnée');
+                showErrorMessage('Aucune conversation sélectionnée');
                 return;
             }
             
@@ -296,57 +364,71 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Fermer le modal
-                    closeDeleteModal();
+            .then(response => {
+                console.log('Réponse HTTP status:', response.status);
+                console.log('Réponse headers:', response.headers);
+                return response.text(); // D'abord récupérer en text pour voir le contenu
+            })
+            .then(text => {
+                console.log('Réponse brute du serveur:', text);
+                try {
+                    const data = JSON.parse(text);
+                    console.log('Données JSON parsées:', data);
                     
-                    // Supprimer la conversation de la liste
-                    const convElement = document.querySelector(`.conversation-item[data-id="${window.currentConvId}"]`);
-                    if (convElement) {
-                        convElement.remove();
-                    }
-                    
-                    // Supprimer des données locales
-                    conversationsData = conversationsData.filter(c => c.id != window.currentConvId);
-                    
-                    // Réinitialiser la sélection
-                    window.currentConvId = null;
-                    
-                    // Vider la zone de chat
-                    const chatDiv = document.getElementById('chatMessages');
-                    if (chatDiv) {
-                        chatDiv.innerHTML = '<div class="text-center text-gray-500 p-8">Sélectionnez une conversation pour commencer</div>';
-                    }
-                    
-                    // Mettre à jour le header
-                    document.getElementById('agentName').textContent = 'Agent Scolaire';
-                    
-                    // Afficher un message de succès
-                    alert('Conversation supprimée avec succès !');
-                    
-                    // Si plus aucune conversation, afficher le message approprié
-                    if (conversationsData.length === 0) {
-                        const sidebar = document.querySelector('.sidebar .space-y-2');
-                        if (sidebar) {
-                            sidebar.innerHTML = '<div class="p-4 text-center text-gray-500"><p>Aucune conversation</p></div>';
+                    if (data.success) {
+                        // Fermer le modal
+                        closeDeleteModal();
+                        
+                        // Supprimer la conversation de la liste
+                        const convElement = document.querySelector(`.conversation-item[data-id="${window.currentConvId}"]`);
+                        if (convElement) {
+                            convElement.remove();
+                        }
+                        
+                        // Supprimer des données locales
+                        conversationsData = conversationsData.filter(c => c.id != window.currentConvId);
+                        
+                        // Réinitialiser la sélection
+                        window.currentConvId = null;
+                        
+                        // Vider la zone de chat
+                        const chatDiv = document.getElementById('chatMessages');
+                        if (chatDiv) {
+                            chatDiv.innerHTML = '<div class="text-center text-gray-500 p-8">Sélectionnez une conversation pour commencer</div>';
+                        }
+                        
+                        // Mettre à jour le header
+                        document.getElementById('agentName').textContent = 'Agent Scolaire';
+                        
+                        // Afficher un message de succès intégré dans la page
+                        showSuccessMessage('Conversation supprimée avec succès !');
+                        
+                        // Si plus aucune conversation, afficher le message approprié
+                        if (conversationsData.length === 0) {
+                            const sidebar = document.querySelector('.sidebar .space-y-2');
+                            if (sidebar) {
+                                sidebar.innerHTML = '<div class="p-4 text-center text-gray-500"><p>Aucune conversation</p></div>';
+                            }
+                        } else {
+                            // Sélectionner automatiquement la première conversation restante
+                            const firstConv = conversationsData[0];
+                            if (firstConv) {
+                                selectConversation(firstConv.id);
+                            }
                         }
                     } else {
-                        // Sélectionner automatiquement la première conversation restante
-                        const firstConv = conversationsData[0];
-                        if (firstConv) {
-                            selectConversation(firstConv.id);
-                        }
+                        showErrorMessage('Erreur lors de la suppression de la conversation');
+                        console.error('Erreur suppression (success=false):', data);
                     }
-                } else {
-                    alert('Erreur lors de la suppression de la conversation');
-                    console.error('Erreur suppression:', data);
+                } catch (parseError) {
+                    console.error('Erreur de parsing JSON:', parseError);
+                    console.error('Contenu qui n\'est pas du JSON valide:', text);
+                    showErrorMessage('Erreur de format de réponse du serveur');
                 }
             })
             .catch(error => {
                 console.error('Erreur lors de la suppression:', error);
-                alert('Erreur de connexion lors de la suppression');
+                showErrorMessage('Erreur de connexion lors de la suppression');
             })
             .finally(() => {
                 // Réactiver le bouton
@@ -690,6 +772,24 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             .catch(error => console.error('Erreur lors de la mise à jour:', error));
         }
 
+        // ===== FONCTION POUR SÉLECTIONNER UNE CONVERSATION =====
+        function selectConversation(convId) {
+            // Retirer la classe active de tous les items
+            document.querySelectorAll('.conversation-item').forEach(i => i.classList.remove('active'));
+            
+            // Trouver et activer l'item correspondant
+            const targetItem = document.querySelector(`.conversation-item[data-id="${convId}"]`);
+            if (targetItem) {
+                targetItem.classList.add('active');
+            }
+
+            // Mettre à jour la conversation actuelle
+            window.currentConvId = convId;
+
+            // Afficher la conversation
+            displayConversation(convId);
+        }
+
         // ===== INITIALISATION AU CHARGEMENT =====
         document.addEventListener('DOMContentLoaded', function() {
             // Ajouter click listeners sur les conversations
@@ -712,11 +812,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             
             // Initialiser avec la première conversation si elle existe
             if (conversationsData.length > 0) {
-                window.currentConvId = conversationsData[0].id;
-                displayConversation(window.currentConvId);
-                // Marquer la première comme active
-                const firstItem = document.querySelector('.conversation-item');
-                if (firstItem) firstItem.classList.add('active');
+                selectConversation(conversationsData[0].id);
             }
         });
     </script>

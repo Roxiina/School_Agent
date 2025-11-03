@@ -95,5 +95,6 @@ class ConversationModel
         $sql = "DELETE FROM conversation WHERE id_conversation = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
+        return $stmt->rowCount(); // Retourner le nombre de lignes supprimées
     }
 }

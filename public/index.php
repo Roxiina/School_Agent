@@ -121,9 +121,10 @@ switch ($page) {
             $result = $conversationModel->deleteConversation($_GET['id']);
             
             // Si c'est une requête AJAX, retourner du JSON
-            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ((!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') || $_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Content-Type: application/json');
-                echo json_encode(['success' => $result > 0]);
+                echo json_encode(['success' => $result > 0, 'deleted_rows' => $result]);
+                exit; // Important : arrêter l'exécution après le JSON
             } else {
                 // Sinon redirection classique
                 $_SESSION['success'] = 'Conversation supprimée';
