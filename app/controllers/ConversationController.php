@@ -18,6 +18,21 @@ class ConversationController {
         Authenticator::requireLogin();
         $userId = $_SESSION['user_id'] ?? null;
         $conversations = $this->conversationModel->getConversations($userId);
+        
+        // Préparer les données pour la vue
+        $conversationsData = [];
+        foreach ($conversations as $conv) {
+            $messages = $this->messageModel->getMessages($conv['id_conversation']);
+            $conversationsData[] = [
+                'id' => $conv['id_conversation'],
+                'titre' => $conv['titre'],
+                'agent_nom' => $conv['agent_nom'],
+                'agent_id' => $conv['id_agent'],
+                'messages' => $messages,
+                'date_creation' => $conv['date_creation']
+            ];
+        }
+        
         require __DIR__ . '/../Views/conversation/index.php';
     }
 
@@ -35,19 +50,33 @@ class ConversationController {
 
     public function create() {
         Authenticator::requireLogin();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'user_id' => $_SESSION['user_id'],
-                'agent_id' => $_POST['agent_id'] ?? 1,
-                'subject_id' => $_POST['subject_id'] ?? 1,
-                'title' => $_POST['title'] ?? 'Nouvelle conversation'
-            ];
-            if ($this->conversationModel->createConversation($data)) {
-                $_SESSION['success'] = 'Conversation créée.';
-                header('Location: ?page=conversation');
-                exit;
+            $userId = $_SESSION['user_id'];
+            $agentId = $_POST['agent_id'] ?? 1;
+            $title = $_POST['title'] ?? 'Nouvelle conversation';
+            
+            // Valider les données
+            if (empty($title)) {
+                $_SESSION['error'] = 'Le titre ne peut pas être vide';
+            } else {
+                $data = [
+                    'titre' => trim($title),
+                    'date_creation' => date('Y-m-d H:i:s'),
+                    'id_agent' => (int)$agentId,
+                    'id_user' => (int)$userId
+                ];
+                
+                if ($this->conversationModel->createConversation($data)) {
+                    $_SESSION['success'] = 'Conversation créée avec succès !';
+                    header('Location: ?page=conversation');
+                    exit;
+                } else {
+                    $_SESSION['error'] = 'Erreur lors de la création de la conversation';
+                }
             }
         }
+        
         require __DIR__ . '/../Views/conversation/create.php';
     }
 

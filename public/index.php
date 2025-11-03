@@ -21,6 +21,7 @@ use SchoolAgent\Controllers\Admin\{
     AdminConversationController,
     AdminSubjectController
 };
+use SchoolAgent\Config\Authenticator;
 // -------------------------------------------------------------
 // Récupération propre de la route dans l’URL
 // -------------------------------------------------------------
@@ -40,6 +41,14 @@ if (isset($_GET['page']) && $_GET['page'] !== '') {
 } else {
     $page = $uri !== '' ? $uri : 'home';
 }
+
+// Gérer le paramètre "action" pour les pages avec sous-actions
+if (isset($_GET['action']) && $_GET['action'] !== '') {
+    $page = $page . '/' . $_GET['action'];
+}
+
+// Couper le paramètre page pour éviter les doublons (ex: 'conversation/create/create')
+$page = trim($page, '/');
 
 // -------------------------------------------------------------
 // Routing via switch-case
@@ -68,6 +77,72 @@ switch ($page) {
 
     case 'conversation':
         (new ConversationController())->index();
+        break;
+
+    case 'conversation/create':
+        (new ConversationController())->create();
+        break;
+
+    case 'conversation/show':
+        if (isset($_GET['id'])) {
+            (new ConversationController())->show($_GET['id']);
+        }
+        break;
+
+    case 'conversation/update':
+        if (isset($_GET['id'])) {
+            Authenticator::requireLogin();
+            $conversationModel = new \SchoolAgent\Models\ConversationModel();
+            
+            // Support both GET (legacy) and POST (AJAX)
+            $title = $_POST['title'] ?? $_GET['title'] ?? null;
+            
+            if ($title) {
+                $result = $conversationModel->updateConversation($_GET['id'], ['titre' => $title]);
+                
+                // Si c'est une requête AJAX, retourner du JSON
+                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' || $_SERVER['REQUEST_METHOD'] === 'POST') {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => $result > 0]);
+                } else {
+                    // Sinon redirection classique
+                    $_SESSION['success'] = 'Conversation renommée avec succès';
+                    header('Location: ?page=conversation');
+                    exit;
+                }
+            }
+        }
+        break;
+
+    case 'conversation/delete':
+        if (isset($_GET['id'])) {
+            Authenticator::requireLogin();
+            $conversationModel = new \SchoolAgent\Models\ConversationModel();
+            $result = $conversationModel->deleteConversation($_GET['id']);
+            
+            // Si c'est une requête AJAX, retourner du JSON
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' || $_SERVER['REQUEST_METHOD'] === 'POST') {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => $result > 0]);
+            } else {
+                // Sinon redirection classique
+                $_SESSION['success'] = 'Conversation supprimée';
+                header('Location: ?page=conversation');
+                exit;
+            }
+        }
+        break;
+
+    case 'message/create':
+        (new MessageController())->create();
+        break;
+
+    case 'message/update':
+        (new MessageController())->update();
+        break;
+
+    case 'message/delete':
+        (new MessageController())->delete();
         break;
 
 // ---------------------------------------------------------------------------

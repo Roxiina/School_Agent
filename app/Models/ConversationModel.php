@@ -13,15 +13,24 @@ class ConversationModel
         $this->db = Database::getConnection();
     }
 
-    // READ (toutes les conversations)
-    public function getConversations()
+    // READ (toutes les conversations pour un utilisateur)
+    public function getConversations($userId = null)
     {
-        $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, c.id_user
-                FROM conversation c
-                JOIN agent a ON c.id_conversation = a.id_agent
-                JOIN utilisateur u ON c.id_conversation = u.id_user
-                ORDER BY c.id_conversation ASC";
-        $stmt = $this->db->query($sql);
+        if ($userId) {
+            $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, a.nom as agent_nom, a.avatar
+                    FROM conversation c
+                    JOIN agent a ON c.id_agent = a.id_agent
+                    WHERE c.id_user = :user_id
+                    ORDER BY c.date_creation DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':user_id' => $userId]);
+        } else {
+            $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, a.nom as agent_nom, a.avatar
+                    FROM conversation c
+                    JOIN agent a ON c.id_agent = a.id_agent
+                    ORDER BY c.date_creation DESC";
+            $stmt = $this->db->query($sql);
+        }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -51,17 +60,33 @@ class ConversationModel
     // UPDATE
     public function updateConversation($id, $data)
     {
-        $sql = "UPDATE conversation
-                SET titre = :titre, date_creation = :date_creation, id_agent = :id_agent, id_user = :id_user
-                WHERE id_conversation = :id";
+        $updates = [];
+        $params = [':id' => $id];
+        
+        if (isset($data['titre'])) {
+            $updates[] = 'titre = :titre';
+            $params[':titre'] = $data['titre'];
+        }
+        if (isset($data['date_creation'])) {
+            $updates[] = 'date_creation = :date_creation';
+            $params[':date_creation'] = $data['date_creation'];
+        }
+        if (isset($data['id_agent'])) {
+            $updates[] = 'id_agent = :id_agent';
+            $params[':id_agent'] = $data['id_agent'];
+        }
+        if (isset($data['id_user'])) {
+            $updates[] = 'id_user = :id_user';
+            $params[':id_user'] = $data['id_user'];
+        }
+        
+        if (empty($updates)) {
+            return false;
+        }
+        
+        $sql = "UPDATE conversation SET " . implode(', ', $updates) . " WHERE id_conversation = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ':titre' => $data['titre'],
-            ':date_creation' => $data['date_creation'],
-            ':id_agent' => $data['id_agent'],
-            ':id_user' => $data['id_user'],
-            ':id' => $id
-        ]);
+        return $stmt->execute($params);
     }
 
     // DELETE

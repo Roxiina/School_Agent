@@ -2,49 +2,52 @@
 namespace SchoolAgent\Models;
 
 use SchoolAgent\Config\Database;
+use PDO;
 
 class AgentModel {
     private $db;
 
     public function __construct() {
-        $this->db = Database::getInstance();
+        $this->db = Database::getConnection();
     }
 
     public function getAgents() {
-        $sql = "SELECT * FROM agent ORDER BY name ASC";
-        $result = $this->db->query($sql);
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $sql = "SELECT * FROM agent ORDER BY nom ASC";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getAgent($id) {
-        $sql = "SELECT * FROM agent WHERE id = ?";
+        $sql = "SELECT * FROM agent WHERE id_agent = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function createAgent($data) {
-        $sql = "INSERT INTO agent (name, description) VALUES (?, ?)";
+        $sql = "INSERT INTO agent (nom, avatar, description) VALUES (:nom, :avatar, :description)";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("ss", $data['name'], $data['description']);
-        
-        return $stmt->execute();
+        return $stmt->execute([
+            ':nom' => $data['nom'],
+            ':avatar' => $data['avatar'] ?? null,
+            ':description' => $data['description'] ?? null
+        ]);
     }
 
     public function updateAgent($id, $data) {
-        $sql = "UPDATE agent SET name = ?, description = ? WHERE id = ?";
+        $sql = "UPDATE agent SET nom = :nom, avatar = :avatar, description = :description WHERE id_agent = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("ssi", $data['name'], $data['description'], $id);
-        
-        return $stmt->execute();
+        return $stmt->execute([
+            ':nom' => $data['nom'],
+            ':avatar' => $data['avatar'] ?? null,
+            ':description' => $data['description'] ?? null,
+            ':id' => $id
+        ]);
     }
 
     public function deleteAgent($id) {
-        $sql = "DELETE FROM agent WHERE id = ?";
+        $sql = "DELETE FROM agent WHERE id_agent = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bind_param("i", $id);
-        
-        return $stmt->execute();
+        return $stmt->execute([':id' => $id]);
     }
 }
