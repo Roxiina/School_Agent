@@ -1,6 +1,17 @@
 RewriteEngine On
 
+# Permettre l'accès direct aux assets (CSS, JS, images)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(css|js|images)/ - [L]
+
 # Redirige tout vers index.php sauf les fichiers réels
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?page=$1 [L,QSA]
+
+# Cache pour les assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>

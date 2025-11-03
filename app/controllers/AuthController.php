@@ -16,17 +16,25 @@ class AuthController
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'];
-            $password = $_POST['mot_de_passe'];
+            // Vérification que les champs existent et ne sont pas vides
+            if (empty($_POST['email']) || empty($_POST['password'])) {
+                Authenticator::setFlash('Veuillez remplir tous les champs.', 'error');
+                require __DIR__ . '/../Views/auth/login.php';
+                return;
+            }
+
+            $email = trim($_POST['email']);
+            $password = $_POST['password'];
 
             $user = $this->model->getUserByEmail($email);
 
             if ($user && password_verify($password, $user['mot_de_passe'])) {
                 Authenticator::login($user['id_user']);
-                header('Location: /home');
+                Authenticator::setFlash('Connexion réussie ! Bienvenue.', 'success');
+                header('Location: ?page=dashboard');
                 exit;
             } else {
-                $error = "Email ou mot de passe incorrect.";
+                Authenticator::setFlash('Email ou mot de passe incorrect.', 'error');
             }
         }
 
@@ -36,7 +44,7 @@ class AuthController
     public function logout()
     {
         Authenticator::logout();
-        header('Location: /login');
+        header('Location: ?page=login');
         exit;
     }
 }

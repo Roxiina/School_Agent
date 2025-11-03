@@ -1,0 +1,33 @@
+/* Styles pour les avatars par défaut des agents */
+.agent-avatar-default {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: var(--transition);
+}
+
+.agent-avatar-default:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.agent-avatar-math {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+}
+
+.agent-avatar-history {
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+}
+
+.agent-avatar-school {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}

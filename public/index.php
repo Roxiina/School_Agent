@@ -11,8 +11,10 @@ use SchoolAgent\Controllers\{
     LevelController,
     SubjectController,
     ConversationController,
-    MessageController
+    MessageController,
+    PrivacyController
 };
+use SchoolAgent\Config\Authenticator;
 
 // -------------------------------------------------------------
 // Récupération propre de la route dans l’URL
@@ -39,11 +41,25 @@ if (isset($_GET['page']) && $_GET['page'] !== '') {
 // -------------------------------------------------------------
 switch ($page) {
     case 'home':
+    case '':
+        // Page d'accueil publique - accessible à tous
         $controller = new HomeController();
         $controller->index();
         break;
 
+    case 'dashboard':
+        // Tableau de bord - nécessite une connexion
+        Authenticator::requireLogin();
+        $controller = new HomeController();
+        $controller->dashboard();
+        break;
+
     case 'login':
+        // Si déjà connecté, rediriger vers dashboard
+        if (Authenticator::isLogged()) {
+            header('Location: ?page=dashboard');
+            exit;
+        }
         (new AuthController())->login();
         break;
 
@@ -51,11 +67,45 @@ switch ($page) {
         (new AuthController())->logout();
         break;
     
+    // Routes pour la confidentialité (RGPD)
+    case 'privacy':
+        $controller = new PrivacyController();
+        $controller->index();
+        break;
+        
+    case 'privacy-policy':
+    case 'terms':
+        $controller = new PrivacyController();
+        $controller->terms();
+        break;
+        
+    case 'cookies':
+    case 'cookie-policy':
+        $controller = new PrivacyController();
+        $controller->cookies();
+        break;
+        
+    case 'data-request':
+        $controller = new PrivacyController();
+        $controller->dataRequest();
+        break;
+        
+    case 'contact':
+        $controller = new PrivacyController();
+        $controller->contact();
+        break;
+    
     
         // Liste des utilisateurs
     case 'user':
         $controller = new UserController();
         $controller->index();
+        break;
+
+    // Profil de l'utilisateur connecté
+    case 'profile':
+        $controller = new UserController();
+        $controller->profile();
         break;
 
     // Afficher le profil utilisateur

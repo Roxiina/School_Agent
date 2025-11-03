@@ -2,6 +2,7 @@
 namespace SchoolAgent\Controllers;
 
 use SchoolAgent\Models\SubjectModel;
+use SchoolAgent\Config\Authenticator;
 
 class SubjectController
 {
@@ -15,6 +16,7 @@ class SubjectController
     // Liste toutes les matières
     public function index()
     {
+        Authenticator::requireLogin();
         $subjects = $this->model->getSubjects();
         require __DIR__ . '/../Views/subject/index.php';
     }
