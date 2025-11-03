@@ -16,12 +16,38 @@ class ConversationModel
     // READ (toutes les conversations)
     public function getConversations()
     {
-        $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, c.id_user
+        $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, c.id_user, a.nom as agent_nom, u.prenom, u.nom
                 FROM conversation c
-                JOIN agent a ON c.id_conversation = a.id_agent
-                JOIN utilisateur u ON c.id_conversation = u.id_user
-                ORDER BY c.id_conversation ASC";
+                JOIN agent a ON c.id_agent = a.id_agent
+                JOIN utilisateur u ON c.id_user = u.id_user
+                ORDER BY c.date_creation DESC";
         $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // READ (conversations d'un utilisateur)
+    public function getConversationsByUser($userId)
+    {
+        $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, a.nom as agent_nom, a.avatar, a.description
+                FROM conversation c
+                JOIN agent a ON c.id_agent = a.id_agent
+                WHERE c.id_user = :id_user
+                ORDER BY c.date_creation DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id_user' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // READ (compter les conversations par agent pour un utilisateur)
+    public function getConversationCountByAgent($userId)
+    {
+        $sql = "SELECT a.id_agent, a.nom as agent_nom, COUNT(c.id_conversation) as conversation_count
+                FROM agent a
+                LEFT JOIN conversation c ON a.id_agent = c.id_agent AND c.id_user = :id_user
+                GROUP BY a.id_agent, a.nom
+                ORDER BY conversation_count DESC, a.nom ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':id_user' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

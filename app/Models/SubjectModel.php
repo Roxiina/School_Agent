@@ -44,6 +44,17 @@ class SubjectModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // READ (toutes les matières avec agents associés)
+    public function getSubjectsWithAgents()
+    {
+        $sql = "SELECT m.id_matiere, m.nom as matiere_nom, a.id_agent, a.nom as agent_nom, a.avatar, a.description, a.temperature, a.system_prompt
+                FROM matiere m
+                JOIN agent a ON m.id_agent = a.id_agent
+                ORDER BY m.nom ASC";
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // UPDATE
     public function updateSubject($id, $data)
     {

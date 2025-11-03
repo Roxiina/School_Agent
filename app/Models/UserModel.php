@@ -27,7 +27,10 @@ class UserModel
     // READ (un utilisateur)
     public function getUser($id)
     {
-        $sql = "SELECT * FROM utilisateur WHERE id_user = :id";
+        $sql = "SELECT u.*, n.niveau 
+                FROM utilisateur u
+                LEFT JOIN niveau_scolaire n ON u.id_niveau_scolaire = n.id_niveau_scolaire
+                WHERE u.id_user = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -62,6 +65,28 @@ class UserModel
             ':email' => $data['email'],
             ':role' => $data['role'],
             ':id_niveau_scolaire' => $data['id_niveau_scolaire'],
+            ':id' => $id
+        ]);
+    }
+
+    // UPDATE email uniquement (pour étudiants)
+    public function updateUserEmail($id, $email)
+    {
+        $sql = "UPDATE utilisateur SET email = :email WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':email' => $email,
+            ':id' => $id
+        ]);
+    }
+
+    // UPDATE mot de passe
+    public function updateUserPassword($id, $password)
+    {
+        $sql = "UPDATE utilisateur SET mot_de_passe = :password WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':password' => password_hash($password, PASSWORD_DEFAULT),
             ':id' => $id
         ]);
     }

@@ -1,9 +1,29 @@
 <?php 
 $title = "Tableau de bord Étudiant - School Agent";
 use SchoolAgent\Config\Authenticator;
+use SchoolAgent\Models\UserModel;
+use SchoolAgent\Models\ConversationModel;
+use SchoolAgent\Models\SubjectModel;
+
 Authenticator::startSession();
 $flash = Authenticator::getFlash();
 $userName = Authenticator::getUserName();
+$userId = Authenticator::getUserId();
+
+// Récupérer les données de l'utilisateur
+$userModel = new UserModel();
+$user = $userModel->getUser($userId);
+
+// Récupérer les conversations de l'étudiant
+$conversationModel = new ConversationModel();
+$conversations = $conversationModel->getConversationsByUser($userId);
+
+// Récupérer le nombre de conversations par agent
+$conversationsByAgent = $conversationModel->getConversationCountByAgent($userId);
+
+// Récupérer les matières avec agents
+$subjectModel = new SubjectModel();
+$subjects = $subjectModel->getSubjectsWithAgents();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -234,69 +254,145 @@ $userName = Authenticator::getUserName();
         <!-- Statistiques -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Agents disponibles</div>
+                <div class="stat-number"><?= count($subjects) ?></div>
+                <div class="stat-label">Matières disponibles</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">5</div>
+                <div class="stat-number"><?= count($conversations) ?></div>
                 <div class="stat-label">Conversations actives</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">2</div>
-                <div class="stat-label">Matières étudiées</div>
+                <div class="stat-number"><?= $user['niveau'] ?? 'N/A' ?></div>
+                <div class="stat-label">Niveau scolaire</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">15</div>
-                <div class="stat-label">Messages échangés</div>
+                <div class="stat-number"><?= isset($user['date_creation']) ? date('d/m/Y', strtotime($user['date_creation'])) : 'Actif' ?></div>
+                <div class="stat-label">Membre depuis</div>
             </div>
         </div>
 
-        <!-- Actions principales -->
-        <div class="dashboard-grid">
-            <div class="card">
-                <div class="card-icon">
+        <!-- Section Mon Profil -->
+        <section style="background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h2 style="color: #2c3e50; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-user-circle" style="color: #667eea;"></i>
+                Mon Profil
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                    <span style="display: block; color: #64748b; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem;">Prénom</span>
+                    <span style="color: #2c3e50; font-size: 1.1rem; font-weight: 500;"><?= htmlspecialchars($user['prenom']) ?></span>
+                </div>
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                    <span style="display: block; color: #64748b; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem;">Nom</span>
+                    <span style="color: #2c3e50; font-size: 1.1rem; font-weight: 500;"><?= htmlspecialchars($user['nom']) ?></span>
+                </div>
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                    <span style="display: block; color: #64748b; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem;">Email</span>
+                    <span style="color: #2c3e50; font-size: 1.1rem; font-weight: 500; word-break: break-all;"><?= htmlspecialchars($user['email']) ?></span>
+                </div>
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                    <span style="display: block; color: #64748b; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem;">Niveau Scolaire</span>
+                    <span style="color: #2c3e50; font-size: 1.1rem; font-weight: 500;"><?= htmlspecialchars($user['niveau'] ?? 'Non défini') ?></span>
+                </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <a href="?page=profile" class="btn btn-primary" style="color: white; background: #667eea; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-edit"></i>
+                    Modifier mon profil
+                </a>
+            </div>
+        </section>
+
+        <!-- Section Mes Conversations -->
+        <section style="background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h2 style="color: #2c3e50; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-comments" style="color: #667eea;"></i>
+                Mes Conversations (<?= count($conversations) ?>)
+            </h2>
+            <div style="margin-bottom: 1.5rem;">
+                <a href="?page=conversation/chat" class="btn" style="color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer;">
                     <i class="fas fa-comments"></i>
-                </div>
-                <h3>Mes Conversations</h3>
-                <p>Accédez à vos conversations avec les agents IA et continuez vos échanges d'apprentissage.</p>
-                <a href="?page=conversation" class="card-link">
-                    Voir mes conversations <i class="fas fa-arrow-right"></i>
+                    💬 Ouvrir le chat
                 </a>
             </div>
+            <?php if (count($conversations) > 0): ?>
+                <div style="display: grid; gap: 1rem;">
+                    <?php foreach ($conversations as $conv): ?>
+                        <div style="padding: 1.5rem; background: #f8fafc; border-radius: 8px; border-left: 4px solid #667eea; transition: all 0.3s ease;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                                <div style="flex: 1;">
+                                    <h4 style="color: #2c3e50; margin-bottom: 0.5rem; font-size: 1.1rem;">
+                                        <?= htmlspecialchars($conv['titre']) ?>
+                                    </h4>
+                                    <p style="color: #64748b; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-robot" style="color: #667eea;"></i>
+                                        Agent : <strong><?= htmlspecialchars($conv['agent_nom']) ?></strong>
+                                    </p>
+                                    <p style="color: #64748b; font-size: 0.875rem;">
+                                        <i class="fas fa-calendar" style="color: #667eea;"></i>
+                                        <?= date('d/m/Y à H:i', strtotime($conv['date_creation'])) ?>
+                                    </p>
+                                </div>
+                                <a href="?page=conversation/chat&id=<?= $conv['id_conversation'] ?>" style="color: #667eea; text-decoration: none; font-weight: 600; white-space: nowrap;">
+                                    Voir <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 8px;">
+                    <i class="fas fa-inbox" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem; display: block;"></i>
+                    <p style="color: #64748b;">Vous n'avez pas encore de conversations. Commencez une discussion avec un agent !</p>
+                </div>
+            <?php endif; ?>
+        </section>
 
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-robot"></i>
+        <!-- Section Agents par Matière -->
+        <section style="background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h2 style="color: #2c3e50; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-book" style="color: #667eea;"></i>
+                Agents par Matière (<?= count($subjects) ?>)
+            </h2>
+            <?php if (count($subjects) > 0): ?>
+                <div class="dashboard-grid">
+                    <?php foreach ($subjects as $subject): 
+                        // Trouver le nombre de conversations avec cet agent
+                        $convCount = 0;
+                        foreach ($conversationsByAgent as $agentConv) {
+                            if ($agentConv['id_agent'] == $subject['id_agent']) {
+                                $convCount = $agentConv['conversation_count'];
+                                break;
+                            }
+                        }
+                    ?>
+                        <div class="card">
+                            <div class="card-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h3><?= htmlspecialchars($subject['matiere_nom']) ?></h3>
+                            <p style="color: #64748b; margin-bottom: 0.75rem;">
+                                <strong style="color: #2c3e50;">Agent :</strong> <?= htmlspecialchars($subject['agent_nom']) ?>
+                            </p>
+                            <p style="color: #667eea; font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-comments"></i>
+                                <span><?= $convCount ?> conversation<?= $convCount > 1 ? 's' : '' ?></span>
+                            </p>
+                            <p style="color: #64748b; font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem;">
+                                <?= htmlspecialchars(substr($subject['description'], 0, 100)) ?>...
+                            </p>
+                            <a href="?page=conversation&action=create&agent_id=<?= $subject['id_agent'] ?>&subject_id=<?= $subject['id_matiere'] ?>" class="card-link">
+                                Commencer une conversation <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <h3>Agents IA</h3>
-                <p>Découvrez les agents spécialisés disponibles pour vous aider dans vos études.</p>
-                <a href="?page=agent" class="card-link">
-                    Choisir un agent <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-book"></i>
+            <?php else: ?>
+                <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 8px;">
+                    <p style="color: #64748b;">Aucune matière disponible pour le moment.</p>
                 </div>
-                <h3>Matières</h3>
-                <p>Explorez les différentes matières et trouvez l'aide dont vous avez besoin.</p>
-                <a href="?page=subject" class="card-link">
-                    Explorer les matières <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <h3>Mon Profil</h3>
-                <p>Gérez vos informations personnelles et vos préférences d'apprentissage.</p>
-                <a href="?page=profile" class="card-link">
-                    Modifier mon profil <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
+            <?php endif; ?>
+        </section>
     </main>
 
     <script>

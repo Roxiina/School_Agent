@@ -70,4 +70,42 @@ class MessageController
         header('Location: /message');
         exit;
     }
+
+    // Enregistrer un message en AJAX (JSON response)
+    public function store()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid request']);
+            exit;
+        }
+
+        $conversationId = $_POST['conversation_id'] ?? null;
+        $messageText = $_POST['message'] ?? null;
+        $userId = $_SESSION['user_id'] ?? null;
+
+        if (!$conversationId || !$messageText || !$userId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Missing fields']);
+            exit;
+        }
+
+        try {
+            $data = [
+                'conversation_id' => $conversationId,
+                'user_id' => $userId,
+                'message' => $messageText
+            ];
+
+            $result = $this->model->createMessage($data);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'message' => 'Message saved', 'id' => $result]);
+            exit;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            exit;
+        }
+    }
 }

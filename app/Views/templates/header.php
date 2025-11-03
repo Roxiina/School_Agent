@@ -12,6 +12,8 @@ $flash = Authenticator::getFlash();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School Agent</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/agents.css">
     <script src="js/app.js" defer></script>
@@ -24,11 +26,8 @@ $flash = Authenticator::getFlash();
                 <nav>
                     <?php if (Authenticator::isLogged()): ?>
                         <ul class="nav-menu">
-                            <li><a href="?page=dashboard">Tableau de bord</a></li>
-                            <li><a href="?page=conversation">Conversations</a></li>
-                            <li><a href="?page=subject">Matières</a></li>
-                            <li><a href="?page=user">Utilisateurs</a></li>
-                            <li><a href="?page=level">Niveaux</a></li>
+                            <li><a href="?page=conversation/chat">Conversations</a></li>
+                            <li><a href="?page=dashboard">Mon Profil</a></li>
                             <li><a href="?page=logout" class="btn btn-secondary">Déconnexion</a></li>
                         </ul>
                     <?php else: ?>

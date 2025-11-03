@@ -14,6 +14,7 @@ use SchoolAgent\Controllers\{
     MessageController,
     PrivacyController
 };
+use SchoolAgent\Models\ConversationModel;
 use SchoolAgent\Config\Authenticator;
 
 // -------------------------------------------------------------
@@ -275,6 +276,18 @@ switch ($page) {
         $controller->index();
         break;
 
+    // Interface de chat pour une conversation
+    case 'conversation/chat':
+        $controller = new ConversationController();
+        $controller->chat();
+        break;
+
+    // Envoyer un message via AJAX
+    case 'conversation/send-message':
+        $controller = new ConversationController();
+        $controller->sendMessage();
+        break;
+
     // Afficher la conversation
     // Exemple : http://localhost:8000/conversation/show?id=4
     case 'conversation/show':
@@ -309,6 +322,37 @@ switch ($page) {
             $controller->delete($_GET['id']);
         }
         break;
+
+    // API JSON pour charger les conversations de l'utilisateur
+    case 'api/conversations':
+        Authenticator::requireLogin();
+        $controller = new ConversationController();
+        $conversations = (new ConversationModel())->getConversationsByUser(Authenticator::getUserId());
+        header('Content-Type: application/json');
+        echo json_encode($conversations);
+        exit;
+
+    // Enregistrer un message
+    case 'message/store':
+        Authenticator::requireLogin();
+        $controller = new MessageController();
+        $controller->store();
+        break;
+
+    // Supprimer toutes les conversations
+    case 'conversation/deleteAll':
+        Authenticator::requireLogin();
+        $controller = new ConversationController();
+        $controller->deleteAll();
+        break;
+
+    // Exporter les conversations
+    case 'conversation/export':
+        Authenticator::requireLogin();
+        $controller = new ConversationController();
+        $controller->export();
+        break;
+
 // ---------------------------------------------------------------------------
 
     // Page non trouvée
