@@ -49,12 +49,13 @@ class ConversationModel
         $sql = "INSERT INTO conversation (titre, date_creation, id_agent, id_user)
                 VALUES (:titre, :date_creation, :id_agent, :id_user)";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
+        $result = $stmt->execute([
             ':titre' => $data['titre'],
             ':date_creation' => $data['date_creation'],
             ':id_agent' => $data['id_agent'],
             ':id_user' => $data['id_user']
         ]);
+        return $result; // Retourner true si succès, false si échec
     }
 
     // UPDATE

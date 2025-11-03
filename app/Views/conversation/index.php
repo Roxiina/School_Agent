@@ -1044,6 +1044,17 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                 closeDeleteModal();
             }
         });
+
+        // Afficher les messages de session (succès/erreur)
+        <?php if (isset($_SESSION['error']) && $_SESSION['error']): ?>
+            showErrorMessage('<?php echo addslashes($_SESSION['error']); ?>');
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+        
+        <?php if (isset($_SESSION['success']) && $_SESSION['success']): ?>
+            showSuccessMessage('<?php echo addslashes($_SESSION['success']); ?>');
+            <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
     </script>
 
 </body>

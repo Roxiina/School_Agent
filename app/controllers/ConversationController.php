@@ -54,11 +54,18 @@ class ConversationController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId = $_SESSION['user_id'];
             $agentId = $_POST['agent_id'] ?? 1;
-            $title = $_POST['title'] ?? 'Nouvelle conversation';
+            $title = $_POST['title'] ?? '';
+            
+            // Debug: loguer les données reçues
+            error_log("Création conversation - User: $userId, Agent: $agentId, Title: '$title'");
             
             // Valider les données
-            if (empty($title)) {
+            if (empty(trim($title))) {
                 $_SESSION['error'] = 'Le titre ne peut pas être vide';
+                error_log("Erreur: titre vide");
+            } elseif (strlen(trim($title)) < 3) {
+                $_SESSION['error'] = 'Le titre doit contenir au moins 3 caractères';
+                error_log("Erreur: titre trop court");
             } else {
                 $data = [
                     'titre' => trim($title),
@@ -67,12 +74,22 @@ class ConversationController {
                     'id_user' => (int)$userId
                 ];
                 
-                if ($this->conversationModel->createConversation($data)) {
-                    $_SESSION['success'] = 'Conversation créée avec succès !';
-                    header('Location: ?page=conversation');
-                    exit;
-                } else {
-                    $_SESSION['error'] = 'Erreur lors de la création de la conversation';
+                try {
+                    $result = $this->conversationModel->createConversation($data);
+                    error_log("Résultat création: " . ($result ? 'true' : 'false'));
+                    
+                    if ($result) {
+                        $_SESSION['success'] = 'Conversation créée avec succès !';
+                        error_log("Succès: redirection vers conversation");
+                        header('Location: ?page=conversation');
+                        exit;
+                    } else {
+                        $_SESSION['error'] = 'Erreur lors de la création de la conversation';
+                        error_log("Erreur: createConversation a retourné false");
+                    }
+                } catch (\Exception $e) {
+                    $_SESSION['error'] = 'Erreur technique lors de la création';
+                    error_log("Exception lors de la création: " . $e->getMessage());
                 }
             }
         }
