@@ -10,6 +10,108 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 use SchoolAgent\Models\AgentModel;
 $agentModel = new AgentModel();
 $agents = $agentModel->getAgents();
+
+// Fonction pour déterminer l'icône et la couleur d'un agent
+function getAgentStyle($agent) {
+    $nom = strtolower($agent['nom']);
+    $description = strtolower($agent['description'] ?? '');
+    
+    // Mathématiques
+    if (strpos($nom, 'math') !== false || strpos($description, 'math') !== false || 
+        strpos($description, 'calcul') !== false || strpos($description, 'équation') !== false) {
+        return [
+            'icon' => 'fas fa-calculator',
+            'gradient' => 'from-blue-500 to-cyan-600',
+            'border' => 'blue-500',
+            'bg' => 'blue-50'
+        ];
+    }
+    
+    // Sciences
+    if (strpos($nom, 'science') !== false || strpos($description, 'science') !== false || 
+        strpos($description, 'physique') !== false || strpos($description, 'chimie') !== false) {
+        return [
+            'icon' => 'fas fa-flask',
+            'gradient' => 'from-green-500 to-emerald-600',
+            'border' => 'green-500',
+            'bg' => 'green-50'
+        ];
+    }
+    
+    // Histoire/Géographie
+    if (strpos($nom, 'histoire') !== false || strpos($description, 'histoire') !== false || 
+        strpos($description, 'géographie') !== false || strpos($description, 'géo') !== false) {
+        return [
+            'icon' => 'fas fa-globe-americas',
+            'gradient' => 'from-amber-500 to-orange-600',
+            'border' => 'amber-500',
+            'bg' => 'amber-50'
+        ];
+    }
+    
+    // Littérature/Français
+    if (strpos($nom, 'français') !== false || strpos($description, 'français') !== false || 
+        strpos($description, 'littérature') !== false || strpos($description, 'lecture') !== false) {
+        return [
+            'icon' => 'fas fa-book',
+            'gradient' => 'from-rose-500 to-pink-600',
+            'border' => 'rose-500',
+            'bg' => 'rose-50'
+        ];
+    }
+    
+    // Langues
+    if (strpos($nom, 'anglais') !== false || strpos($description, 'anglais') !== false || 
+        strpos($description, 'langue') !== false || strpos($description, 'english') !== false) {
+        return [
+            'icon' => 'fas fa-language',
+            'gradient' => 'from-purple-500 to-violet-600',
+            'border' => 'purple-500',
+            'bg' => 'purple-50'
+        ];
+    }
+    
+    // Arts
+    if (strpos($nom, 'art') !== false || strpos($description, 'art') !== false || 
+        strpos($description, 'dessin') !== false || strpos($description, 'créati') !== false) {
+        return [
+            'icon' => 'fas fa-palette',
+            'gradient' => 'from-teal-500 to-cyan-600',
+            'border' => 'teal-500',
+            'bg' => 'teal-50'
+        ];
+    }
+    
+    // Sport/EPS
+    if (strpos($nom, 'sport') !== false || strpos($description, 'sport') !== false || 
+        strpos($description, 'eps') !== false || strpos($description, 'physique') !== false) {
+        return [
+            'icon' => 'fas fa-running',
+            'gradient' => 'from-red-500 to-orange-600',
+            'border' => 'red-500',
+            'bg' => 'red-50'
+        ];
+    }
+    
+    // Informatique/Technologie
+    if (strpos($nom, 'info') !== false || strpos($description, 'info') !== false || 
+        strpos($description, 'techno') !== false || strpos($description, 'code') !== false) {
+        return [
+            'icon' => 'fas fa-laptop-code',
+            'gradient' => 'from-slate-500 to-gray-600',
+            'border' => 'slate-500',
+            'bg' => 'slate-50'
+        ];
+    }
+    
+    // Agent par défaut (polyvalent)
+    return [
+        'icon' => 'fas fa-robot',
+        'gradient' => 'from-indigo-500 to-purple-600',
+        'border' => 'indigo-500',
+        'bg' => 'indigo-50'
+    ];
+}
 ?>
 
 <!DOCTYPE html>
@@ -79,7 +181,9 @@ $agents = $agentModel->getAgents();
                         </label>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <?php if (!empty($agents)): ?>
-                                <?php foreach ($agents as $index => $agent): ?>
+                                <?php foreach ($agents as $index => $agent): 
+                                    $style = getAgentStyle($agent);
+                                ?>
                                     <label class="relative agent-card">
                                         <input 
                                             type="radio" 
@@ -88,10 +192,10 @@ $agents = $agentModel->getAgents();
                                             <?php echo $index === 0 ? 'checked' : ''; ?>
                                             class="peer sr-only"
                                         >
-                                        <div class="p-4 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-indigo-500 peer-checked:bg-indigo-50 hover:border-indigo-300 transition-all duration-200">
+                                        <div class="p-4 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-<?php echo $style['border']; ?> peer-checked:bg-<?php echo $style['bg']; ?> hover:border-<?php echo $style['border']; ?> hover:bg-<?php echo $style['bg']; ?> transition-all duration-200">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <i class="fas fa-robot text-white text-lg"></i>
+                                                <div class="w-12 h-12 bg-gradient-to-br <?php echo $style['gradient']; ?> rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                                                    <i class="<?php echo $style['icon']; ?> text-white text-lg"></i>
                                                 </div>
                                                 <div class="min-w-0 flex-1">
                                                     <p class="font-semibold text-gray-900 truncate"><?php echo htmlspecialchars($agent['nom']); ?></p>

@@ -212,6 +212,54 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             }
         }
 
+        // ===== FONCTION POUR DÉTERMINER L'ICÔNE D'UN AGENT =====
+        function getAgentIcon(agentName) {
+            const name = agentName.toLowerCase();
+            
+            // Mathématiques
+            if (name.includes('math') || name.includes('calcul') || name.includes('équation')) {
+                return 'fas fa-calculator';
+            }
+            
+            // Sciences
+            if (name.includes('science') || name.includes('physique') || name.includes('chimie')) {
+                return 'fas fa-flask';
+            }
+            
+            // Histoire/Géographie
+            if (name.includes('histoire') || name.includes('géographie') || name.includes('géo')) {
+                return 'fas fa-globe-americas';
+            }
+            
+            // Littérature/Français
+            if (name.includes('français') || name.includes('littérature') || name.includes('lecture')) {
+                return 'fas fa-book';
+            }
+            
+            // Langues
+            if (name.includes('anglais') || name.includes('langue') || name.includes('english')) {
+                return 'fas fa-language';
+            }
+            
+            // Arts
+            if (name.includes('art') || name.includes('dessin') || name.includes('créati')) {
+                return 'fas fa-palette';
+            }
+            
+            // Sport/EPS
+            if (name.includes('sport') || name.includes('eps')) {
+                return 'fas fa-running';
+            }
+            
+            // Informatique/Technologie
+            if (name.includes('info') || name.includes('techno') || name.includes('code')) {
+                return 'fas fa-laptop-code';
+            }
+            
+            // Agent par défaut
+            return 'fas fa-robot';
+        }
+
         // ===== FONCTIONS DE NOTIFICATION =====
         function showSuccessMessage(message) {
             showNotification(message, 'success');
@@ -477,20 +525,25 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                 
             } else {
                 const text = message.reponse || 'Pas de réponse';
+                // Récupérer le nom de l'agent actuel
+                const currentConv = conversationsData.find(c => c.id == window.currentConvId);
+                const agentName = currentConv ? currentConv.name : 'Agent IA';
+                const agentIcon = getAgentIcon(agentName);
+                
                 div.style.display = 'flex';
                 div.style.width = '100%';
                 div.style.justifyContent = 'flex-start';
                 div.innerHTML = `
                     <div style="max-width: 70%; display: flex; gap: 12px; align-items: flex-start;" class="group">
                         <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                            <i class="fas fa-robot text-white text-xs"></i>
+                            <i class="${agentIcon} text-white text-xs"></i>
                         </div>
                         <div style="flex: 1; position: relative;">
                             <div class="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-lg">
                                 <p class="text-sm text-gray-800" style="margin: 0;">${escapeHtml(text).replace(/\n/g, '<br>')}</p>
                             </div>
                             <div class="text-xs text-gray-500 mt-1">
-                                <i class="fas fa-robot text-xs"></i> Agent IA
+                                <i class="${agentIcon} text-xs"></i> ${agentName}
                             </div>
                             <div class="absolute -bottom-10 left-0 gap-1 hidden group-hover:flex rounded-lg p-2 whitespace-nowrap">
                                 <button class="px-3 py-1 text-xs bg-indigo-500 text-white rounded-full hover:bg-indigo-600 edit-btn transition-all duration-200" title="Modifier">
@@ -531,12 +584,17 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 
             const chatMessagesDiv = document.getElementById('chatMessages');
             const agentNameEl = document.getElementById('agentName');
+            const agentIconEl = document.querySelector('.w-10.h-10 i'); // Icône dans le header
 
             // Vider les messages précédents
             chatMessagesDiv.innerHTML = '';
 
-            // Mettre à jour le header
+            // Mettre à jour le header avec l'icône appropriée
             agentNameEl.textContent = data.name;
+            if (agentIconEl) {
+                const agentIcon = getAgentIcon(data.name);
+                agentIconEl.className = agentIcon + ' text-white text-lg';
+            }
 
             // Afficher les messages
             if (data.messages && data.messages.length > 0) {
@@ -674,6 +732,10 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             chatDiv.appendChild(userMsgEl);
 
             // Créer un indicateur de chargement pour la réponse
+            const currentConv = conversationsData.find(c => c.id == window.currentConvId);
+            const agentName = currentConv ? currentConv.name : 'Agent IA';
+            const agentIcon = getAgentIcon(agentName);
+            
             const loadingEl = document.createElement('div');
             loadingEl.style.display = 'flex';
             loadingEl.style.width = '100%';
@@ -681,7 +743,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             loadingEl.innerHTML = `
                 <div style="max-width: 70%; display: flex; gap: 12px; align-items: flex-start;">
                     <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <i class="fas fa-robot text-white text-xs"></i>
+                        <i class="${agentIcon} text-white text-xs"></i>
                     </div>
                     <div style="flex: 1;">
                         <div class="bg-gray-100 border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-lg">
@@ -691,7 +753,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                                     <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
                                     <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
                                 </div>
-                                <span class="text-sm text-gray-600">L'agent réfléchit...</span>
+                                <span class="text-sm text-gray-600">${agentName} réfléchit...</span>
                             </div>
                         </div>
                     </div>
