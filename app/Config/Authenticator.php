@@ -13,8 +13,24 @@ class Authenticator
     public static function login($userId)
     {
         self::startSession();
-        $_SESSION['is_logged'] = true;
+        $_SESSION['logged_in'] = true;
         $_SESSION['user_id'] = $userId;
+        $_SESSION['is_logged'] = true; // Pour compatibilité
+
+        // Récupérer les infos utilisateur depuis la BD
+        try {
+            $db = Database::getConnection();
+            $stmt = $db->prepare("SELECT id_user, nom, email FROM utilisateur WHERE id_user = ?");
+            $stmt->execute([$userId]);
+            
+            if ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $_SESSION['user_name'] = $row['nom'];
+                $_SESSION['user_email'] = $row['email'];
+            }
+        } catch (\Exception $e) {
+            // En cas d'erreur, on continue quand même la connexion
+            error_log("Erreur lors du fetch utilisateur: " . $e->getMessage());
+        }
 
         // ✅ Message flash de connexion
         self::setFlash("Vous êtes maintenant connecté.", "success");
