@@ -4,7 +4,7 @@ Authenticator::startSession();
 
 // Fonctions pour les icônes et informations des niveaux
 function getLevelInfo($levelName) {
-    $name = strtolower($levelName ?? '');
+    $name = strtolower($levelName);
     
     $info = [
         'icon' => 'fas fa-graduation-cap',
@@ -51,7 +51,7 @@ function getLevelInfo($levelName) {
             'skills' => ['Spécialisations', 'Philosophie', 'Méthodologie', 'Préparation aux examens'],
             'objectives' => 'Obtenir le baccalauréat et préparer l\'entrée dans l\'enseignement supérieur.'
         ];
-    } elseif (strpos($name, 'université') !== false || strpos($name, 'supérieur') !== false || strpos($name, 'master') !== false || strpos($name, 'licence') !== false || strpos($name, 'bts') !== false) {
+    } elseif (strpos($name, 'université') !== false || strpos($name, 'supérieur') !== false || strpos($name, 'master') !== false || strpos($name, 'licence') !== false) {
         $info = [
             'icon' => 'fas fa-university',
             'color' => 'from-amber-500 to-orange-600',
@@ -71,7 +71,7 @@ function getLevelInfo($levelName) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($level['niveau'] ?? 'Niveau'); ?> - School Agent</title>
+    <title><?php echo htmlspecialchars($level['nom'] ?? 'Niveau'); ?> - School Agent</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -210,7 +210,7 @@ function getLevelInfo($levelName) {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <?php if (!empty($level)): ?>
             <?php 
-                $levelInfo = getLevelInfo($level['niveau']);
+                $levelInfo = getLevelInfo($level['nom']);
             ?>
             
             <!-- Hero Section -->
@@ -224,7 +224,7 @@ function getLevelInfo($levelName) {
                     <!-- Level Title -->
                     <h1 class="text-5xl md:text-6xl font-bold mb-4">
                         <span class="bg-gradient-to-r <?php echo $levelInfo['color']; ?> bg-clip-text text-transparent">
-                            <?php echo htmlspecialchars($level['niveau']); ?>
+                            <?php echo htmlspecialchars($level['nom']); ?>
                         </span>
                     </h1>
                     
@@ -241,7 +241,7 @@ function getLevelInfo($levelName) {
                     
                     <!-- Primary Action Button -->
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <a href="?page=conversation&action=create&level=<?php echo $level['id_niveau_scolaire']; ?>" 
+                        <a href="?page=conversation&action=create&level=<?php echo $level['id_niveau']; ?>" 
                            class="bg-gradient-to-r <?php echo $levelInfo['color']; ?> text-white px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl transition-all duration-300 btn-glow inline-flex items-center gap-3">
                             <i class="fas fa-comments text-xl"></i>
                             Commencer l'apprentissage
@@ -363,7 +363,7 @@ function getLevelInfo($levelName) {
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a href="?page=conversation&action=create&level=<?php echo $level['id_niveau_scolaire']; ?>" 
+                    <a href="?page=conversation&action=create&level=<?php echo $level['id_niveau']; ?>" 
                        class="bg-gradient-to-r <?php echo $levelInfo['color']; ?> text-white px-12 py-4 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all duration-300 btn-glow inline-flex items-center gap-3">
                         <i class="fas fa-rocket"></i>
                         Démarrer maintenant
