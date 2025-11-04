@@ -2,17 +2,17 @@
 // Autoload Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+
 // use SchoolAgent\Controllers\HomeController;
 // use SchoolAgent\Controllers\UserController;
 use SchoolAgent\Controllers\{
-    HomeController,
-    UserController,
-    AuthController,
-    LevelController,
-    SubjectController,
-    ConversationController,
-    MessageController
+    AuthController
 };
+<<<<<<< HEAD
+
+use SchoolAgent\Controllers\front\{
+    HomeController
+=======
 use SchoolAgent\Controllers\Admin\{
     AdminController,
     AdminUserController,
@@ -23,7 +23,10 @@ use SchoolAgent\Controllers\Admin\{
     AdminAgentController,
     AdminUserLogController,
     AdminUserAgentController
+>>>>>>> main
 };
+
+
 // -------------------------------------------------------------
 // Récupération propre de la route dans l’URL
 // -------------------------------------------------------------
@@ -61,6 +64,8 @@ switch ($page) {
         (new AuthController())->logout();
         break;
 
+<<<<<<< HEAD
+=======
 // ---------------------------------------------------------------------------
 // ADMINISTRATION DU SITE
 // ---------------------------------------------------------------------------
@@ -307,6 +312,7 @@ switch ($page) {
         }
         break;
         
+>>>>>>> main
 
     // Page non trouvée
     default:
