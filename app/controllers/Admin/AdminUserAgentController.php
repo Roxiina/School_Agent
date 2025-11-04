@@ -77,6 +77,7 @@ class AdminUserAgentController
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Paramètres manquants pour éditer la relation'];
             header('Location: /admin/useragent');
             exit;
+            
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

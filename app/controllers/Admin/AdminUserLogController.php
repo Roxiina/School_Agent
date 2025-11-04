@@ -10,6 +10,7 @@ class AdminUserLogController
 
     public function __construct()
     {
+        
         $this->model = new UserLogModel();
     }
 
