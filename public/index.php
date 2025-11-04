@@ -13,7 +13,17 @@ use SchoolAgent\Controllers\{
     ConversationController,
     MessageController
 };
-
+use SchoolAgent\Controllers\Admin\{
+    AdminController,
+    AdminUserController,
+    AdminLevelController,
+    AdminMessageController,
+    AdminConversationController,
+    AdminSubjectController,
+    AdminAgentController,
+    AdminUserLogController,
+    AdminUserAgentController
+};
 // -------------------------------------------------------------
 // Récupération propre de la route dans l’URL
 // -------------------------------------------------------------
@@ -50,216 +60,253 @@ switch ($page) {
     case 'logout':
         (new AuthController())->logout();
         break;
-    
-    
-        // Liste des utilisateurs
-    case 'user':
-        $controller = new UserController();
-        $controller->index();
-        break;
 
-    // Afficher le profil utilisateur
-    // Exemple : http://localhost:8000/user/show?id=4
-    case 'user/show':
-    if (isset($_GET['id'])) {
-        $controller = new UserController();
-        $controller->show($_GET['id']);
-    } else {
-        echo "<h1>Erreur : ID manquant</h1>";
-    }
-    break;
-
-    // Formulaire création utilisateur
-    case 'user/create':
-        $controller = new UserController();
-        $controller->create();
-        break;
-    
-    // Formulaire édition utilisateur
-    // http://localhost:8000/user/edit/?id=4
-    case 'user/edit':
-        if (isset($_GET['id'])) {
-            $controller = new UserController();
-            $controller->edit($_GET['id']);
-        }
-        break;
-
-    // Suppression utilisateur
-    // http://localhost:8000/user/delete/?id=4
-    case 'user/delete':
-        if (isset($_GET['id'])) {
-            $controller = new UserController();
-            $controller->delete($_GET['id']);
-        }
-        break;
 // ---------------------------------------------------------------------------
-    // Liste des NIVEAUX -----------------------------------------------------
-    case 'level':
-        $controller = new LevelController();
-        $controller->index();
-        break;
-
-    // Afficher le niveau
-    // Exemple : http://localhost:8000/level/show?id=4
-    case 'level/show':
-    if (isset($_GET['id'])) {
-        $controller = new LevelController();
-        $controller->show($_GET['id']);
-    } else {
-        echo "<h1>Erreur : ID manquant</h1>";
-    }
-    break;
-
-    // Formulaire création niveau
-    case 'level/create':
-        $controller = new LevelController();
-        $controller->create();
-        break;
-    
-    // Formulaire édition niveau
-    // http://localhost:8000/level/edit/?id=4
-    case 'level/edit':
-        if (isset($_GET['id'])) {
-            $controller = new LevelController();
-            $controller->edit($_GET['id']);
-        }
-        break;
-
-    // Suppression niveau
-    // http://localhost:8000/level/delete/?id=4
-    case 'level/delete':
-        if (isset($_GET['id'])) {
-            $controller = new LevelController();
-            $controller->delete($_GET['id']);
-        }
-        break;
+// ADMINISTRATION DU SITE
 // ---------------------------------------------------------------------------
-    // Liste des MATIERES ----------------------------------------------------
-    case 'subject':
-        $controller = new SubjectController();
-        $controller->index();
+
+    // http://localhost:8000/admin
+    case 'admin':
+        (new AdminController())->dashboard();
+        break;
+    
+    // -------------------- user admin ---------------------
+    /* admin user list */
+    // http://localhost:8000/admin/user
+    case 'admin/user':
+        (new AdminUserController())->index();
         break;
 
-    // Afficher la matière
-    // Exemple : http://localhost:8000/subject/show?id=4
-    case 'subject/show':
-    if (isset($_GET['id'])) {
-        $controller = new SubjectController();
-        $controller->show($_GET['id']);
+    /* create */
+    case 'admin/user/create':
+        (new AdminUserController())->create();
+        break;
+
+    /* show */
+    case 'admin/user/show':
+        if (isset($_GET['id'])) {
+            (new AdminUserController())->show($_GET['id']);
+        }
+        break;
+
+    /* edit */
+    case 'admin/user/edit':
+        if (isset($_GET['id'])) {
+            (new AdminUserController())->edit($_GET['id']);
+        } else {
+            // allow create/edit without id? here require id
+            echo "<h1>Paramètre id manquant</h1>";
+        }
+        break;
+
+    /* delete */
+    case 'admin/user/delete':
+        if (isset($_GET['id'])) {
+            (new AdminUserController())->delete($_GET['id']);
+        }
+        break;
+
+    // -------------------- level admin ---------------------
+    /* admin level list */
+    // http://localhost:8000/admin/level
+    case 'admin/level':
+        (new AdminLevelController())->index();
+        break;
+
+    /* create */
+    // http://localhost:8000/admin/level/create
+    case 'admin/level/create':
+        (new AdminLevelController())->create();
+        break;
+
+    /* show */
+    // http://localhost:8000/admin/level/show?id=1
+    case 'admin/level/show':
+        if (isset($_GET['id'])) {
+            (new AdminLevelController())->show($_GET['id']);
+        }
+        break;
+
+    /* edit */
+    // http://localhost:8000/admin/level/edit?id=1
+    case 'admin/level/edit':
+        if (isset($_GET['id'])) {
+            (new AdminLevelController())->edit($_GET['id']);
+        } else {
+            echo "<h1>Paramètre id manquant</h1>";
+        }
+        break;
+
+    /* delete */
+    // http://localhost:8000/admin/level/delete?id=1
+    case 'admin/level/delete':
+        if (isset($_GET['id'])) {
+            (new AdminLevelController())->delete($_GET['id']);
+        }
+        break;
+    
+    // -------------------- messages admin ---------------------
+    // Liste messages admin
+    case 'admin/message':
+        (new AdminMessageController())->index();
+        break;
+
+    case 'admin/message/create':
+        (new AdminMessageController())->create();
+        break;
+
+    case 'admin/message/show':
+        if (isset($_GET['id'])) {
+            (new AdminMessageController())->show($_GET['id']);
+        }
+        break;
+
+    case 'admin/message/edit':
+        if (isset($_GET['id'])) {
+            (new AdminMessageController())->edit($_GET['id']);
+        } else {
+            echo "<h1>Paramètre id manquant</h1>";
+        }
+        break;
+
+    case 'admin/message/delete':
+        if (isset($_GET['id'])) {
+            (new AdminMessageController())->delete($_GET['id']);
+        }
+        break;
+
+    // -------------------- conversation admin ---------------------
+    case 'admin/conversation':
+        (new AdminConversationController())->index();
+        break;
+
+    case 'admin/conversation/create':
+        (new AdminConversationController())->create();
+        break;
+
+    case 'admin/conversation/show':
+        if (isset($_GET['id'])) {
+            (new AdminConversationController())->show($_GET['id']);
+        }
+        break;
+
+    case 'admin/conversation/edit':
+        if (isset($_GET['id'])) {
+            (new AdminConversationController())->edit($_GET['id']);
+        } else {
+            echo "<h1>Paramètre id manquant</h1>";
+        }
+        break;
+
+    case 'admin/conversation/delete':
+        if (isset($_GET['id'])) {
+            (new AdminConversationController())->delete($_GET['id']);
+        }
+        break;
+
+    case 'admin/subject':
+    (new AdminSubjectController())->index();
+    break;
+
+    // -------------------- subject admin ---------------------
+
+    case 'admin/subject/create':
+        (new AdminSubjectController())->create();
+        break;
+
+    case 'admin/subject/show':
+        if (isset($_GET['id'])) {
+            (new AdminSubjectController())->show($_GET['id']);
+        }
+        break;
+
+    case 'admin/subject/edit':
+        if (isset($_GET['id'])) {
+            (new AdminSubjectController())->edit($_GET['id']);
+        }
+        break;
+
+    case 'admin/subject/delete':
+        if (isset($_GET['id'])) {
+            (new AdminSubjectController())->delete($_GET['id']);
+        }
+        break;
+
+    // -------------------- agent admin ---------------------
+
+    case 'admin/agent':
+        (new AdminAgentController())->index();
+        break;
+
+    case 'admin/agent/create':
+        (new AdminAgentController())->create();
+        break;
+
+    case 'admin/agent/show':
+        if (isset($_GET['id'])) {
+            (new AdminAgentController())->show($_GET['id']);
+        }
+        break;
+
+    case 'admin/agent/edit':
+        if (isset($_GET['id'])) {
+            (new AdminAgentController())->edit($_GET['id']);
+        } else {
+            echo "<h1>Paramètre id manquant</h1>";
+        }
+        break;
+
+    case 'admin/agent/delete':
+        if (isset($_GET['id'])) {
+            (new AdminAgentController())->delete($_GET['id']);
+        }
+        break;
+
+    // -------------------- user_log admin ---------------------
+    // Pas de create ou edit car tu m'as dit que les logs sont générés automatiquement
+    
+    // -------------------- user_log admin ---------------------
+    // Pas de create ou edit car les logs sont générés automatiquement
+
+    case 'admin/userlog':
+        (new AdminUserLogController())->index();
+        break;
+
+    case 'admin/userlog/show':
+        if (isset($_GET['id'])) {
+            (new AdminUserLogController())->show($_GET['id']);
+        }
+        break;
+
+    case 'admin/userlog/delete':
+        if (isset($_GET['id'])) {
+            (new AdminUserLogController())->delete($_GET['id']);
+        }
+        break;
+
+    // -------------------- useragent admin ---------------------
+    case 'admin/useragent':
+        (new AdminUserAgentController())->index();
+        break;
+
+    case 'admin/useragent/create':
+        (new AdminUserAgentController())->create();
+        break;
+
+    case 'admin/useragent/edit':
+    if (isset($_GET['id_user']) && isset($_GET['id_agent'])) {
+        (new AdminUserAgentController())->edit($_GET['id_user'], $_GET['id_agent']);
     } else {
-        echo "<h1>Erreur : ID manquant</h1>";
+        echo "<h1>Paramètres manquants pour modifier la relation</h1>";
     }
     break;
 
-    // Formulaire création matière
-    case 'subject/create':
-        $controller = new SubjectController();
-        $controller->create();
-        break;
-    
-    // Formulaire édition matière
-    // http://localhost:8000/subject/edit/?id=4
-    case 'subject/edit':
-        if (isset($_GET['id'])) {
-            $controller = new SubjectController();
-            $controller->edit($_GET['id']);
+    case 'admin/useragent/delete':
+        if (isset($_GET['id_user'], $_GET['id_agent'])) {
+            (new AdminUserAgentController())->delete($_GET['id_user'], $_GET['id_agent']);
         }
         break;
-
-    // Suppression matière
-    // http://localhost:8000/subject/delete/?id=4
-    case 'subject/delete':
-        if (isset($_GET['id'])) {
-            $controller = new SubjectController();
-            $controller->delete($_GET['id']);
-        }
-        break;
-
-    // ---------------------------------------------------------------------------
-    // Liste des MESSAGES --------------------------------------------------------
-    case 'message':
-        $controller = new MessageController();
-        $controller->index();
-        break;
-
-    // Afficher le message
-    // Exemple : http://localhost:8000/message/show?id=4
-    case 'message/show':
-    if (isset($_GET['id'])) {
-        $controller = new MessageController();
-        $controller->show($_GET['id']);
-    } else {
-        echo "<h1>Erreur : ID manquant</h1>";
-    }
-    break;
-
-    // Formulaire création message
-    case 'message/create':
-        $controller = new MessageController();
-        $controller->create();
-        break;
-    
-    // Formulaire édition message
-    // http://localhost:8000/message/edit/?id=4
-    case 'message/edit':
-        if (isset($_GET['id'])) {
-            $controller = new MessageController();
-            $controller->edit($_GET['id']);
-        }
-        break;
-
-    // Suppression message
-    // http://localhost:8000/message/delete/?id=4
-    case 'message/delete':
-        if (isset($_GET['id'])) {
-            $controller = new MessageController();
-            $controller->delete($_GET['id']);
-        }
-        break;
-// ----------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------
-    // Liste des CONVERSATIONS-----------------------------------------------
-    case 'conversation':
-        $controller = new ConversationController();
-        $controller->index();
-        break;
-
-    // Afficher la conversation
-    // Exemple : http://localhost:8000/conversation/show?id=4
-    case 'conversation/show':
-    if (isset($_GET['id'])) {
-        $controller = new ConversationController();
-        $controller->show($_GET['id']);
-    } else {
-        echo "<h1>Erreur : ID manquant</h1>";
-    }
-    break;
-
-    // Formulaire création conversation
-    case 'conversation/create':
-        $controller = new ConversationController();
-        $controller->create();
-        break;
-    
-    // Formulaire édition conversation
-    // http://localhost:8000/conversation/edit/?id=4
-    case 'conversation/edit':
-        if (isset($_GET['id'])) {
-            $controller = new ConversationController();
-            $controller->edit($_GET['id']);
-        }
-        break;
-
-    // Suppression conversation
-    // http://localhost:8000/conversation/delete/?id=4
-    case 'conversation/delete':
-        if (isset($_GET['id'])) {
-            $controller = new ConversationController();
-            $controller->delete($_GET['id']);
-        }
-        break;
-// ---------------------------------------------------------------------------
+        
 
     // Page non trouvée
     default:
