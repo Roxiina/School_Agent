@@ -32,6 +32,6 @@ class AdminController
 
     public function dashboard()
     {
-        require __DIR__ . '/../../Views/admin/dashboard.php';
+        include __DIR__ . '/front_admin/pages/dashboard.php';
     }
 }
