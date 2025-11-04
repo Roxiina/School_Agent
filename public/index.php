@@ -8,11 +8,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use SchoolAgent\Controllers\{
     AuthController
 };
-<<<<<<< HEAD
 
 use SchoolAgent\Controllers\front\{
     HomeController
-=======
+};
+
 use SchoolAgent\Controllers\Admin\{
     AdminController,
     AdminUserController,
@@ -23,7 +23,6 @@ use SchoolAgent\Controllers\Admin\{
     AdminAgentController,
     AdminUserLogController,
     AdminUserAgentController
->>>>>>> main
 };
 
 
@@ -64,8 +63,6 @@ switch ($page) {
         (new AuthController())->logout();
         break;
 
-<<<<<<< HEAD
-=======
 // ---------------------------------------------------------------------------
 // ADMINISTRATION DU SITE
 // ---------------------------------------------------------------------------
@@ -312,7 +309,6 @@ switch ($page) {
         }
         break;
         
->>>>>>> main
 
     // Page non trouvée
     default:
