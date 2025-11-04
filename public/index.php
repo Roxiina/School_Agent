@@ -19,7 +19,10 @@ use SchoolAgent\Controllers\Admin\{
     AdminLevelController,
     AdminMessageController,
     AdminConversationController,
-    AdminSubjectController
+    AdminSubjectController,
+    AdminAgentController,
+    AdminUserLogController,
+    AdminUserAgentController
 };
 // -------------------------------------------------------------
 // Récupération propre de la route dans l’URL
@@ -229,9 +232,80 @@ switch ($page) {
         }
         break;
 
+    // -------------------- agent admin ---------------------
+
+    case 'admin/agent':
+        (new AdminAgentController())->index();
+        break;
+
+    case 'admin/agent/create':
+        (new AdminAgentController())->create();
+        break;
+
+    case 'admin/agent/show':
+        if (isset($_GET['id'])) {
+            (new AdminAgentController())->show($_GET['id']);
+        }
+        break;
+
+    case 'admin/agent/edit':
+        if (isset($_GET['id'])) {
+            (new AdminAgentController())->edit($_GET['id']);
+        } else {
+            echo "<h1>Paramètre id manquant</h1>";
+        }
+        break;
+
+    case 'admin/agent/delete':
+        if (isset($_GET['id'])) {
+            (new AdminAgentController())->delete($_GET['id']);
+        }
+        break;
+
+    // -------------------- user_log admin ---------------------
+    // Pas de create ou edit car tu m'as dit que les logs sont générés automatiquement
     
+    // -------------------- user_log admin ---------------------
+    // Pas de create ou edit car les logs sont générés automatiquement
 
+    case 'admin/userlog':
+        (new AdminUserLogController())->index();
+        break;
 
+    case 'admin/userlog/show':
+        if (isset($_GET['id'])) {
+            (new AdminUserLogController())->show($_GET['id']);
+        }
+        break;
+
+    case 'admin/userlog/delete':
+        if (isset($_GET['id'])) {
+            (new AdminUserLogController())->delete($_GET['id']);
+        }
+        break;
+
+    // -------------------- useragent admin ---------------------
+    case 'admin/useragent':
+        (new AdminUserAgentController())->index();
+        break;
+
+    case 'admin/useragent/create':
+        (new AdminUserAgentController())->create();
+        break;
+
+    case 'admin/useragent/edit':
+    if (isset($_GET['id_user']) && isset($_GET['id_agent'])) {
+        (new AdminUserAgentController())->edit($_GET['id_user'], $_GET['id_agent']);
+    } else {
+        echo "<h1>Paramètres manquants pour modifier la relation</h1>";
+    }
+    break;
+
+    case 'admin/useragent/delete':
+        if (isset($_GET['id_user'], $_GET['id_agent'])) {
+            (new AdminUserAgentController())->delete($_GET['id_user'], $_GET['id_agent']);
+        }
+        break;
         
 
     // Page non trouvée
