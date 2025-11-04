@@ -2,6 +2,48 @@
 // Autoload Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Gestion des assets statiques (CSS, JS, images)
+$uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+
+// Servir les fichiers CSS depuis app/Views/front/css/
+if (preg_match('/^css\/(.+\.css)$/', $uri, $matches)) {
+    $cssFile = __DIR__ . '/../app/Views/front/css/' . $matches[1];
+    if (file_exists($cssFile)) {
+        header('Content-Type: text/css');
+        readfile($cssFile);
+        exit;
+    }
+}
+
+// Servir les fichiers JS depuis app/Views/front/js/
+if (preg_match('/^js\/(.+\.js)$/', $uri, $matches)) {
+    $jsFile = __DIR__ . '/../app/Views/front/js/' . $matches[1];
+    if (file_exists($jsFile)) {
+        header('Content-Type: application/javascript');
+        readfile($jsFile);
+        exit;
+    }
+}
+
+// Servir les images depuis app/Views/front/images/
+if (preg_match('/^images\/(.+\.(jpg|jpeg|png|gif|svg|webp))$/', $uri, $matches)) {
+    $imageFile = __DIR__ . '/../app/Views/front/images/' . $matches[1];
+    if (file_exists($imageFile)) {
+        $extension = strtolower(pathinfo($imageFile, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'webp' => 'image/webp'
+        ];
+        header('Content-Type: ' . ($mimeTypes[$extension] ?? 'application/octet-stream'));
+        readfile($imageFile);
+        exit;
+    }
+}
+
 // use SchoolAgent\Controllers\HomeController;
 // use SchoolAgent\Controllers\UserController;
 use SchoolAgent\Controllers\{
