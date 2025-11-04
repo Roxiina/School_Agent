@@ -5,9 +5,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Gestion des assets statiques (CSS, JS, images)
 $uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-// Servir les fichiers CSS depuis app/Views/front/css/
+// Servir les fichiers CSS depuis public/css/
 if (preg_match('/^css\/(.+\.css)$/', $uri, $matches)) {
-    $cssFile = __DIR__ . '/../app/Views/front/css/' . $matches[1];
+    $cssFile = __DIR__ . '/css/' . $matches[1];
     if (file_exists($cssFile)) {
         header('Content-Type: text/css');
         readfile($cssFile);
@@ -15,9 +15,9 @@ if (preg_match('/^css\/(.+\.css)$/', $uri, $matches)) {
     }
 }
 
-// Servir les fichiers JS depuis app/Views/front/js/
+// Servir les fichiers JS depuis public/js/
 if (preg_match('/^js\/(.+\.js)$/', $uri, $matches)) {
-    $jsFile = __DIR__ . '/../app/Views/front/js/' . $matches[1];
+    $jsFile = __DIR__ . '/js/' . $matches[1];
     if (file_exists($jsFile)) {
         header('Content-Type: application/javascript');
         readfile($jsFile);

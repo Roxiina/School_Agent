@@ -30,7 +30,7 @@ class AuthController
             }
         }
 
-        require __DIR__ . '/../Views/auth/login.php';
+        require __DIR__ . '/../Views/front/login.php';
     }
 
     public function logout()

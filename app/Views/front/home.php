@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/front/home.css">
 </head>
 <body>
     <!-- Header -->
@@ -175,6 +175,6 @@
     </footer>
 
     <!-- Custom JavaScript -->
-    <script src="/js/home.js"></script>
+    <script src="/js/front/home.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/front/login.css">
 </head>
 <body>
     <!-- Header -->
@@ -105,7 +105,11 @@
     </footer>
 
     <!-- Custom JavaScript -->
-    <!-- <script src="/js/login.js"></script> --> <!-- Temporairement désactivé pour debug -->
+        </footer>
+    
+    <!-- JavaScript -->
+    <script src="/js/front/login.js"></script> <!-- Réactivé -->
+    <script>
     <script>
         // Version simplifiée pour debug
         document.addEventListener('DOMContentLoaded', function() {
