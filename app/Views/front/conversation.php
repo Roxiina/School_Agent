@@ -48,14 +48,37 @@
                 <h3 class="sidebar-title">Sélectionner un agent</h3>
             </div>
             <div class="agents-list">
+                <?php 
+                    // Fonction pour obtenir l'icône correspondante à chaque agent
+                    $getAgentIcon = function($agentName, $avatar) {
+                        $name = strtolower($agentName);
+                        
+                        // Mapping basé sur le nom ou l'avatar
+                        if (strpos($name, 'math') !== false || strpos($avatar, 'math') !== false) {
+                            return 'fas fa-calculator';
+                        } elseif (strpos($name, 'histoire') !== false || strpos($avatar, 'hist') !== false) {
+                            return 'fas fa-book-open';
+                        } elseif (strpos($name, 'scolaire') !== false || strpos($avatar, 'school') !== false) {
+                            return 'fas fa-graduation-cap';
+                        } elseif (strpos($name, 'français') !== false || strpos($name, 'français') !== false) {
+                            return 'fas fa-pen-fancy';
+                        } elseif (strpos($name, 'science') !== false) {
+                            return 'fas fa-flask';
+                        } elseif (strpos($name, 'english') !== false || strpos($name, 'anglais') !== false) {
+                            return 'fas fa-flag';
+                        } else {
+                            return 'fas fa-robot';
+                        }
+                    };
+                ?>
                 <?php if (!empty($agents) ?? false): ?>
-                    <?php foreach ($agents as $agent): ?>
-                        <a href="/conversation?agent=<?= $agent['id_agent'] ?>" 
-                           class="agent-item <?= isset($_GET['agent']) && $_GET['agent'] == $agent['id_agent'] ? 'active' : '' ?>">
+                    <?php foreach ($agents as $agentItem): ?>
+                        <a href="/conversation/agent/<?= $agentItem['id_agent'] ?>" 
+                           class="agent-item <?= isset($agent) && $agent && $agent['id_agent'] == $agentItem['id_agent'] ? 'active' : '' ?>">
                             <div class="agent-avatar">
-                                <?= substr($agent['nom'], 0, 1) ?>
+                                <i class="<?= $getAgentIcon($agentItem['nom'], $agentItem['avatar'] ?? '') ?>"></i>
                             </div>
-                            <span class="agent-name"><?= htmlspecialchars($agent['nom']) ?></span>
+                            <span class="agent-name"><?= htmlspecialchars($agentItem['nom']) ?></span>
                         </a>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -71,24 +94,45 @@
             <?php if (isset($agent) && $agent): ?>
                 <!-- Chat Header -->
                 <div class="chat-header">
-                    <div class="agent-avatar" style="width: 44px; height: 44px; font-size: 20px;">
-                        <?= substr($agent['nom'], 0, 1) ?>
+                    <div class="agent-avatar" style="width: 44px; height: 44px; font-size: 20px; display: flex; align-items: center; justify-content: center;">
+                        <i class="<?= $getAgentIcon($agent['nom'], $agent['avatar'] ?? '') ?>" style="font-size: 24px;"></i>
                     </div>
                     <div class="chat-header-info">
                         <div class="chat-header-title"><?= htmlspecialchars($agent['nom']) ?></div>
-                        <div class="chat-header-subtitle">Expert en <?= htmlspecialchars($agent['nom']) ?></div>
+                        <div class="chat-header-subtitle">🎓 Assistant spécialisé</div>
                     </div>
                 </div>
+
+                <!-- Conversation History -->
+                <?php if (!empty($conversationHistory)): ?>
+                    <div class="conversation-history">
+                        <div class="history-header">
+                            <i class="fas fa-history"></i>
+                            <span>Historique des conversations</span>
+                        </div>
+                        <div class="history-list">
+                            <?php foreach ($conversationHistory as $conv): ?>
+                                <div class="history-item">
+                                    <div class="history-title"><?= htmlspecialchars($conv['titre']) ?></div>
+                                    <div class="history-date">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <?= date('d/m/Y H:i', strtotime($conv['date_creation'])) ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Messages Container -->
                 <div class="messages-container" id="messagesContainer">
                     <div class="message agent">
-                        <div class="message-avatar agent">
-                            <?= substr($agent['nom'], 0, 1) ?>
+                        <div class="message-avatar agent" style="display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                            <i class="<?= $getAgentIcon($agent['nom'], $agent['avatar'] ?? '') ?>"></i>
                         </div>
                         <div>
                             <div class="message-bubble">
-                                Bonjour <?= htmlspecialchars($user['prenom'] ?? 'étudiant') ?> ! 👋 Je suis <?= htmlspecialchars($agent['nom']) ?>, ton assistant IA spécialisé. Comment puis-je t'aider aujourd'hui ?
+                                Salut <?= htmlspecialchars($user['prenom'] ?? 'étudiant') ?> ! 👋 Je suis <?= htmlspecialchars($agent['nom']) ?>, ton assistant IA. Je suis là pour t'aider dans tes apprentissages. N'hésite pas à me poser tes questions ! 📚
                             </div>
                             <div class="message-time">À l'instant</div>
                         </div>

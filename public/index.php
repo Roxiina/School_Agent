@@ -50,8 +50,14 @@ if (isset($_GET['page']) && $_GET['page'] !== '') {
 
 // -------------------------------------------------------------
 // Routing via switch-case
-// -------------------------------------------------------------
-switch ($page) {
+// -------------------------------------------------
+// Extraire les segments de la route pour gérer les sous-routes
+$pageSegments = explode('/', trim($page, '/'));
+$mainPage = $pageSegments[0] ?? 'home';
+$subPage = $pageSegments[1] ?? null;
+$param = $pageSegments[2] ?? null;
+
+switch ($mainPage) {
     case 'home':
         $controller = new HomeController();
         $controller->index();
@@ -62,7 +68,12 @@ switch ($page) {
         break;
 
     case 'conversation':
-        (new ConversationController())->index();
+        // Vérifier s'il y a une sous-route /agent/id
+        if ($subPage === 'agent' && $param) {
+            (new ConversationController())->agent($param);
+        } else {
+            (new ConversationController())->index();
+        }
         break;
 
     case 'login':
