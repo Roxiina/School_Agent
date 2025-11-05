@@ -15,6 +15,17 @@ class AuthController
 
     public function login()
     {
+        // Si l'utilisateur est déjà connecté, le rediriger
+        if (Authenticator::isLogged()) {
+            $user = $this->model->getUser(Authenticator::getUserId());
+            if ($user && $user['role'] === 'admin') {
+                header('Location: /admin');
+            } else {
+                header('Location: /home');
+            }
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $password = $_POST['mot_de_passe'];
@@ -23,7 +34,13 @@ class AuthController
 
             if ($user && password_verify($password, $user['mot_de_passe'])) {
                 Authenticator::login($user['id_user']);
-                header('Location: /home');
+                
+                // Rediriger selon le rôle
+                if ($user['role'] === 'admin') {
+                    header('Location: /admin');
+                } else {
+                    header('Location: /home');
+                }
                 exit;
             } else {
                 $error = "Email ou mot de passe incorrect.";

@@ -15,6 +15,23 @@
     <link rel="stylesheet" href="/css/front/home.css">
 </head>
 <body>
+    <!-- Flash Messages -->
+    <?php
+    use SchoolAgent\Config\Authenticator;
+    $flash = Authenticator::getFlash();
+    if ($flash): ?>
+        <div class="flash-message flash-<?= $flash['type'] ?>" style="position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 15px 20px; border-radius: 5px; color: white; font-weight: 500;">
+            <?= htmlspecialchars($flash['message']) ?>
+        </div>
+        <script>
+            // Faire disparaître le message après 5 secondes
+            setTimeout(() => {
+                const flashMsg = document.querySelector('.flash-message');
+                if (flashMsg) flashMsg.style.display = 'none';
+            }, 5000);
+        </script>
+    <?php endif; ?>
+
     <!-- Header -->
     <header class="header">
         <nav class="nav-container">
@@ -28,7 +45,17 @@
                 <li><a href="#fonctionnalites" class="nav-link">Fonctionnalités</a></li>
                 <li><a href="#a-propos" class="nav-link">À propos</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="/login" class="btn btn-primary">Se connecter</a></li>
+                <?php if (isset($isLogged) && $isLogged): ?>
+                    <li><span class="nav-welcome" style="color: #10b981; font-weight: 500; padding: 8px 16px;">
+                        Bonjour <?= htmlspecialchars($user['prenom'] ?? 'Utilisateur') ?> ! 👋
+                    </span></li>
+                    <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+                        <li><a href="/admin" class="btn btn-secondary" style="background: #6366f1; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">Administration</a></li>
+                    <?php endif; ?>
+                    <li><a href="/logout" class="btn btn-danger" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">Se déconnecter</a></li>
+                <?php else: ?>
+                    <li><a href="/login" class="btn btn-primary">Se connecter</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>
@@ -43,10 +70,24 @@
                 Votre assistant IA personnel pour l'apprentissage. Transformez votre façon d'étudier avec une intelligence artificielle adaptée à votre niveau et vos besoins.
             </p>
             <div class="hero-buttons animate-fade-in">
-                <a href="/login" class="btn btn-primary btn-large">
-                    <i class="fas fa-rocket"></i>
-                    Commencer maintenant
-                </a>
+                <?php if (isset($isLogged) && $isLogged): ?>
+                    <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+                        <a href="/admin" class="btn btn-primary btn-large">
+                            <i class="fas fa-cogs"></i>
+                            Accéder à l'administration
+                        </a>
+                    <?php else: ?>
+                        <a href="#fonctionnalites" class="btn btn-primary btn-large">
+                            <i class="fas fa-graduation-cap"></i>
+                            Commencer à apprendre
+                        </a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <a href="/login" class="btn btn-primary btn-large">
+                        <i class="fas fa-rocket"></i>
+                        Commencer maintenant
+                    </a>
+                <?php endif; ?>
                 <a href="#fonctionnalites" class="btn btn-outline btn-large">
                     <i class="fas fa-info-circle"></i>
                     Découvrir les fonctionnalités
@@ -158,10 +199,17 @@
             <p class="cta-subtitle">
                 Rejoignez des milliers d'étudiants qui utilisent déjà School Agent pour améliorer leurs résultats scolaires et leur compréhension.
             </p>
-            <a href="/login" class="btn btn-primary btn-large">
-                <i class="fas fa-user-plus"></i>
-                Créer mon compte gratuitement
-            </a>
+            <?php if (isset($isLogged) && $isLogged): ?>
+                <a href="#fonctionnalites" class="btn btn-primary btn-large">
+                    <i class="fas fa-graduation-cap"></i>
+                    Continuer votre apprentissage
+                </a>
+            <?php else: ?>
+                <a href="/login" class="btn btn-primary btn-large">
+                    <i class="fas fa-user-plus"></i>
+                    Créer mon compte gratuitement
+                </a>
+            <?php endif; ?>
         </div>
     </section>
 

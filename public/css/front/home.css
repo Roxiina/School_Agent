@@ -391,3 +391,74 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Flash Messages */
+.flash-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 15px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+    max-width: 400px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.flash-success {
+    background: #10b981;
+    color: white;
+}
+
+.flash-error {
+    background: #ef4444;
+    color: white;
+}
+
+.flash-info {
+    background: #3b82f6;
+    color: white;
+}
+
+.flash-warning {
+    background: #f59e0b;
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Navigation improvements for logged users */
+.nav-welcome {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .flash-message {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .nav-menu {
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+    
+    .nav-welcome {
+        font-size: var(--font-size-sm);
+    }
+}
