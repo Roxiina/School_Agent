@@ -29,6 +29,8 @@ class AgentsController
             'Sciences' => 'Explorez le monde des sciences avec un agent expert. Physique, chimie, biologie - des explications claires pour comprendre les phénomènes naturels.',
             'Anglais' => 'Progressez en anglais avec un agent dédié à la langue. Vocabulaire, grammaire, prononciation et compréhension - pour devenir bilingue!',
             'Informatique' => 'Apprenez l\'informatique de manière progressive. Du code à la théorie, un agent expert pour vous guider dans vos apprentissages numériques.',
+            'Méthodologie' => 'Maîtrisez les techniques d\'apprentissage efficace et l\'organisation du travail scolaire.',
+            'Histoire' => 'Plongez dans l\'histoire avec un agent expert pour comprendre les événements qui ont façonné notre monde.',
         ];
         
         // Récupérer tous les agents
@@ -37,25 +39,27 @@ class AgentsController
         // Récupérer toutes les matières
         $subjects = $this->subjectModel->getSubjects();
         
+        // Créer une map agents par id
+        $agentsById = [];
+        foreach ($agents as $agent) {
+            $agentsById[$agent['id_agent']] = $agent;
+        }
+        
         // Grouper les agents par matière
         $agentsBySubject = [];
         foreach ($subjects as $subject) {
-            // Exclure la matière "Histoire"
-            if (strtolower($subject['nom']) !== 'histoire') {
-                $agentsBySubject[$subject['id_matiere']] = [
-                    'name' => $subject['nom'],
-                    'description' => $subject['description'] ?? '',
-                    'why_use' => $subjectDescriptions[$subject['nom']] ?? 'Un agent expert pour vous accompagner dans votre apprentissage de cette matière.',
-                    'agents' => []
-                ];
-            }
-        }
-        
-        // Assigner les agents à leurs matières
-        foreach ($agents as $agent) {
-            $subjectId = $agent['id_matiere'] ?? null;
-            if ($subjectId && isset($agentsBySubject[$subjectId])) {
-                $agentsBySubject[$subjectId]['agents'][] = $agent;
+            // Inclure toutes les matières (y compris Histoire)
+            $agentsBySubject[$subject['id_matiere']] = [
+                'name' => $subject['nom'],
+                'description' => $subject['description'] ?? '',
+                'why_use' => $subjectDescriptions[$subject['nom']] ?? 'Un agent expert pour vous accompagner dans votre apprentissage de cette matière.',
+                'agents' => []
+            ];
+            
+            // Ajouter l'agent associé à cette matière
+            $agentId = $subject['id_agent'] ?? null;
+            if ($agentId && isset($agentsById[$agentId])) {
+                $agentsBySubject[$subject['id_matiere']]['agents'][] = $agentsById[$agentId];
             }
         }
         
