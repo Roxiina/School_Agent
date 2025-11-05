@@ -22,7 +22,7 @@ class AdminAgentController
     public function show($id)
     {
         $agent = $this->model->getAgent($id);
-//test
+
         if (!$agent) {
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Agent introuvable'];
             header('Location: /admin/agent');

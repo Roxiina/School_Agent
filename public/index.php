@@ -10,7 +10,8 @@ use SchoolAgent\Controllers\{
 };
 
 use SchoolAgent\Controllers\front\{
-    HomeController
+    HomeController,
+    IaController
 };
 
 use SchoolAgent\Controllers\Admin\{
@@ -62,6 +63,11 @@ switch ($page) {
     case 'logout':
         (new AuthController())->logout();
         break;
+
+    case 'ia':
+        (new IaController())->index();
+        break;
+
 
 // ---------------------------------------------------------------------------
 // ADMINISTRATION DU SITE
