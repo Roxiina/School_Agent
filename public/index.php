@@ -9,8 +9,9 @@ use SchoolAgent\Controllers\{
     AuthController
 };
 
-use SchoolAgent\Controllers\front\{
-    HomeController
+use SchoolAgent\Controllers\Front\{
+    HomeController,
+    AgentsController
 };
 
 use SchoolAgent\Controllers\Admin\{
@@ -53,6 +54,10 @@ switch ($page) {
     case 'home':
         $controller = new HomeController();
         $controller->index();
+        break;
+
+    case 'agents':
+        (new AgentsController())->index();
         break;
 
     case 'login':

@@ -1,0 +1,415 @@
+/* School Agent - Agents Page CSS */
+
+/* Agent Card Styles */
+.agent-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.agent-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary);
+}
+
+/* Agent Card Header */
+.agent-card-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+    padding: var(--spacing-8);
+    text-align: center;
+    color: var(--white);
+}
+
+.agent-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-4);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-5xl);
+    overflow: hidden;
+}
+
+.agent-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.agent-name {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Agent Card Body */
+.agent-card-body {
+    padding: var(--spacing-6);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.agent-description {
+    color: var(--text-secondary);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-6);
+    flex: 1;
+}
+
+/* Agent Card Footer */
+.agent-card-footer {
+    display: flex;
+    gap: var(--spacing-3);
+    margin-top: auto;
+}
+
+.agent-btn {
+    flex: 1;
+    padding: var(--spacing-3);
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    font-size: var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+}
+
+.agent-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.agent-btn-secondary {
+    background: var(--gray-100);
+    color: var(--text-primary);
+    border: 1px solid var(--gray-200);
+}
+
+.agent-btn-secondary:hover {
+    background: var(--gray-200);
+    color: var(--text-primary);
+}
+
+/* Subject Section */
+.subject-section {
+    margin-bottom: var(--spacing-20);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.subject-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-8);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 2px solid var(--primary);
+}
+
+.subject-title i {
+    color: var(--primary);
+    font-size: var(--font-size-2xl);
+}
+
+/* Agents Grid */
+.agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-8);
+    margin-bottom: var(--spacing-12);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .agents-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .agent-card-header {
+        padding: var(--spacing-6);
+    }
+
+    .agent-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: var(--font-size-4xl);
+    }
+
+    .subject-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .agent-btn {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-2) var(--spacing-3);
+    }
+}
+
+/* No Agents Message */
+.no-agents {
+    text-align: center;
+    padding: var(--spacing-12);
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    border: 1px dashed var(--gray-200);
+}
+
+.no-agents i {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-4);
+    opacity: 0.5;
+    display: block;
+}
+
+.no-agents p {
+    font-size: var(--font-size-base);
+    margin: 0;
+}
+
+/* Coming Soon Section */
+.coming-soon-section {
+    margin-top: var(--spacing-20);
+    padding: var(--spacing-12);
+    background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    color: var(--white);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.coming-soon-section h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-4);
+}
+
+.coming-soon-section p {
+    font-size: var(--font-size-lg);
+    opacity: 0.95;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Stagger animation for cards */
+.agents-grid .agent-card:nth-child(1) { animation-delay: 0.1s; }
+.agents-grid .agent-card:nth-child(2) { animation-delay: 0.2s; }
+.agents-grid .agent-card:nth-child(3) { animation-delay: 0.3s; }
+.agents-grid .agent-card:nth-child(4) { animation-delay: 0.4s; }
+.agents-grid .agent-card:nth-child(5) { animation-delay: 0.5s; }
+.agents-grid .agent-card:nth-child(6) { animation-delay: 0.6s; }
+
+.agents-grid .agent-card {
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+/* Hero Section Agents */
+.agents-hero {
+    text-align: center;
+    margin-bottom: var(--spacing-20);
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.agents-hero h1 {
+    font-size: var(--font-size-5xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-4);
+    color: var(--text-primary);
+}
+
+.agents-hero p {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* IA Information Section */
+.ia-info-section {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: var(--spacing-12);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-20);
+    border-left: 4px solid var(--primary);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.ia-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-8);
+    align-items: start;
+}
+
+.ia-info-section h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-6);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.ia-info-section h2 i {
+    color: var(--primary);
+    font-size: var(--font-size-2xl);
+}
+
+.ia-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ia-info-list li {
+    margin-bottom: var(--spacing-4);
+    display: flex;
+    gap: var(--spacing-3);
+    align-items: flex-start;
+}
+
+.ia-info-list li i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    font-size: var(--font-size-base);
+}
+
+.ia-info-list li strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 2px;
+}
+
+.ia-info-list li span {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+}
+
+/* Check icon color */
+.ia-info-section i.fa-check-circle {
+    color: var(--accent);
+}
+
+/* Light icon colors */
+.ia-info-section i.fa-lightbulb,
+.ia-info-section i.fa-rocket,
+.ia-info-section i.fa-heart,
+.ia-info-section i.fa-graduation-cap {
+    color: var(--primary);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Main Content Spacing */
+main {
+    margin-top: 100px;
+    padding: 0 var(--spacing-6);
+}
+
+.agents-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-12) var(--spacing-6);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .agents-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .agents-hero h1 {
+        font-size: var(--font-size-4xl);
+    }
+
+    .ia-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .agents-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+    }
+
+    .agents-hero h1 {
+        font-size: var(--font-size-3xl);
+    }
+
+    .agents-hero p {
+        font-size: var(--font-size-base);
+    }
+
+    .coming-soon-section {
+        padding: var(--spacing-8);
+    }
+
+    .coming-soon-section h2 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .coming-soon-section p {
+        font-size: var(--font-size-base);
+    }
+
+    .subject-title {
+        font-size: var(--font-size-xl);
+    }
+
+    main {
+        margin-top: 80px;
+        padding: 0 var(--spacing-4);
+    }
+
+    .agents-content {
+        padding: var(--spacing-8) var(--spacing-4);
+    }
+}

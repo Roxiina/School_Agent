@@ -25,9 +25,7 @@
             
             <ul class="nav-menu">
                 <li><a href="/home" class="nav-link">Accueil</a></li>
-                <li><a href="#fonctionnalites" class="nav-link">Fonctionnalités</a></li>
-                <li><a href="#a-propos" class="nav-link">À propos</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="/agents" class="nav-link">Nos Agents</a></li>
             </ul>
         </nav>
     </header>
