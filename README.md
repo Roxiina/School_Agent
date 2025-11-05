@@ -259,3 +259,6 @@ a la racine du projet creer un fichier config.php avec le code suivant :
   ];
 ```
 Et à la place integrer votre cle api grok
+
+pour mettre a jour la base de donnee recuperer le script sql dans documents > doc_bdd > code_sql_2-ia.txt
+et l executer dans phpmyadmin

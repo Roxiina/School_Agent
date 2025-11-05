@@ -1,42 +1,76 @@
 <?php
 namespace SchoolAgent\Controllers\front;
 
+use SchoolAgent\Models\AgentModel;
+
 class IaController
 {
     private $apiKey;
+    private $agentModel;
 
     public function __construct()
     {
-        // Charge le config ici dans le constructeur
+        // Charger la clé API depuis config.php
         $config = require __DIR__ . '/../../../config.php';
         $this->apiKey = $config['GROQ_API_KEY'];
+
+        // Charger le model Agent
+        $this->agentModel = new AgentModel();
     }
 
     public function index()
     {
-        $response = null;
+        session_start(); // Assure que la session est active
+
+        // Vérifier qu’un utilisateur est connecté
+        if (!isset($_SESSION['user_id'])) {
+            die("❌ Accès refusé : utilisateur non connecté.");
+        }
+
+        $userId = $_SESSION['user_id'];
+
+        // Récupérer les agents liés à l'utilisateur
+        $agents = $this->agentModel->getAgentsByUser($userId);
+
+        // Aucun agent assigné → bloquer
+        if (empty($agents)) {
+            die("❌ Aucun agent disponible pour votre compte.");
+        }
+
+        $responseAI = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['prompt'])) {
             $prompt = $_POST['prompt'];
-            $response = $this->askAI($prompt);
-        }
 
-        // Rendre la variable accessible à la vue
-        $responseAI = $response;
+            // Agent choisi
+            $agentId = $_POST['agent_id'] ?? null;
+            $agent = $this->agentModel->getAgent($agentId);
+
+            // Vérifier que l’agent appartient bien à l’utilisateur
+            $allowedAgentIds = array_column($agents, 'id_agent');
+            if (!$agent || !in_array($agentId, $allowedAgentIds)) {
+                $responseAI = "❌ Agent introuvable ou non autorisé.";
+            } else {
+                $responseAI = $this->askAI($prompt, $agent);
+            }
+        }
 
         require __DIR__ . '/../../Views/front/ia.php';
     }
 
-    private function askAI($prompt)
+    private function askAI($prompt, $agent)
     {
+        $model = $agent['model'] ?? 'llama-3.1-8b-instant';
+        $temperature = $agent['temperature'] ?? 1;
+        $maxTokens = $agent['max_completion_tokens'] ?? 512;
+
         $payload = [
             "messages" => [
                 ["role" => "user", "content" => $prompt]
             ],
-            "model" => "llama-3.1-8b-instant",
-            "temperature" => 1,
-            "max_completion_tokens" => 512,
-            "stream" => false
+            "model" => $model,
+            "temperature" => (float)$temperature,
+            "max_completion_tokens" => (int)$maxTokens
         ];
 
         $ch = curl_init("https://api.groq.com/openai/v1/chat/completions");
@@ -58,7 +92,6 @@ class IaController
         }
 
         $json = json_decode($result, true);
-
         curl_close($ch);
 
         if (isset($json['error'])) {

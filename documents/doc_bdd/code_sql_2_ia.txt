@@ -1,0 +1,23 @@
+-- ===========================================================
+-- 1️⃣ Ajouter les nouvelles colonnes à la table agent
+-- ===========================================================
+ALTER TABLE agent
+ADD COLUMN model VARCHAR(50) NOT NULL DEFAULT 'llama-3.1-8b-instant',
+ADD COLUMN max_completion_tokens INT NOT NULL DEFAULT 512;
+
+-- ===========================================================
+-- 2️⃣ Mettre à jour les agents existants avec les valeurs par défaut
+-- ===========================================================
+UPDATE agent
+SET model = 'llama-3.1-8b-instant',
+    max_completion_tokens = 512;
+
+-- ===========================================================
+-- 3️⃣ Mettre à jour le jeu de données pour les nouveaux inserts
+-- ===========================================================
+-- Exemple de réinsertion ou insertion par défaut pour les agents
+INSERT INTO agent (nom, avatar, description, temperature, system_prompt, model, max_completion_tokens)
+VALUES
+('Agent Mathéo', 'math.png', 'Agent spécialisé en mathématiques', 1.0, 'Tu es un assistant de mathématiques.', 'llama-3.1-8b-instant', 512),
+('Agent Histoire', 'hist.png', 'Agent passionné d\'histoire et de culture générale', 1.0, 'Tu es un professeur d\'histoire.', 'llama-3.1-8b-instant', 512),
+('Agent Scolaire', 'school.png', 'Agent généraliste pour le suivi scolaire', 1.0, 'Tu aides les élèves à organiser leur travail.', 'llama-3.1-8b-instant', 512);
