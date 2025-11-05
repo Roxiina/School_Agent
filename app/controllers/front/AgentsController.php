@@ -48,7 +48,11 @@ class AgentsController
         // Grouper les agents par matière
         $agentsBySubject = [];
         foreach ($subjects as $subject) {
-            // Inclure toutes les matières (y compris Histoire)
+            // Exclure la matière "Méthodologie"
+            if (strtolower($subject['nom']) === 'méthodologie') {
+                continue;
+            }
+            
             $agentsBySubject[$subject['id_matiere']] = [
                 'name' => $subject['nom'],
                 'description' => $subject['description'] ?? '',
