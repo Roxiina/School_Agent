@@ -250,3 +250,12 @@ cela devrait creer le dossier "vendor" ou il, y a la bibiliotheque autoload qui 
 Pour afficher le site sur don navigateur si le projet n'est pas dans wampserver il faut execiter la commande suivante dans un terminal :  
 ```php -S localhost:8000 -t public```
 
+Pour IA :
+a la racine du projet creer un fichier config.php avec le code suivant :
+```
+  <?php
+  return [
+      "GROQ_API_KEY" =>'CLE API GROK'
+  ];
+```
+Et à la place integrer votre cle api grok
