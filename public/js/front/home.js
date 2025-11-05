@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initHeaderScroll();
     initScrollAnimations();
     initWelcomeAnimation();
+    initBurgerMenu();
 });
 
 /**
@@ -221,6 +222,41 @@ function monitorPerformance() {
 monitorPerformance();
 
 /**
+ * Burger Menu Toggle
+ * Handles the burger menu functionality on profile and dashboard pages
+ */
+function initBurgerMenu() {
+    const burgerBtn = document.getElementById('burgerBtn');
+    const burgerDropdown = document.getElementById('burgerDropdown');
+
+    if (burgerBtn && burgerDropdown) {
+        // Toggle dropdown on button click
+        burgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            burgerDropdown.classList.toggle('show');
+            burgerBtn.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.burger-menu')) {
+                burgerDropdown.classList.remove('show');
+                burgerBtn.classList.remove('active');
+            }
+        });
+
+        // Close dropdown when clicking on a link
+        const burgerItems = burgerDropdown.querySelectorAll('.burger-item');
+        burgerItems.forEach(item => {
+            item.addEventListener('click', () => {
+                burgerDropdown.classList.remove('show');
+                burgerBtn.classList.remove('active');
+            });
+        });
+    }
+}
+
+/**
  * Export functions for potential module use
  */
 if (typeof module !== 'undefined' && module.exports) {
@@ -231,6 +267,7 @@ if (typeof module !== 'undefined' && module.exports) {
         initScrollAnimations,
         validateEmail,
         scrollToTop,
-        trackEvent
+        trackEvent,
+        initBurgerMenu
     };
 }

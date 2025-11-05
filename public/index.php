@@ -12,7 +12,9 @@ use SchoolAgent\Controllers\{
 use SchoolAgent\Controllers\Front\{
     HomeController,
     AgentsController,
-    ConversationController
+    ConversationController,
+    ProfileController,
+    DashboardController
 };
 
 use SchoolAgent\Controllers\Admin\{
@@ -83,6 +85,22 @@ switch ($page) {
 
     case 'logout':
         (new AuthController())->logout();
+        break;
+
+    case 'profile':
+        (new ProfileController())->index();
+        break;
+
+    case 'profile/update':
+        (new ProfileController())->update();
+        break;
+
+    case 'dashboard/agents':
+        (new DashboardController())->agents();
+        break;
+
+    case 'dashboard/conversations':
+        (new DashboardController())->conversations();
         break;
 
 // ---------------------------------------------------------------------------

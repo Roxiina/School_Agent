@@ -50,6 +50,7 @@
                     <li><span class="nav-welcome" style="color: #10b981; font-weight: 500; padding: 8px 16px;">
                         Bonjour <?= htmlspecialchars($user['prenom'] ?? 'Utilisateur') ?> ! 👋
                     </span></li>
+                    <li><a href="/profile" class="btn btn-secondary" style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">👤 Mon Profil</a></li>
                     <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
                         <li><a href="/admin" class="btn btn-secondary" style="background: #6366f1; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">Administration</a></li>
                     <?php endif; ?>

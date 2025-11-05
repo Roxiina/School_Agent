@@ -66,6 +66,17 @@ class UserModel
         ]);
     }
 
+    // UPDATE PASSWORD
+    public function updatePassword($id, $hashedPassword)
+    {
+        $sql = "UPDATE utilisateur SET mot_de_passe = :mot_de_passe WHERE id_user = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':mot_de_passe' => $hashedPassword,
+            ':id' => $id
+        ]);
+    }
+
     // DELETE
     public function deleteUser($id)
     {
