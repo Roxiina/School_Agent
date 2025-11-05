@@ -11,16 +11,22 @@ class Database
     public static function getConnection()
     {
         if (self::$instance === null) {
-            $host = 'localhost';
-            $dbname = 'schoolia';
-            $username = 'root';
-            $password = ''; // adapte à ta config locale
+            // Charger la configuration
+            $config = include __DIR__ . '/database.config.php';
+            
+            $host = $config['host'];
+            $port = $config['port'];
+            $dbname = $config['dbname'];
+            $username = $config['username'];
+            $password = $config['password'];
+            $charset = $config['charset'];
 
             try {
-                self::$instance = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+                self::$instance = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=$charset", $username, $password);
                 self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
-                die('Erreur de connexion : ' . $e->getMessage());
+                die('Erreur de connexion : ' . $e->getMessage() . "\n" .
+                    'Vérifier app/Config/database.config.php');
             }
         }
 

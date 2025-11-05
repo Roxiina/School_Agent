@@ -57,7 +57,7 @@ $mainPage = $pageSegments[0] ?? 'home';
 $subPage = $pageSegments[1] ?? null;
 $param = $pageSegments[2] ?? null;
 
-switch ($mainPage) {
+switch ($page) {
     case 'home':
         $controller = new HomeController();
         $controller->index();
@@ -68,6 +68,7 @@ switch ($mainPage) {
         break;
 
     case 'conversation':
+    case (strpos($page, 'conversation/agent/') === 0 ? $page : null):
         // Vérifier s'il y a une sous-route /agent/id
         if ($subPage === 'agent' && $param) {
             (new ConversationController())->agent($param);
