@@ -11,7 +11,8 @@ use SchoolAgent\Controllers\{
 
 use SchoolAgent\Controllers\Front\{
     HomeController,
-    AgentsController
+    AgentsController,
+    ConversationController
 };
 
 use SchoolAgent\Controllers\Admin\{
@@ -58,6 +59,10 @@ switch ($page) {
 
     case 'agents':
         (new AgentsController())->index();
+        break;
+
+    case 'conversation':
+        (new ConversationController())->index();
         break;
 
     case 'login':

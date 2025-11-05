@@ -43,6 +43,9 @@
             <ul class="nav-menu">
                 <li><a href="#accueil" class="nav-link active">Accueil</a></li>
                 <li><a href="/agents" class="nav-link">Nos Agents</a></li>
+                <?php if (isset($isLogged) && $isLogged && isset($user['role']) && $user['role'] === 'etudiant'): ?>
+                    <li><a href="/conversation" class="nav-link" style="color: #10b981; font-weight: 600;">💬 Discuter</a></li>
+                <?php endif; ?>
                 <?php if (isset($isLogged) && $isLogged): ?>
                     <li><span class="nav-welcome" style="color: #10b981; font-weight: 500; padding: 8px 16px;">
                         Bonjour <?= htmlspecialchars($user['prenom'] ?? 'Utilisateur') ?> ! 👋
