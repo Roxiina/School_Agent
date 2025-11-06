@@ -560,6 +560,140 @@
     <script src="/js/front/conversation.js"></script>
     
     <script>
+        // Current conversation ID
+        let currentConversationId = <?= isset($_GET['id']) ? (int)$_GET['id'] : 'null' ?>;
+        
+        // Send message function
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message) return;
+            
+            if (!currentConversationId) {
+                alert('Veuillez d\'abord sélectionner une conversation');
+                return;
+            }
+            
+            try {
+                // Send message via API
+                const response = await fetch('/api/conversation/send-message.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        conversation_id: currentConversationId,
+                        message: message
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Clear input
+                    messageInput.value = '';
+                    
+                    // Display user message in chat
+                    const messagesContainer = document.getElementById('messagesContainer');
+                    if (messagesContainer) {
+                        const userMessageHTML = `
+                            <div class="message user">
+                                <div class="message-avatar user" style="display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="message-bubble">
+                                        ${message}
+                                    </div>
+                                    <div class="message-time">À l'instant</div>
+                                </div>
+                            </div>
+                        `;
+                        messagesContainer.innerHTML += userMessageHTML;
+                        
+                        // Scroll to bottom
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                    
+                    // TODO: Get agent response here
+                    // You can call an agent API endpoint to get a response
+                } else {
+                    alert('Erreur: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi du message:', error);
+                alert('Erreur lors de l\'envoi du message');
+            }
+        }
+        
+        // Load conversation function
+        function loadConversation(conversationId) {
+            currentConversationId = conversationId;
+            
+            const conversationItems = document.querySelectorAll('.conversation-item');
+            
+            // Remove active class from all items
+            conversationItems.forEach(item => item.classList.remove('active'));
+            
+            // Add active class to clicked item
+            document.querySelector(`[data-conv-id="${conversationId}"]`).classList.add('active');
+            
+            // Load conversation via AJAX
+            fetch(`/api/conversation/load.php?id=${conversationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update messages container
+                        const messagesContainer = document.getElementById('messagesContainer');
+                        if (messagesContainer && data.messages) {
+                            let messagesHTML = '';
+                            
+                            // Add initial greeting if first load
+                            if (data.messages.length === 0) {
+                                messagesHTML = `
+                                    <div class="message agent">
+                                        <div class="message-avatar agent" style="display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                                            <i class="fas fa-robot"></i>
+                                        </div>
+                                        <div>
+                                            <div class="message-bubble">
+                                                Salut ! 👋 Je suis ton assistant. N'hésite pas à me poser tes questions ! 📚
+                                            </div>
+                                            <div class="message-time">À l'instant</div>
+                                        </div>
+                                    </div>
+                                `;
+                            } else {
+                                // Display loaded messages
+                                data.messages.forEach(msg => {
+                                    const isUser = msg.question && !msg.reponse; // User message has question
+                                    const content = isUser ? msg.question : msg.reponse;
+                                    messagesHTML += `
+                                        <div class="message ${isUser ? 'user' : 'agent'}">
+                                            <div class="message-avatar ${isUser ? 'user' : 'agent'}" style="display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                                                <i class="fas fa-${isUser ? 'user' : 'robot'}"></i>
+                                            </div>
+                                            <div>
+                                                <div class="message-bubble">
+                                                    ${content}
+                                                </div>
+                                                <div class="message-time">À l'instant</div>
+                                            </div>
+                                        </div>
+                                    `;
+                                });
+                            }
+                            
+                            messagesContainer.innerHTML = messagesHTML;
+                            // Scroll to bottom
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    }
+                })
+                .catch(error => console.error('Erreur lors du chargement de la conversation:', error));
+        }
+        
         // Agent Selection Modal Handler
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('agentSelectionModal');
