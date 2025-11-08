@@ -64,8 +64,48 @@ switch ($page) {
         (new AuthController())->logout();
         break;
 
+    // --------------------- ia ---------------------
+
+    // http://localhost:8000/ia
     case 'ia':
         (new IaController())->index();
+        break;
+
+    // http://localhost:8000/ia/conversations?id=7
+    case 'ia/conversations':
+        if (isset($_GET['id'])) {
+            (new IaController())->showConversations($_GET['id']);
+        } else {
+            header('Location: /ia');
+            exit;
+        }
+        break;
+
+    // http://localhost:8000/ia/create_conversation?id=7
+    case 'ia/create_conversation':
+        if (isset($_GET['id'])) {
+            (new IaController())->createConversation($_GET['id']);
+        } else {
+            header('Location: /ia');
+            exit;
+        }
+        break;
+
+    // http://localhost:8000/ia/chat?id=7
+    case 'ia/chat':
+        if (isset($_GET['id'])) {
+            (new IaController())->showChat($_GET['id'], null);
+        } elseif (isset($_GET['new_with_agent'])) {
+            (new IaController())->showChat(null, $_GET['new_with_agent']);
+        } else {
+            // Paramètre manquant
+            header('Location: /ia');
+            exit;
+        }
+        break;
+
+    case 'ia/conversation/delete':
+        (new IaController())->deleteConversation();
         break;
 
 

@@ -24,7 +24,9 @@ class IaController
 
         // Vérifier qu’un utilisateur est connecté
         if (!isset($_SESSION['user_id'])) {
-            die("❌ Accès refusé : utilisateur non connecté.");
+            // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+            header('Location: /login');
+            exit;
         }
 
         $userId = $_SESSION['user_id'];
@@ -32,30 +34,136 @@ class IaController
         // Récupérer les agents liés à l'utilisateur
         $agents = $this->agentModel->getAgentsByUser($userId);
 
-        // Aucun agent assigné → bloquer
-        if (empty($agents)) {
-            die("❌ Aucun agent disponible pour votre compte.");
+        // La vue gérera l'affichage si $agents est vide
+        require __DIR__ . '/../../Views/front/ia/ia.php';
+    }
+
+    public function showConversations($agentId)
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
         }
 
-        $responseAI = null;
+        $userId = $_SESSION['user_id'];
 
+        $conversationModel = new \SchoolAgent\Models\ConversationModel();
+
+        // Sécurité : Vérifier que l'agent est bien accessible par l'utilisateur
+        $userAgents = $this->agentModel->getAgentsByUser($userId);
+        $allowedAgentIds = array_column($userAgents, 'id_agent');
+        if (!in_array($agentId, $allowedAgentIds)) {
+            die("❌ Accès non autorisé à cet agent.");
+        }
+
+        $agent = $this->agentModel->getAgent($agentId);
+        $conversations = $conversationModel->getConversationsByUserAndAgent($userId, $agentId);
+
+        // Le chemin de la vue est mis à jour selon votre demande
+        require __DIR__ . '/../../Views/front/ia/conversation/index.php';
+    }
+
+    public function showChat($conversationId = null, $agentIdForNew = null)
+    {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
+        }
+        $userId = $_SESSION['user_id'];
+
+        $conversationModel = new \SchoolAgent\Models\ConversationModel();
+        $messageModel = new \SchoolAgent\Models\MessageModel();
+        
+        $isNew = ($conversationId === null);
+        $conversation = null;
+        $agent = null;
+        $messages = [];
+
+        if ($isNew) {
+            // C'est une nouvelle conversation
+            $agent = $this->agentModel->getAgent($agentIdForNew);
+            if (!$agent) die("❌ Agent non trouvé.");
+            // On prépare une conversation "virtuelle" pour le titre de la page
+            $conversation = ['titre' => 'Nouvelle conversation'];
+
+        } else {
+            // C'est une conversation existante
+            $conversation = $conversationModel->getConversation($conversationId);
+            if (!$conversation || $conversation['id_user'] != $userId) {
+                die("❌ Accès non autorisé à cette conversation.");
+            }
+            $agent = $this->agentModel->getAgent($conversation['id_agent']);
+            $messages = $messageModel->getMessagesByConversationId($conversationId);
+        }
+
+        // Traitement de l'envoi d'un message (pour nouveau ou existant)
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['prompt'])) {
             $prompt = $_POST['prompt'];
 
-            // Agent choisi
-            $agentId = $_POST['agent_id'] ?? null;
-            $agent = $this->agentModel->getAgent($agentId);
-
-            // Vérifier que l’agent appartient bien à l’utilisateur
-            $allowedAgentIds = array_column($agents, 'id_agent');
-            if (!$agent || !in_array($agentId, $allowedAgentIds)) {
-                $responseAI = "❌ Agent introuvable ou non autorisé.";
-            } else {
-                $responseAI = $this->askAI($prompt, $agent);
+            if ($isNew) {
+                // Logique pour le PREMIER message : créer la conversation + le message
+                $convData = [
+                    'titre' => 'Conversation du ' . date('d-m-Y H:i'),
+                    'date_creation' => date('Y-m-d H:i:s'),
+                    'id_agent' => $agentIdForNew,
+                    'id_user' => $userId
+                ];
+                $newConversationId = $conversationModel->createConversation($convData);
+                $conversationId = $newConversationId; // On a maintenant un ID
             }
+            
+            $responseAI = $this->askAI($prompt, $agent);
+            $messageData = [
+                'question' => $prompt,
+                'reponse' => $responseAI,
+                'id_conversation' => $conversationId
+            ];
+            $messageModel->createMessage($messageData);
+
+            // Rediriger vers la page de chat avec l'ID permanent
+            header('Location: /ia/chat?id=' . $conversationId);
+            exit;
         }
 
-        require __DIR__ . '/../../Views/front/ia.php';
+        require __DIR__ . '/../../Views/front/ia/conversation/show.php';
+    }
+
+    public function deleteConversation()
+    {
+        session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /login');
+            exit;
+        }
+
+        $userId = $_SESSION['user_id'];
+        $conversationId = $_POST['conversation_id'] ?? null;
+        $agentId = $_POST['agent_id'] ?? null;
+
+        if (!$conversationId || !$agentId) {
+            // Rediriger si les IDs sont manquants
+            header('Location: /ia');
+            exit;
+        }
+
+        $conversationModel = new \SchoolAgent\Models\ConversationModel();
+
+        // Sécurité : Vérifier que la conversation à supprimer appartient bien à l'utilisateur
+        $conversation = $conversationModel->getConversation($conversationId);
+        if (!$conversation || $conversation['id_user'] != $userId) {
+            die("❌ Action non autorisée.");
+        }
+
+        // Supprimer la conversation
+        $conversationModel->deleteConversation($conversationId);
+
+        // Rediriger vers la page de l'historique
+        header('Location: /ia/conversations?id=' . $agentId);
+        exit;
     }
 
     private function askAI($prompt, $agent)

@@ -32,6 +32,15 @@ class MessageModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // READ (messages by conversation)
+    public function getMessagesByConversationId($conversationId)
+    {
+        $sql = "SELECT * FROM message WHERE id_conversation = :conversationId ORDER BY id_message ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':conversationId' => $conversationId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // CREATE
     public function createMessage($data)
     {
