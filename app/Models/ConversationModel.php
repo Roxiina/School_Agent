@@ -34,6 +34,15 @@ class ConversationModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // READ (conversations by user and agent)
+    public function getConversationsByUserAndAgent($userId, $agentId)
+    {
+        $sql = "SELECT * FROM conversation WHERE id_user = :userId AND id_agent = :agentId ORDER BY date_creation DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':userId' => $userId, ':agentId' => $agentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // CREATE
     public function createConversation($data)
     {
@@ -46,6 +55,7 @@ class ConversationModel
             ':id_agent' => $data['id_agent'],
             ':id_user' => $data['id_user']
         ]);
+        return $this->db->lastInsertId();
     }
 
     // UPDATE
