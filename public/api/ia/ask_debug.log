@@ -46,3 +46,18 @@ La moyenne est la va
 
 La moyenne est la va
 [08:28:13] Message sauvegardé
+[09:52:13] Requête reçue
+[09:52:13] Input: {"conversation_id":"3","question":"de  un restangle ?"}
+[09:52:13] Conv ID: 3
+[09:52:13] BD connectée
+[09:52:13] Conversation trouvée: Agent Mathéo
+[09:52:13] Messages précédents: 10
+[09:52:13] Appel Groq API
+[09:52:14] Réponse Groq (HTTP 200): {"id":"chatcmpl-cbf52eae-4216-4cd5-b4ff-64aac334448f","object":"chat.completion","created":1762768333,"model":"llama-3.1-8b-instant","choices":[{"index":0,"message":{"role":"assistant","content":"La m
+[09:52:14] IA Réponse: La moyenne d'un rectangle est la même que la moyenne de ses côtés.
+
+Pour calculer la moyenne d'un
+[09:52:14] IA Réponse: La moyenne d'un rectangle est la même que la moyenne de ses côtés.
+
+Pour calculer la moyenne d'un
+[09:52:14] Message sauvegardé

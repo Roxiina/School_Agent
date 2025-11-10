@@ -50,6 +50,14 @@ class IaController
             ];
         }, $agentsData);
 
+        // Variables pour le header
+        $isLogged = true;
+        $user = [
+            'id' => $userId,
+            'prenom' => $_SESSION['user_prenom'] ?? 'Utilisateur',
+            'role' => $_SESSION['user_role'] ?? 'etudiant'
+        ];
+
         // La vue gérera l'affichage si $agents est vide
         require __DIR__ . '/../../Views/front/ia/ia.php';
     }
@@ -76,6 +84,14 @@ class IaController
 
         $agent = $this->agentModel->getAgent($agentId);
         $conversations = $conversationModel->getConversationsByUserAndAgent($userId, $agentId);
+
+        // Variables pour le header
+        $isLogged = true;
+        $user = [
+            'id' => $userId,
+            'prenom' => $_SESSION['user_prenom'] ?? 'Utilisateur',
+            'role' => $_SESSION['user_role'] ?? 'etudiant'
+        ];
 
         // Le chemin de la vue est mis à jour selon votre demande
         require __DIR__ . '/../../Views/front/ia/conversation/index.php';
@@ -143,6 +159,14 @@ class IaController
             header('Location: /ia/chat?id=' . $conversationId);
             exit;
         }
+
+        // Variables pour le header
+        $isLogged = true;
+        $user = [
+            'id' => $userId,
+            'prenom' => $_SESSION['user_prenom'] ?? 'Utilisateur',
+            'role' => $_SESSION['user_role'] ?? 'etudiant'
+        ];
 
         require __DIR__ . '/../../Views/front/ia/conversation/show.php';
     }

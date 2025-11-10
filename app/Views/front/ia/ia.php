@@ -4,88 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assistants IA - School Agent</title>
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/front/home.css">
     <link rel="stylesheet" href="/css/front/ia.css">
 </head>
 <body>
-    <?php include __DIR__ . '/../../templates/ia_header.php'; ?>
-
-    <section class="hero-section">
-        <div class="hero-background">
-            <div class="gradient-orb orb-1"></div>
-            <div class="gradient-orb orb-2"></div>
-            <div class="gradient-orb orb-3"></div>
-            <div class="grid-overlay"></div>
+    <!-- Flash Messages -->
+    <?php
+    use SchoolAgent\Config\Authenticator;
+    $flash = Authenticator::getFlash();
+    if ($flash): ?>
+        <div class="flash-message flash-<?= $flash['type'] ?>" style="position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 15px 20px; border-radius: 5px; color: white; font-weight: 500;">
+            <?= htmlspecialchars($flash['message']) ?>
         </div>
-        <div class="hero-content">
-            <div class="hero-badge">
-                <span class="badge-icon"></span>
-                <span>Intelligence Artificielle</span>
-            </div>
-            <h1 class="hero-title">
-                Découvrez vos <span class="gradient-text">Assistants IA</span>
-            </h1>
-            <p class="hero-description">
-                Des assistants intelligents pour vous accompagner dans votre apprentissage
-            </p>
-        </div>
-    </section>
+        <script>
+            // Faire disparaître le message après 5 secondes
+            setTimeout(() => {
+                const flashMsg = document.querySelector('.flash-message');
+                if (flashMsg) flashMsg.style.display = 'none';
+            }, 5000);
+        </script>
+    <?php endif; ?>
 
-    <main class="main-content">
-        <section class="agents-section">
-            <div class="agents-container">
-                <?php if (!empty($agents)): ?>
-                    <?php foreach ($agents as $agent): ?>
-                        <article class="agent-card" data-agent-id="<?= htmlspecialchars($agent['id']) ?>">
-                            <div class="card-header">
-                                <div class="agent-avatar">
-                                    <span class="avatar-letter"><?= strtoupper(substr($agent['name'], 0, 1)) ?></span>
-                                    <div class="avatar-ring"></div>
-                                </div>
-                                <span class="agent-status <?= $agent['status'] === 'active' ? 'status-active' : 'status-inactive' ?>">
-                                    <?= $agent['status'] === 'active' ? 'Disponible' : 'Indisponible' ?>
-                                </span>
-                            </div>
-                            <div class="card-body">
-                                <h3 class="agent-name"><?= htmlspecialchars($agent['name']) ?></h3>
-                                <p class="agent-description"><?= htmlspecialchars($agent['description']) ?></p>
-                                <div class="agent-tags">
-                                    <?php 
-                                    $tags = explode(',', $agent['tags'] ?? '');
-                                    foreach ($tags as $tag): 
-                                        if (trim($tag)): ?>
-                                            <span class="tag"><?= htmlspecialchars(trim($tag)) ?></span>
-                                        <?php endif;
-                                    endforeach; ?>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-primary" onclick="selectAgent(<?= $agent['id'] ?>)">
-                                    <span>Discuter</span>
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M8 2L14 8L8 14M14 8H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </button>
-                                <button class="btn btn-secondary" onclick="viewDetails(<?= $agent['id'] ?>)">
-                                    En savoir plus
-                                </button>
-                            </div>
-                        </article>
-                    <?php endforeach; ?>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/home" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                School Agent
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="/home" class="nav-link">Accueil</a></li>
+                <li><a href="/ia" class="nav-link active">Nos Agents</a></li>
+                <?php if (isset($isLogged) && $isLogged && isset($user['role']) && $user['role'] === 'etudiant'): ?>
+                    <li><a href="/ia" class="nav-link" style="color: #10b981; font-weight: 600;">💬 Discuter</a></li>
+                <?php endif; ?>
+                <?php if (isset($isLogged) && $isLogged): ?>
+                    <li><span class="nav-welcome" style="color: #10b981; font-weight: 500; padding: 8px 16px;">
+                        Bonjour <?= htmlspecialchars($user['prenom'] ?? 'Utilisateur') ?> ! 👋
+                    </span></li>
+                    <li><a href="/profile" class="btn btn-secondary" style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">👤 Mon Profil</a></li>
+                    <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+                        <li><a href="/admin" class="btn btn-secondary" style="background: #6366f1; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">Administration</a></li>
+                    <?php endif; ?>
+                    <li><a href="/logout" class="btn btn-danger" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">Se déconnecter</a></li>
                 <?php else: ?>
-                    <div class="empty-container">
-                        <div class="empty-icon"></div>
-                        <p class="empty-text">Aucun assistant disponible pour le moment</p>
+                    <li><a href="/login" class="btn btn-primary">Se connecter</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="ia-page">
+        <!-- Hero Simple -->
+        <section class="page-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-badge">
+                        <i class="fas fa-robot"></i>
+                        Intelligence Artificielle
+                    </span>
+                    <h1 class="hero-title">
+                        Choisissez votre <span class="highlight">Assistant IA</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Des assistants intelligents pour vous accompagner dans votre apprentissage
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agents Grid -->
+        <section class="agents-section">
+            <div class="container">
+                <?php if (!empty($agents)): ?>
+                    <div class="agents-grid">
+                        <?php foreach ($agents as $agent): ?>
+                            <article class="agent-card">
+                                <div class="card-header">
+                                    <div class="agent-avatar">
+                                        <?= strtoupper(substr($agent['name'], 0, 1)) ?>
+                                    </div>
+                                    <span class="status-badge">
+                                        <i class="fas fa-circle"></i>
+                                        <?= $agent['status'] === 'active' ? 'Disponible' : 'Hors ligne' ?>
+                                    </span>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <h3 class="agent-name"><?= htmlspecialchars($agent['name']) ?></h3>
+                                    <p class="agent-desc"><?= htmlspecialchars($agent['description']) ?></p>
+                                </div>
+                                
+                                <div class="card-footer">
+                                    <a href="/ia/conversations?id=<?= $agent['id'] ?>" class="btn-primary">
+                                        <i class="fas fa-comments"></i>
+                                        <span>Discuter</span>
+                                    </a>
+                                    <a href="/ia/conversations?id=<?= $agent['id'] ?>" class="btn-secondary">
+                                        <i class="fas fa-history"></i>
+                                        <span>Historique</span>
+                                    </a>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Aucun assistant disponible</h3>
+                        <p>Les assistants IA ne sont pas encore configurés</p>
                     </div>
                 <?php endif; ?>
             </div>
         </section>
     </main>
 
-    <?php include __DIR__ . '/../../templates/footer.php'; ?>
-    
-    <script src="/js/front/ia.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 School Agent. Tous droits réservés. Fait avec ❤️ pour l'éducation et l'apprentissage.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript -->
+    <script src="/js/front/home.js"></script>
 </body>
 </html>

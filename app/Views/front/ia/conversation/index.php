@@ -4,165 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversations - <?= htmlspecialchars($agent['nom']) ?></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/front/home.css">
-    <link rel="stylesheet" href="/css/front/conversations.css?v=20251110">
+    <link rel="stylesheet" href="/css/front/conversations.css">
 </head>
 <body>
+    <!-- Flash Messages -->
+    <?php
+    use SchoolAgent\Config\Authenticator;
+    $flash = Authenticator::getFlash();
+    if ($flash): ?>
+        <div class="flash-message flash-<?= $flash['type'] ?>" style="position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 15px 20px; border-radius: 5px; color: white; font-weight: 500;">
+            <?= htmlspecialchars($flash['message']) ?>
+        </div>
+        <script>
+            // Faire disparaître le message après 5 secondes
+            setTimeout(() => {
+                const flashMsg = document.querySelector('.flash-message');
+                if (flashMsg) flashMsg.style.display = 'none';
+            }, 5000);
+        </script>
+    <?php endif; ?>
+
     <!-- Header -->
     <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="/" class="logo">
-                    <i class="fas fa-brain"></i>
-                    <span>School Agent</span>
-                </a>
-                <nav class="nav-container">
-                    <div class="nav-menu">
-                        <a href="/" class="nav-link">Accueil</a>
-                        <a href="/ia" class="nav-link active">Nos Assistants</a>
-                        <a href="/" class="nav-link">Fonctionnalités</a>
-                    </div>
-                </nav>
-            </div>
-        </div>
+        <nav class="nav-container">
+            <a href="/home" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                School Agent
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="/home" class="nav-link">Accueil</a></li>
+                <li><a href="/ia" class="nav-link active">Nos Agents</a></li>
+                <?php if (isset($isLogged) && $isLogged && isset($user['role']) && $user['role'] === 'etudiant'): ?>
+                    <li><a href="/ia" class="nav-link" style="color: #10b981; font-weight: 600;">💬 Discuter</a></li>
+                <?php endif; ?>
+                <?php if (isset($isLogged) && $isLogged): ?>
+                    <li><span class="nav-welcome" style="color: #10b981; font-weight: 500; padding: 8px 16px;">
+                        Bonjour <?= htmlspecialchars($user['prenom'] ?? 'Utilisateur') ?> ! 👋
+                    </span></li>
+                    <li><a href="/profile" class="btn btn-secondary" style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">👤 Mon Profil</a></li>
+                    <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+                        <li><a href="/admin" class="btn btn-secondary" style="background: #6366f1; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">Administration</a></li>
+                    <?php endif; ?>
+                    <li><a href="/logout" class="btn btn-danger" style="background: #ef4444; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; margin-left: 8px;">Se déconnecter</a></li>
+                <?php else: ?>
+                    <li><a href="/login" class="btn btn-primary">Se connecter</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="conversations-main">
-        <!-- Hero Section -->
-        <div class="conversations-hero">
+    <main class="conversations-page">
+        <!-- Hero Simple -->
+        <section class="page-hero">
             <div class="container">
-                <a href="/ia" class="back-link">
+                <a href="/ia" class="back-btn">
                     <i class="fas fa-arrow-left"></i>
                     <span>Retour aux assistants</span>
                 </a>
-                <div class="hero-content">
-                    <div class="agent-badge">
-                        <i class="fas fa-robot"></i>
+                
+                <div class="agent-intro">
+                    <div class="agent-avatar-large">
+                        <?= strtoupper(substr($agent['nom'], 0, 1)) ?>
                     </div>
-                    <h1><?= htmlspecialchars($agent['nom']) ?></h1>
-                    <p><?= htmlspecialchars($agent['description'] ?? 'Assistant IA spécialisé pour vous accompagner') ?></p>
+                    <div class="agent-info">
+                        <h1 class="agent-title"><?= htmlspecialchars($agent['nom']) ?></h1>
+                        <p class="agent-desc"><?= htmlspecialchars($agent['description'] ?? 'Assistant IA spécialisé') ?></p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Content Section -->
-        <div class="container conversations-content">
-            <!-- Actions Bar -->
-            <div class="actions-bar">
-                <h2>Mes conversations</h2>
-                <a href="/ia/chat?new_with_agent=<?= $agent['id_agent'] ?>" class="btn-new-conversation">
-                    <i class="fas fa-plus"></i>
+        <!-- Actions -->
+        <section class="page-actions">
+            <div class="container">
+                <a href="/ia/chat?new_with_agent=<?= $agent['id_agent'] ?>" class="btn-new-chat">
+                    <i class="fas fa-plus-circle"></i>
                     <span>Nouvelle conversation</span>
                 </a>
             </div>
+        </section>
 
-            <!-- Conversations List -->
-            <?php if (!empty($conversations)): ?>
-                <div class="conversations-grid">
-                    <?php foreach ($conversations as $index => $conversation): ?>
-                        <div class="conversation-card" style="animation: slideUp 0.4s ease-out forwards; animation-delay: <?= ($index * 0.05) ?>s;">
-                            <div class="card-header">
-                                <div class="conversation-info">
-                                    <i class="fas fa-comments"></i>
-                                    <div class="conversation-meta">
-                                        <h3>
-                                            <?php
-                                                $date = new DateTime($conversation['date_creation']);
-                                                echo 'Conversation du ' . $date->format('d/m/Y');
-                                            ?>
-                                        </h3>
-                                        <span class="conversation-time">
-                                            <i class="fas fa-clock"></i>
-                                            <?php echo $date->format('H:i'); ?>
-                                        </span>
+        <!-- Liste des Conversations -->
+        <section class="conversations-section">
+            <div class="container">
+                <?php if (!empty($conversations)): ?>
+                    <div class="conversations-grid">
+                        <?php foreach ($conversations as $conv): ?>
+                            <article class="conversation-card">
+                                <div class="card-top">
+                                    <div class="conv-icon">
+                                        <i class="fas fa-comments"></i>
                                     </div>
-                                </div>
-                                <form method="post" action="/ia/conversation/delete" class="delete-form" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette conversation ?');">
-                                    <input type="hidden" name="conversation_id" value="<?= $conversation['id_conversation'] ?>">
-                                    <input type="hidden" name="agent_id" value="<?= $agent['id_agent'] ?>">
-                                    <button type="submit" class="btn-delete" title="Supprimer">
-                                        <i class="fas fa-trash"></i>
+                                    <button class="delete-btn" onclick="if(confirm('Supprimer cette conversation ?')) { document.getElementById('delete-form-<?= $conv['id_conversation'] ?>').submit(); }">
+                                        <i class="fas fa-trash-alt"></i>
                                     </button>
-                                </form>
-                            </div>
-                            
-                            <div class="card-body">
-                                <div class="conversation-preview">
-                                    <?php
-                                        $messages = $conversation['messages'] ?? [];
-                                        $lastMessage = !empty($messages) ? end($messages) : null;
-                                        if ($lastMessage && !empty($lastMessage['question'])):
-                                            $preview = substr(htmlspecialchars($lastMessage['question']), 0, 120);
-                                            if (strlen($lastMessage['question']) > 120) $preview .= '...';
-                                    ?>
-                                        <p><i class="fas fa-quote-left"></i> <?= $preview ?></p>
-                                    <?php else: ?>
-                                        <p class="no-messages"><i class="fas fa-inbox"></i> Aucun message</p>
-                                    <?php endif; ?>
                                 </div>
                                 
-                                <div class="card-stats">
-                                    <span class="stat">
-                                        <i class="fas fa-message"></i>
-                                        <?= count($messages) ?> message<?= count($messages) > 1 ? 's' : '' ?>
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="card-footer">
-                                <a href="/ia/chat?id=<?= $conversation['id_conversation'] ?>" class="btn-view">
-                                    <span>Voir la conversation</span>
+                                <h3 class="conv-title"><?= htmlspecialchars($conv['titre']) ?></h3>
+                                <p class="conv-date">
+                                    <i class="far fa-calendar"></i>
+                                    <?= date('d/m/Y à H:i', strtotime($conv['date_creation'])) ?>
+                                </p>
+                                
+                                <a href="/ia/chat?id=<?= $conv['id_conversation'] ?>" class="view-conv-btn">
+                                    Ouvrir la conversation
                                     <i class="fas fa-arrow-right"></i>
                                 </a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php else: ?>
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-comments"></i>
+
+                                <form id="delete-form-<?= $conv['id_conversation'] ?>" method="post" action="/ia/delete-conversation" style="display: none;">
+                                    <input type="hidden" name="conversation_id" value="<?= $conv['id_conversation'] ?>">
+                                    <input type="hidden" name="agent_id" value="<?= $agent['id_agent'] ?>">
+                                </form>
+                            </article>
+                        <?php endforeach; ?>
                     </div>
-                    <h3>Aucune conversation</h3>
-                    <p>Vous n'avez pas encore de conversation avec <?= htmlspecialchars($agent['nom']) ?>.</p>
-                    <a href="/ia/chat?new_with_agent=<?= $agent['id_agent'] ?>" class="btn-primary">
-                        <i class="fas fa-plus"></i>
-                        <span>Commencer une conversation</span>
-                    </a>
-                </div>
-            <?php endif; ?>
-        </div>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-comment-slash"></i>
+                        </div>
+                        <h3>Aucune conversation</h3>
+                        <p>Commencez une nouvelle conversation avec <?= htmlspecialchars($agent['nom']) ?></p>
+                        <a href="/ia/chat?new_with_agent=<?= $agent['id_agent'] ?>" class="btn-start">
+                            Démarrer maintenant
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
-                    <h4>School Agent</h4>
-                    <p>Plateforme d'apprentissage avec assistance IA</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Navigation</h4>
-                    <a href="/">Accueil</a>
-                    <a href="/ia">Assistants</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p>support@schoolagent.local</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 School Agent. Tous droits réservés.</p>
+                <p>&copy; 2025 School Agent. Tous droits réservés. Olivier / Nicolas / Flavie</p>
             </div>
         </div>
     </footer>
 
-    <script src="/js/front/conversations.js?v=20251110"></script>
+    <!-- Custom JavaScript -->
+    <script src="/js/front/home.js"></script>
 </body>
 </html>
