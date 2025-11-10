@@ -32,7 +32,23 @@ class IaController
         $userId = $_SESSION['user_id'];
 
         // Récupérer les agents liés à l'utilisateur
-        $agents = $this->agentModel->getAgentsByUser($userId);
+        $agentsData = $this->agentModel->getAgentsByUser($userId);
+
+        // Transformer les données pour la vue
+        $agents = array_map(function($agent) {
+            return [
+                'id' => $agent['id_agent'],
+                'name' => $agent['nom'],
+                'description' => $agent['description'] ?? 'Aucune description disponible',
+                'avatar' => $agent['avatar'] ?? null,
+                'status' => 'active', // Par défaut, tous les agents sont actifs
+                'tags' => '', // Pas de tags dans la base de données pour le moment
+                'temperature' => $agent['temperature'] ?? 1.0,
+                'system_prompt' => $agent['system_prompt'] ?? '',
+                'model' => $agent['model'] ?? 'llama-3.1-8b-instant',
+                'max_completion_tokens' => $agent['max_completion_tokens'] ?? 512
+            ];
+        }, $agentsData);
 
         // La vue gérera l'affichage si $agents est vide
         require __DIR__ . '/../../Views/front/ia/ia.php';

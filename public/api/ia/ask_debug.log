@@ -31,3 +31,18 @@
 [07:02:10] IA Réponse: Les animaux sont également des organismes vivants qui ont besoin de nutriments pour grandir, se dé
 [07:02:10] IA Réponse: Les animaux sont également des organismes vivants qui ont besoin de nutriments pour grandir, se dé
 [07:02:11] Message sauvegardé
+[08:28:12] Requête reçue
+[08:28:12] Input: {"conversation_id":"3","question":"calcul de la moyenne ?"}
+[08:28:12] Conv ID: 3
+[08:28:12] BD connectée
+[08:28:12] Conversation trouvée: Agent Mathéo
+[08:28:12] Messages précédents: 7
+[08:28:12] Appel Groq API
+[08:28:13] Réponse Groq (HTTP 200): {"id":"chatcmpl-daa6a1b7-2173-433d-a5ce-d93e00fa6c25","object":"chat.completion","created":1762763292,"model":"llama-3.1-8b-instant","choices":[{"index":0,"message":{"role":"assistant","content":"Oui,
+[08:28:13] IA Réponse: Oui, le calcul de la moyenne est une opération mathématique très courante !
+
+La moyenne est la va
+[08:28:13] IA Réponse: Oui, le calcul de la moyenne est une opération mathématique très courante !
+
+La moyenne est la va
+[08:28:13] Message sauvegardé
