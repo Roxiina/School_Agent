@@ -1,6 +1,12 @@
 RewriteEngine On
 
-# Redirige tout vers index.php sauf les fichiers réels
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+# Autoriser l'accès direct aux fichiers et dossiers réels
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Autoriser le dossier /api/ à être accessible directement
+RewriteRule ^api/ - [L]
+
+# Redirige tout le reste vers index.php avec le paramètre page
 RewriteRule ^(.*)$ index.php?page=$1 [L,QSA]

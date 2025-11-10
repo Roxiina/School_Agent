@@ -42,9 +42,9 @@
             
             <ul class="nav-menu">
                 <li><a href="#accueil" class="nav-link active">Accueil</a></li>
-                <li><a href="/agents" class="nav-link">Nos Agents</a></li>
+                <li><a href="/ia" class="nav-link">Nos Agents</a></li>
                 <?php if (isset($isLogged) && $isLogged && isset($user['role']) && $user['role'] === 'etudiant'): ?>
-                    <li><a href="/conversation" class="nav-link" style="color: #10b981; font-weight: 600;">💬 Discuter</a></li>
+                    <li><a href="/ia" class="nav-link" style="color: #10b981; font-weight: 600;">💬 Discuter</a></li>
                 <?php endif; ?>
                 <?php if (isset($isLogged) && $isLogged): ?>
                     <li><span class="nav-welcome" style="color: #10b981; font-weight: 500; padding: 8px 16px;">
@@ -79,7 +79,7 @@
                             Accéder à l'administration
                         </a>
                     <?php else: ?>
-                        <a href="/agents" class="btn btn-primary btn-large">
+                        <a href="/ia" class="btn btn-primary btn-large">
                             <i class="fas fa-graduation-cap"></i>
                             Commencer à apprendre
                         </a>
@@ -90,7 +90,7 @@
                         Commencer maintenant
                     </a>
                 <?php endif; ?>
-                <a href="/agents" class="btn btn-outline btn-large">
+                <a href="/ia" class="btn btn-outline btn-large">
                     <i class="fas fa-info-circle"></i>
                     Découvrir les fonctionnalités
                 </a>
@@ -202,7 +202,7 @@
                 Rejoignez des milliers d'étudiants qui utilisent déjà School Agent pour améliorer leurs résultats scolaires et leur compréhension.
             </p>
             <?php if (isset($isLogged) && $isLogged): ?>
-                <a href="/agents" class="btn btn-primary btn-large">
+                <a href="/ia" class="btn btn-primary btn-large">
                     <i class="fas fa-graduation-cap"></i>
                     Continuer votre apprentissage
                 </a>
