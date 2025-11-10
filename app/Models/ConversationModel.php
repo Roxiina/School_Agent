@@ -18,23 +18,10 @@ class ConversationModel
     {
         $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, c.id_user
                 FROM conversation c
-                ORDER BY c.date_creation DESC";
+                JOIN agent a ON c.id_conversation = a.id_agent
+                JOIN utilisateur u ON c.id_conversation = u.id_user
+                ORDER BY c.id_conversation ASC";
         $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // READ (conversations d'un agent pour un utilisateur)
-    public function getConversationsByAgentAndUser($agentId, $userId)
-    {
-        $sql = "SELECT c.id_conversation, c.titre, c.date_creation, c.id_agent, c.id_user
-                FROM conversation c
-                WHERE c.id_agent = :id_agent AND c.id_user = :id_user
-                ORDER BY c.date_creation DESC";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ':id_agent' => $agentId,
-            ':id_user' => $userId
-        ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -45,6 +32,15 @@ class ConversationModel
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // READ (conversations by user and agent)
+    public function getConversationsByUserAndAgent($userId, $agentId)
+    {
+        $sql = "SELECT * FROM conversation WHERE id_user = :userId AND id_agent = :agentId ORDER BY date_creation DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':userId' => $userId, ':agentId' => $agentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // CREATE
@@ -59,6 +55,7 @@ class ConversationModel
             ':id_agent' => $data['id_agent'],
             ':id_user' => $data['id_user']
         ]);
+        return $this->db->lastInsertId();
     }
 
     // UPDATE
