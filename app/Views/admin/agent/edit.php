@@ -8,6 +8,8 @@
     <textarea name="description"><?= htmlspecialchars($agent['description']) ?></textarea><br>
     <input type="number" step="0.1" name="temperature" value="<?= $agent['temperature'] ?>"><br>
     <textarea name="system_prompt"><?= htmlspecialchars($agent['system_prompt']) ?></textarea><br>
+    <input type="text" name="model" value="<?= htmlspecialchars($agent['model']) ?>" required><br>
+    <input type="number" name="max_completion_tokens" value="<?= $agent['max_completion_tokens'] ?>" required><br>
 
     <button type="submit">💾 Modifier</button>
 </form>

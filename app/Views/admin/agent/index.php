@@ -8,10 +8,6 @@
     <tr>
         <th>ID</th>
         <th>Nom</th>
-        <th>Avatar</th>
-        <th>Description</th>
-        <th>Température</th>
-        <th>System Prompt</th>
         <th>Actions</th>
     </tr>
 
@@ -19,10 +15,6 @@
         <tr>
             <td><?= $agent['id_agent'] ?></td>
             <td><?= htmlspecialchars($agent['nom']) ?></td>
-            <td><?= htmlspecialchars($agent['avatar'] ?? '') ?></td>
-            <td><?= htmlspecialchars(substr($agent['description'] ?? '', 0, 50) . (strlen($agent['description'] ?? '') > 50 ? '...' : '')) ?></td>
-            <td><?= htmlspecialchars($agent['temperature'] ?? '') ?></td>
-            <td><?= htmlspecialchars(substr($agent['system_prompt'] ?? '', 0, 50) . (strlen($agent['system_prompt'] ?? '') > 50 ? '...' : '')) ?></td>
             <td>
                 <a href="/admin/agent/show?id=<?= $agent['id_agent'] ?>">👁️</a>
                 <a href="/admin/agent/edit?id=<?= $agent['id_agent'] ?>">✏️</a>
