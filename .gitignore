@@ -1,2 +1,4 @@
 /vendor/
+config.php
+/app/Config/database.config.php
 /app/Config/
