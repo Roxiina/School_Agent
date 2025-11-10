@@ -14,7 +14,8 @@ use SchoolAgent\Controllers\Front\{
     AgentsController,
     ConversationController,
     ProfileController,
-    DashboardController
+    DashboardController,
+    IaController
 };
 
 use SchoolAgent\Controllers\Admin\{
