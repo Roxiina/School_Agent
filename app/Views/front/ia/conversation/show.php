@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usKNU8gMadcHKYc13/iU1A7P29DEkJUxm1qgkDBEhdP1mNvWDmkwcPmDljVRQw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/front/home.css">
     <link rel="stylesheet" href="/css/front/chat.css?v=20251110">
     <style>
@@ -30,7 +30,7 @@
         .chat-layout {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 280px;
+            grid-template-columns: 1fr;
             gap: 0;
             margin-top: 70px;
         }
@@ -58,6 +58,7 @@
             background-color: var(--gray-50);
             border-left: 1px solid var(--gray-200);
             overflow-y: auto;
+            display: none;
         }
 
         @media (max-width: 1024px) {
@@ -97,7 +98,7 @@
             display: flex;
             align-items: flex-end;
             gap: var(--spacing-2);
-            max-width: 70%;
+            max-width: 100%;
         }
 
         .message.user-message {
@@ -130,7 +131,7 @@
             display: flex;
             align-items: flex-end;
             gap: var(--spacing-2);
-            max-width: 70%;
+            max-width: 100%;
         }
 
         .ai-message .message-content {
@@ -273,7 +274,7 @@
             <div class="header-content">
                 <a href="/" class="logo">
                     <i class="fas fa-brain"></i>
-                    <span>SchoolIA</span>
+                    <span>School Agent</span>
                 </a>
                 <nav class="nav-container">
                     <div class="nav-menu">
@@ -340,7 +341,7 @@
 
                 <!-- Chat Input -->
                 <div class="chat-input-container">
-                    <form method="post" action="" class="chat-input-form">
+                    <form method="post" action="" class="chat-input-form" data-conversation-id="<?= $conversation['id_conversation'] ?? '' ?>">
                         <?php if ($isNew ?? false): ?>
                             <input type="hidden" name="agent_id" value="<?= $agent['id_agent'] ?>">
                         <?php endif; ?>
@@ -379,7 +380,9 @@
                 </div>
 
                 <div class="sidebar-info">
-                    <p><strong>ID Conversation:</strong> <?= htmlspecialchars($conversation['id_conversation'] ?? 'N/A') ?></p>
+                    <?php if (!empty($conversation['id_conversation'])): ?>
+                        <p><strong>ID Conversation:</strong> <?= htmlspecialchars($conversation['id_conversation']) ?></p>
+                    <?php endif; ?>
                     <p><strong>Messages:</strong> <?= count($messages ?? []) * 2 ?></p>
                 </div>
             </aside>
@@ -405,7 +408,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 SchoolIA. Tous droits réservés.</p>
+                <p>&copy; 2024 School Agent. Tous droits réservés.</p>
             </div>
         </div>
     </footer>

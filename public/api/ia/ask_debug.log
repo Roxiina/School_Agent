@@ -1,0 +1,33 @@
+[06:53:36] Requête reçue
+[06:53:36] Input: {"conversation_id":"3","question":"dq"}
+[06:53:36] Conv ID: 3
+[06:53:36] BD connectée
+[06:53:36] Conversation trouvée: Agent Mathéo
+[06:53:36] Messages précédents: 5
+[06:53:36] Appel Groq API
+[06:53:37] Réponse Groq (HTTP 200): {"id":"chatcmpl-7e6b48fb-087c-4c06-8d5c-3e99136cab60","object":"chat.completion","created":1762757616,"model":"llama-3.1-8b-instant","choices":[{"index":0,"message":{"role":"assistant","content":"Il s
+[06:53:37] IA Réponse: Il semble que vous ayez fait une erreur. Pouvez-vous me donner une question ou un sujet de mathémat
+[06:53:37] IA Réponse: Il semble que vous ayez fait une erreur. Pouvez-vous me donner une question ou un sujet de mathémat
+[06:53:37] Message sauvegardé
+[06:55:22] Requête reçue
+[06:55:22] Input: {"conversation_id":"3","question":"c'est une moyenne ?"}
+[06:55:22] Conv ID: 3
+[06:55:22] BD connectée
+[06:55:22] Conversation trouvée: Agent Mathéo
+[06:55:22] Messages précédents: 6
+[06:55:22] Appel Groq API
+[06:55:23] Réponse Groq (HTTP 200): {"id":"chatcmpl-0cbff2dc-c3ca-4ce1-8d29-2ddcf4f1a04d","object":"chat.completion","created":1762757722,"model":"llama-3.1-8b-instant","choices":[{"index":0,"message":{"role":"assistant","content":"Non,
+[06:55:23] IA Réponse: Non, "dq" n'est pas une moyenne. En fait, "dq" n'est pas un terme mathématique ou scientifique conn
+[06:55:23] IA Réponse: Non, "dq" n'est pas une moyenne. En fait, "dq" n'est pas un terme mathématique ou scientifique conn
+[06:55:23] Message sauvegardé
+[07:02:09] Requête reçue
+[07:02:09] Input: {"conversation_id":"5","question":"les animaux aussi ?"}
+[07:02:09] Conv ID: 5
+[07:02:09] BD connectée
+[07:02:09] Conversation trouvée: Agent Scolaire
+[07:02:09] Messages précédents: 1
+[07:02:09] Appel Groq API
+[07:02:10] Réponse Groq (HTTP 200): {"id":"chatcmpl-3b2eda30-fef9-41fa-afb8-b0eae595f073","object":"chat.completion","created":1762758130,"model":"llama-3.1-8b-instant","choices":[{"index":0,"message":{"role":"assistant","content":"Les 
+[07:02:10] IA Réponse: Les animaux sont également des organismes vivants qui ont besoin de nutriments pour grandir, se dé
+[07:02:10] IA Réponse: Les animaux sont également des organismes vivants qui ont besoin de nutriments pour grandir, se dé
+[07:02:11] Message sauvegardé

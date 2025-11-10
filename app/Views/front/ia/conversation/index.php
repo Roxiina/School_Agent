@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usKNU8gMadcHKYc13/iU1A7P29DEkJUxm1qgkDBEhdP1mNvWDmkwcPmDljVRQw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/front/home.css">
     <link rel="stylesheet" href="/css/front/conversations.css?v=20251110">
 </head>
@@ -18,7 +18,7 @@
             <div class="header-content">
                 <a href="/" class="logo">
                     <i class="fas fa-brain"></i>
-                    <span>SchoolIA</span>
+                    <span>School Agent</span>
                 </a>
                 <nav class="nav-container">
                     <div class="nav-menu">

@@ -47,11 +47,26 @@ class ChatApp {
         const message = this.textarea.value.trim();
         if (!message) return;
         
-        // Récupérer l'ID de conversation depuis l'URL
-        const params = new URLSearchParams(window.location.search);
-        const conversationId = params.get('id');
+        // Récupérer l'ID de conversation depuis le data attribute du formulaire
+        let conversationId = this.form.getAttribute('data-conversation-id');
         
+        // Fallback: chercher dans l'URL
         if (!conversationId) {
+            const params = new URLSearchParams(window.location.search);
+            conversationId = params.get('id');
+        }
+        
+        // Si pas d'ID, c'est une nouvelle conversation - faire un POST traditionnel d'abord
+        if (!conversationId) {
+            // Récupérer l'agent_id du formulaire (si c'est une nouvelle conversation)
+            const agentIdInput = this.form.querySelector('input[name="agent_id"]');
+            if (agentIdInput) {
+                // C'est une nouvelle conversation - faire un POST traditionnel
+                this.form.submit();
+                return;
+            }
+            
+            // Sinon, c'est une erreur
             this.showError('ID de conversation manquant');
             return;
         }
