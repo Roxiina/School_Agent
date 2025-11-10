@@ -148,5 +148,16 @@
     <!-- Custom JavaScript -->
     <script src="/js/front/chat.js?v=20251110"></script>
     <script src="/js/front/home.js"></script>
+    <script>
+        // Forcer le scroll en bas après chargement complet
+        window.addEventListener('load', function() {
+            const messagesContainer = document.querySelector('.messages-container');
+            if (messagesContainer) {
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 150);
+            }
+        });
+    </script>
 </body>
 </html>
