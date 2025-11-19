@@ -20,9 +20,7 @@ class IaController
 
     public function index()
     {
-        session_start(); // Assure que la session est active
-
-        // Vérifier qu’un utilisateur est connecté
+        // Vérifier qu'un utilisateur est connecté
         if (!isset($_SESSION['user_id'])) {
             // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
             header('Location: /login');
@@ -64,8 +62,6 @@ class IaController
 
     public function showConversations($agentId)
     {
-        session_start();
-
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
             exit;
@@ -99,7 +95,6 @@ class IaController
 
     public function showChat($conversationId = null, $agentIdForNew = null)
     {
-        session_start();
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
             exit;
@@ -173,8 +168,6 @@ class IaController
 
     public function deleteConversation()
     {
-        session_start();
-
         if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: /login');
             exit;

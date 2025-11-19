@@ -1,7 +1,9 @@
 <?php
+// Démarrer la session AVANT tout output
+session_start();
+
 // Autoload Composer
 require_once __DIR__ . '/../vendor/autoload.php';
-
 
 // use SchoolAgent\Controllers\HomeController;
 // use SchoolAgent\Controllers\UserController;
